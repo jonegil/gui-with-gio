@@ -37,4 +37,4 @@ Over the next 10 steps we will
  - [Chapter 10 - Input boiltime](10_input_boitime.md)
  
 ## Source code
-All the source-code is in this repo, on the [main branch](code)
+All the source-code is in this repo, in the ```egg_timer/code``` folder.
