@@ -15,7 +15,7 @@ The intention of this section is to add a button. That we can click. It will be 
 
 We start by reviewing the handful of new packages that are imported. 
 Next, we look at how **operations** and **widgets** combine to amke a button.
-Finally we touch on [Material Design](material.io), the well established framework for user interfaces also available in Gio.
+Finally we touch on [Material Design](https://material.io/), the well established framework for user interfaces also available in Gio.
 
 ## Code
 
