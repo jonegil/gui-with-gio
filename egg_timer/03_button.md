@@ -36,7 +36,7 @@ import (
 
 **app** and **unit** we know before, but the rest are new:
 - [font/gofont](https://pkg.go.dev/gioui.org/font/gofont) - Did you know Go had it's own dedicated set of high-quality True Type fonts? 
-  - [Read](https://blog.golang.org/go-fonts) the fascinating blog and definetly visit [Bigelow & Holmes)](https://bigelowandholmes.typepad.com/), the creators
+  - [Read](https://blog.golang.org/go-fonts) the fascinating blog and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), the creators
 - [io/system](https://pkg.go.dev/gioui.org/io/system]) - Provides high-level events that are sent from the window. 
   - Most important now will be the **system.FrameEvent** that requests a new frame that describes what to display.
 - [layuot](https://pkg.go.dev/gioui.org/layout]) - Defines various layouts, such as *dimensions*, *constraints* and *directions*, as well as [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex) that is well decribed by [Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox)
