@@ -48,7 +48,7 @@ func main() {
 
 ## Comments
 
-[gioui.org/unit](https://pkg.go.dev/gioui.org/unit) implements device independent units and values. The docs describes a handful of alternatives:
+[gioui.org/unit](https://pkg.go.dev/gioui.org/unit) implements device independent units and values. The docs describe a handful of alternatives:
 
 | Type | Description |
 | dp | Device indepentent pixel - independent of the underlying device. |
@@ -64,11 +64,11 @@ The options of **app.NewWindow()** are fairly self-explanatory. Some comments th
    - MaxSize
    - MinSize
    - Both, effectively locking the window size 
- - There's also a Fullscreen option if you need.
+ - There's also a Fullscreen option if you need it.
 
  ``` 
    **Note to self** 
-   Two of the options, NavigtionColor and StatusColor, feel out of place. 
+   Two of the options, NavigationColor and StatusColor, feel out of place. 
    Do they fit better in widgets or components? 
    Remember to ask Chris or Elias about this.
 ```
