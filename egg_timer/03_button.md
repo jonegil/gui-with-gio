@@ -9,16 +9,13 @@ has_children: false
 # Chapter 3 - Button 
 
 ## Goals
-The intention of this section is to add a button. That we can click. It will be so good.
+The intention of this section is to add a button. Not only can we click it, but it will have a nice hover and click animations.
 
 ## Outline
-
-We start by reviewing the handful of new packages that are imported. 
-Next, we look at how **operations** and **widgets** combine to amke a button.
+We start by reviewing the new packages that are imported. There are quite many, so let´s spend some time here. Next, we look at how **operations** and **widgets** combine to make a button.
 Finally we touch on [Material Design](https://material.io/), the well established framework for user interfaces also available in Gio.
 
 ## Code
-
 To make things tidy, let's discuss imports first.
 
 ```go
@@ -35,15 +32,18 @@ import (
 ```
 
 **app** and **unit** we know before, but the rest are new:
-- [font/gofont](https://pkg.go.dev/gioui.org/font/gofont) - Did you know Go had it's own dedicated set of high-quality True Type fonts? 
-  - [Read](https://blog.golang.org/go-fonts) the fascinating blog and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), the creators
-- [io/system](https://pkg.go.dev/gioui.org/io/system]) - Provides high-level events that are sent from the window. 
-  - Most important now will be the **system.FrameEvent** that requests a new frame that describes what to display.
-- [layuot](https://pkg.go.dev/gioui.org/layout]) - Defines various layouts, such as *dimensions*, *constraints* and *directions*, as well as [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex) that is well decribed by [Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox)
+- [font/gofont](https://pkg.go.dev/gioui.org/font/gofont) - Did you know Go has it's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
 
+- [io/system](https://pkg.go.dev/gioui.org/io/system) - Provides high-level events that are sent from the window. Most important is the **system.FrameEvent**. It's effectively a list of operations that do one of two things: Details how to handle input and describes what to display.
+  
+- [layuot](https://pkg.go.dev/gioui.org/layout) - Defines useful parts of a layout, such as *dimensions*, *constraints* and *directions*. It also includes the concept known as [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex). It´s widely used across many domains and well worth the time to read up on, for example here at [Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox). 
 
+- [op](https://pkg.go.dev/gioui.org/op) - Operations, or ops, are central in Gio. They are used to update the user interface. There are operations used to draw, handle input, change window properties, scale, rotate and more. Interestingly there are also [macros](https://pkg.go.dev/gioui.org/op#MacroOp), making it possible to record opertions to be executed later. Taken together this means a list of opererations is a *mutable stack*, where you can control the flow.
 
+- [widget](https://pkg.go.dev/gioui.org/widget) - Widget provides the foundation of UI components, such as state tracking and event handling. Is the mouse hovering over a button? Has it been clicked, and if so how many times? Display an image. 
 
+- [widget/material](https://pkg.go.dev/gioui.org/widget/material) - Expands on the widget package by defining a theme. The default looks good, and is what we'll use, but it's just as easy to adjust by setting propoerties such as foreground and backgroun color, size and type of fonts etc.
+  - Note: Gio expands the base functionality in a dedicated repo called [gio-x](https://pkg.go.dev/gioui.org/x) where [more material components](https://pkg.go.dev/gioui.org/x/component) are in development, including navigation bars and tooltips.
 
 ```go
 func main() {
