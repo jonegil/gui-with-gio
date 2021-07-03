@@ -40,9 +40,9 @@ import (
 
 - [op](https://pkg.go.dev/gioui.org/op) - Operations, or ops, are central in Gio. They are used to update the user interface. There are operations used to draw, handle input, change window properties, scale, rotate and more. Interestingly there are also [macros](https://pkg.go.dev/gioui.org/op#MacroOp), making it possible to record opertions to be executed later. Taken together this means a list of opererations is a *mutable stack*, where you can control the flow.
 
-- [widget](https://pkg.go.dev/gioui.org/widget) - Widget provides the foundation of UI components, such as state tracking and event handling. Is the mouse hovering over a button? Has it been clicked, and if so how many times? Display an image. 
+- [widget](https://pkg.go.dev/gioui.org/widget) - Widget provides the underlying functionality of UI components, such as state tracking and event handling. Is the mouse hovering over a button? Has it been clicked, and if so how many times? To draw widgets, we need a theme which comes next:
 
-- [widget/material](https://pkg.go.dev/gioui.org/widget/material) - Expands on the widget package by defining a theme. The default looks good, and is what we'll use, but it's just as easy to adjust by setting propoerties such as foreground and backgroun color, size and type of fonts etc.
+- [widget/material](https://pkg.go.dev/gioui.org/widget/material) - Expands on the widget package by defining a theme. The default looks good, and is what we'll use, but it's just as easy to adjust by setting propoerties such as  color, text size font properties etc.
   - Note: Gio expands the base functionality in a dedicated repo called [gio-x](https://pkg.go.dev/gioui.org/x) where [more material components](https://pkg.go.dev/gioui.org/x/component) are in development, including navigation bars and tooltips.
 
 ```go
