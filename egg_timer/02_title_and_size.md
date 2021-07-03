@@ -65,10 +65,5 @@ The options of **app.NewWindow()** are fairly self-explanatory. Some commonts th
    - MinSize
    - Both, effectively locking the window size 
  - There's also a Fullscreen option if you need.
-
- ``` 
-   **Note to self** 
-   Two of the options, NavigtionColor and StatusColor, feel out of place. 
-   Do they fit better in widgets or components? 
-   Remember to ask Chris or Elias about this.
-```
+ - If you're building for Android, Status and Navigation colors can be set here. 
+ 
