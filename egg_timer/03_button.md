@@ -11,12 +11,17 @@ has_children: false
 ## Goals
 The intention of this section is to add a button. Not only can we click it, but it will have a nice hover and click animations.
 
+![A button](03_button.gif)
+
 ## Outline
 We start by reviewing the new packages that are imported. There are quite many, so let´s spend some time here. Next, we look at how **operations** and **widgets** combine to make a button.
 Finally we touch on [Material Design](https://material.io/), the well established framework for user interfaces also available in Gio.
 
-## Code
-To make things tidy, let's discuss imports first.
+To make things tidy, let's discuss imports first, then the main function later.
+
+## Imports
+
+### Code
 
 ```go
 import (
@@ -31,6 +36,7 @@ import (
 )
 ```
 
+### Comments
 **app** and **unit** we know before, but the rest are new:
 - [font/gofont](https://pkg.go.dev/gioui.org/font/gofont) - Did you know Go has it's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
 
@@ -42,8 +48,22 @@ import (
 
 - [widget](https://pkg.go.dev/gioui.org/widget) - Widget provides the underlying functionality of UI components, such as state tracking and event handling. Is the mouse hovering over a button? Has it been clicked, and if so how many times? 
 
-- [widget/material](https://pkg.go.dev/gioui.org/widget/material) - While the **widget** provides functionality, **widget/material** defines a theme. The default looks good, and is what we'll use, but it's just as easy to adjust by setting propoerties such as color, text size font properties etc.
+- [widget/material](https://pkg.go.dev/gioui.org/widget/material) - While the **widget** provides functionality, **widget/material** defines a theme. Note that the interface is actualy split between two parts:
+  1. The actual widget, which has state
+  1. Drawing of the widget, which is completely stateless
+
+  This is on purpose to improve reusability and flexibility of the widgets. We'll make use of this later.
+  
+  The default looks good, and is what we'll use, but it's just as easy to adjust by setting propoerties such as color, text size font properties etc.
+  
   - Note: Gio expands the base functionality in a dedicated repo called [gio-x](https://pkg.go.dev/gioui.org/x) where [more material components](https://pkg.go.dev/gioui.org/x/component) are in development, including navigation bars and tooltips.
+
+
+## Main
+
+With imports well out of our way, let's look at the code. It's longer but still easy. 
+
+### Code
 
 ```go
 func main() {
@@ -80,11 +100,48 @@ func main() {
 	}()
 	app.Main()
 }
+```
+### Comments
+
+1. From the top, we recognice the main function starting defining and calling the anonymous function.
+
+1. We continue to define the window ` w ` 
+
+1. Three new variables are set
+
+	- **ops** define the operations from the user interface
+
+	- **startButton** is our button, a clickable widget.
+	
+	- **th** is the material theme, and sets the fonts to be gofonts
+
+1. The `for e:= range w.Events() ` loop is more intersting: 
+    - **w.Events()** gets us the *channel* through which events are delivered. We simply listen to this channel forever.
+
+	- Then ... what's this ` e:= e.(type) ` thing. It's actually a neat thing, known as a [type switch](https://tour.golang.org/methods/16) that allows us to take different actions depending on the **type** of event that's being processed.
+
+	- In our case, we're only interested if the event is a **system.FrameEvent**. If it is:
+	  
+	  - We define a new *graphical context*, or **gtx**. It receives the pointer to **ops** as well as the event
+	  
+	  - **b** is declared as the actual button, with theme **th**, and a pointer to the **startButton** widget. We also define the text that is displayed (note how the text is purely a something that is displayed on the button, not part of the stateful widget the button actually is.)
+	  
+	  - Look here now. The button **b** is asked to *lay itself out* on the context **gtx**. This is key. The layout doesn't layout the button, the button lays itself out. This is very handy. Try for example to resize the window. No stress, the button just lays itself out again, no matter size or shape of the canvas.
+	  
+	  	- Notice how we got all the mouseover and the click-animation for free. They're all part of the theme. That's pretty nice!
+
+	  - We finalize by actually sending the operations **ops** from the context **gtx** to the FrameEvent **e**.
+
+1. Finally we call ` app.Main() `. Don't forget.
+	  
 
 
+Phew, that's a long one. Thanks if you're still along. We can summarize the whole chapter in three lines:
+
+```go
+  gtx := layout.NewContext(&ops, e)
+  b := material.Button(th, &startButton, "Start")
+  b.Layout(gtx)
 ```
 
-
-
-## Comments
-
+If you're comfortable with those, your're good.
