@@ -14,7 +14,10 @@ The intention of this section is to add a button. Not only can we click it, but 
 ![A button](03_button.gif)
 
 ## Outline
+This section will present many new components. We don't dive deep, get focus on the overall structure of the program. Don't get lost in the details, focus on the big picture, and you'll be fine.
+
 We start by reviewing the new packages that are imported. There are quite many, so let´s spend some time here. Next, we look at how **operations** and **widgets** combine to make a button.
+
 Finally we touch on [Material Design](https://material.io/), the well established framework for user interfaces also available in Gio.
 
 To make things tidy, let's discuss imports first, then the main function later.
