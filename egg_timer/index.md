@@ -23,12 +23,13 @@ Over the next 10 steps we will
 ### Written
  - [Chapter 1 - Empty window](01_empty_window.md)
  - [Chapter 2 - Title and size](02_title_and_size.md)
-
-### In writing
  - [Chapter 3 - Button](03_button.md)
 
-### Not written
+### In writing
  - [Chapter 4 - Low button](04_button_low.md)
+
+### Not written
+
  - [Chapter 5 - Refactoring](05_button_low_refactored.md)
  - [Chapter 6 - Button with margin](06_button_low_margin.md)
  - [Chapter 7 - Progressbar](07_progressbar.md)

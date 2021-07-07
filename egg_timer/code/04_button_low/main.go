@@ -46,7 +46,7 @@ func main() {
 					//Emtpy space is left at the start, i.e. at the top
 					Spacing: layout.SpaceStart,
 				}.Layout(gtx,
-					// We insert to rigid elements
+					// We insert two rigid elements:
 					// First a button ...
 					layout.Rigid(
 						func(gtx layout.Context) layout.Dimensions {
