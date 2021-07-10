@@ -51,7 +51,13 @@ This we can work with:
 **Rigid** is simply a Flex child filling out available space. 
 
 ### Constraint and Dimensions
-It´s worth mentioning how a Layout is bound together through *Constraints* and *Dimensions*. They form the interfce between layout and child elements. When you create a Widget, it responds with it´s dimensions, effectively laying itself out. 
+It´s worth mentioning how a Layout is bound together through [Constraints](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Constraints) and [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions). 
+ - Constraints are the Minimum *and* Maxium size of a widget ´´´Min, Max image.point´´´
+   - I.e. *how large can it be*
+ - Dimensions are the Actual size of a widget, effectively ´´´Size image.Point´´´
+   - I.e. *how large is it*
+
+Together, this forms the interafce between layout and child elements. When you create a Widget, it responds with it´s dimensions, effectively laying itself out. 
 
 Note how layout operations are recursive. A child in a layout can itself be a layout. From generic components you can thus create quite involved user interfaces.
 
@@ -96,14 +102,14 @@ Inside ```Flex { }``` we define two characteristicts:
 Sounds like Tetris if you ask me.
 
 Now look at the two **layout.Rigid**:
- - The first defines a function that returns **Dimensions**
+ - The first defines a function that returns [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions)
     - ```func (b ButtonStyle) Layout(gtx layout.Context) layout.Dimensions {```
- - The second defines a **Spacer**, call Layout, which return **Dimensions**
+ - The second defines a **Spacer**, call Layout, which return  [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions)
     - ```func (s Spacer) Layout(gtx Context) Dimensions {```
  - If you added a third, fourth, fifth element, guess what they would each return? Yes, Dimensions. It's pretty neat how this simple element binds the Gui together.
 
 
- 
+
 
 
 
