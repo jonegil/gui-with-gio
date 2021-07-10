@@ -94,3 +94,18 @@ Inside ```Flex { }``` we define two characteristicts:
  - Vertical alignment. Stuff will be be placed or below each other.
  - Leftover space will be at the start
 Sounds like Tetris if you ask me.
+
+Now look at the two **layout.Rigid**:
+ - The first defines a function that returns **Dimensions**
+    - ```func (b ButtonStyle) Layout(gtx layout.Context) layout.Dimensions {```
+ - The second defines a **Spacer**, call Layout, which return **Dimensions**
+    - ```func (s Spacer) Layout(gtx Context) Dimensions {```
+ - If you added a third, fourth, fifth element, guess what they would each return? Yes, Dimensions. It's pretty neat how this simple element binds the Gui together.
+
+
+ 
+
+
+
+
+
