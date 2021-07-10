@@ -95,8 +95,8 @@ func main() {
 			// this is sent when the application should re-render.
 			case system.FrameEvent:
 				gtx := layout.NewContext(&ops, e)
-				b := material.Button(th, &startButton, "Start")
-				b.Layout(gtx)
+				btn := material.Button(th, &startButton, "Start")
+				btn.Layout(gtx)
 				e.Frame(gtx.Ops)
 			}
 		}
@@ -127,9 +127,9 @@ func main() {
 	  
 	  - We define a new *graphical context*, or **gtx**. It receives the pointer to **ops** as well as the event
 	  
-	  - **b** is declared as the actual button, with theme **th**, and a pointer to the **startButton** widget. We also define the text that is displayed (note how the text is purely a something that is displayed on the button, not part of the stateful widget the button actually is.)
+	  - **btn** is declared as the actual button, with theme **th**, and a pointer to the **startButton** widget. We also define the text that is displayed (note how the text is purely a something that is displayed on the button, not part of the stateful widget the button actually is.)
 	  
-	  - Look here now. The button **b** is asked to *lay itself out* on the context **gtx**. This is key. The layout doesn't layout the button, the button lays itself out. This is very handy. Try for example to resize the window. No stress, the button just lays itself out again, no matter size or shape of the canvas.
+	  - Look here now. The button **btn** is asked to *lay itself out* on the context **gtx**. This is key. The layout doesn't layout the button, the button lays itself out. This is very handy. Try for example to resize the window. No stress, the button just lays itself out again, no matter size or shape of the canvas.
 	  
 	  	- Notice how we got all the mouseover and the click-animation for free. They're all part of the theme. That's pretty nice!
 
