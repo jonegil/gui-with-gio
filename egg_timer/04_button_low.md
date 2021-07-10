@@ -14,8 +14,53 @@ The intention of this section is to move the button to the bottom. To do that we
 ## Outline
 The last chapter was all about the overall structure of the program. Now we zoom into the **system.FrameEvent** and start using the [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex) 
 
-## Code
-Here's the whole **system.FrameEvent**:
+## Overview
+
+### Code
+You know the overall strucutre of the program like the back of your hand out from last chapter. So instead of repeating it all, so here we´re only going to focus on what´s happening inside the **system.FrameEvent**:
+
+First look at the Layout
+
+```go
+case system.FrameEvent:
+
+    layout.Flex{
+    // ...
+    }.Layout( //...
+        // We insert two rigid elements:
+        // First a button ...
+        layout.Rigid(),
+        // .. then an empty spacer
+        layout.Rigid(),
+    }
+```
+
+### Comments
+
+This we can work with:
+1. First we define a **Flexbox** through Layout.Flex
+1. Then we place a new **Layout** onto that Flexbox
+1. That 2nd layout contains two **rigids**. 
+  a. First one to contain the button
+  b. Then one to contain a spacer below it.
+
+**Flex** lays out a list of children. 
+- Rigid children are laid out first and Flexed children laid out after.
+- Apart from that, children are positioned in the order they are defined.
+
+**Rigid** is simply a Flex child filling out available space. 
+
+### Constraint and Dimensions
+It´s worth mentioning how a Layout is bound together through *Constraints* and *Dimensions*. They form the interfce between layout and child elements. When you create a Widget, it responds with it´s dimensions, effectively laying itself out. 
+
+Note how layout operations are recursive. A child in a layout can itself be a layout. From generic components you can thus create quite involved user interfaces.
+
+## Full content
+
+Let's look at the whole **system.FrameEvent**:
+
+### Code
+
 ```go
 case system.FrameEvent:
     gtx := layout.NewContext(&ops, e)
@@ -43,27 +88,9 @@ case system.FrameEvent:
     e.Frame(gtx.Ops)
 ```
 
-Skim the details and look at the major components. Use a foldable editor and hide some of the inner lines.
+### Comments
 
-```go
-layout.Flex{
-   // ...
-}.Layout( //...
-    // We insert two rigid elements:
-    // First a button ...
-    layout.Rigid(),
-    // .. then an empty spacer
-    layout.Rigid(),
-}
-```
-
-This we can work with:
-1. First we defeine a Flexbox through **Layout.Flex**
-1. Then we place a **Layout** onto that Flexbox
-1. Within the layout we place two rigids. 
-  a. First one to contain the buttion
-  b. Then one to contain a spacer below it.
-
-
-## Comments
-
+Inside ```Flex { }``` we define two characteristicts:
+ - Vertical alignment. Stuff will be be placed or below each other.
+ - Leftover space will be at the start
+Sounds like Tetris if you ask me.
