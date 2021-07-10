@@ -14,7 +14,7 @@ The intention of this section is to move the button to the bottom. To do that we
 ## Outline
 The last chapter was all about the overall structure of the program. Now we zoom into the **system.FrameEvent** and start using the [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex) 
 
-## Overview
+## Overall structure
 
 ### Code
 You know the overall strucutre of the program like the back of your hand out from last chapter. So instead of repeating it all, so here we´re only going to focus on what´s happening inside the **system.FrameEvent**:
@@ -50,20 +50,20 @@ This we can work with:
 
 **Rigid** is simply a Flex child filling out available space. 
 
-### Constraint and Dimensions
+#### Constraint and Dimensions
 It´s worth mentioning how a Layout is bound together through [Constraints](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Constraints) and [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions). 
- - Constraints are the Minimum *and* Maxium size of a widget ´´´Min, Max image.point´´´
-   - I.e. *how large can it be*
+ - Constraints are the Minimum and Maxium size of a widget ´´´Min, Max image.point´´´
+   - I.e. how large can it be
  - Dimensions are the Actual size of a widget, effectively ´´´Size image.Point´´´
-   - I.e. *how large is it*
+   - I.e. how large is it actually
 
-Together, this forms the interafce between layout and child elements. When you create a Widget, it responds with it´s dimensions, effectively laying itself out. 
+There are some nuances, like what to do if constraits can't me met, but for the most part this describes the dialoge between parent and child. From the parent, you create a Widget and pass in the context. The widget responds, with it´s own dimensions, effectively laying itself out. 
 
-Note how layout operations are recursive. A child in a layout can itself be a layout. From generic components you can thus create quite involved user interfaces.
+Note that layout operations are recursive. A child in a layout can itself be a layout. From generic components you can thus create quite involved user interfaces.
 
-## Full content
+## Code in detail
 
-Let's look at the whole **system.FrameEvent**:
+OK, time to look at the whole **system.FrameEvent**:
 
 ### Code
 
@@ -85,7 +85,7 @@ case system.FrameEvent:
                 return btn.Layout(gtx)
             },
         ),
-        // .. then an empty spacer
+        // ... then an empty spacer
         layout.Rigid(
             //The height of the spacer is 25 Device independent pixels
             layout.Spacer{Height: unit.Dp(25)}.Layout,
@@ -101,11 +101,11 @@ Inside ```Flex { }``` we define two characteristicts:
  - Leftover space will be at the start
 Sounds like Tetris if you ask me.
 
-Now look at the two **layout.Rigid**:
- - The first defines a function that returns [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions)
-    - ```func (b ButtonStyle) Layout(gtx layout.Context) layout.Dimensions {```
- - The second defines a **Spacer**, call Layout, which return  [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions)
-    - ```func (s Spacer) Layout(gtx Context) Dimensions {```
+Now look at the two calls **layout.Rigid( )**:
+ - ```Rigid( )``` is a function that accepts a **Widget**
+ - A widget is whatever that returns [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions)
+    a. ```func (b ButtonStyle) Layout(gtx layout.Context) layout.Dimensions {```
+    a. ```func (s Spacer) Layout(gtx Context) Dimensions {```
  - If you added a third, fourth, fifth element, guess what they would each return? Yes, Dimensions. It's pretty neat how this simple element binds the Gui together.
 
 
