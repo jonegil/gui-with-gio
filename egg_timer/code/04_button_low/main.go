@@ -37,9 +37,7 @@ func main() {
 			// this is sent when the application should re-render.
 			case system.FrameEvent:
 				gtx := layout.NewContext(&ops, e)
-				// Let's try out the flexbox layout concept
-				// Here's a good reference for the main concepts
-				// https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox
+				// Let's try out the flexbox layout:
 				layout.Flex{
 					// Vertical alignment, from top to bottom
 					Axis: layout.Vertical,
