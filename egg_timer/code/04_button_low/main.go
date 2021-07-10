@@ -52,7 +52,7 @@ func main() {
 							return btn.Layout(gtx)
 						},
 					),
-					// .. then an empty spacer
+					// ... then an empty spacer
 					layout.Rigid(
 						//The height of the spacer is 25 Device independent pixels
 						layout.Spacer{Height: unit.Dp(25)}.Layout,
@@ -61,7 +61,6 @@ func main() {
 				e.Frame(gtx.Ops)
 			}
 		}
-
 	}()
 	app.Main()
 }
