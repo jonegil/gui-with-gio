@@ -45,14 +45,14 @@ func main() {
 					Spacing: layout.SpaceStart,
 				}.Layout(gtx,
 					// We insert two rigid elements:
-					// First a button ...
+					// First one to hold a button ...
 					layout.Rigid(
 						func(gtx layout.Context) layout.Dimensions {
 							btn := material.Button(th, &startButton, "Start")
 							return btn.Layout(gtx)
 						},
 					),
-					// ... then an empty spacer
+					// ... then one to hold an empty spacer
 					layout.Rigid(
 						//The height of the spacer is 25 Device independent pixels
 						layout.Spacer{Height: unit.Dp(25)}.Layout,
