@@ -69,7 +69,7 @@ func loop(w *app.Window) error {
 						return btn.Layout(gtx)
 					},
 				),
-				// .. then an empty spacer
+				// ... then an empty spacer
 				layout.Rigid(
 					//The height of the spacer is 25 Device independent pixels
 					layout.Spacer{Height: unit.Dp(25)}.Layout,

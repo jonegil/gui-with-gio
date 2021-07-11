@@ -9,19 +9,18 @@ has_children: false
 # Chapter 4 - Low button 
 
 ## Goals
-The intention of this section is to move the button to the bottom. To do that we start using the [Flexbox layout concept]((https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox))
+The button can't fill the screen, obviously. So let's move the button to the bottom. To do that we start using the layout concept known as [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex). 
 
 ![A low button with a spacer below](04_button_low.png)
 
 ## Outline
-The last chapter was all about the overall structure of the program. Now we zoom into the **system.FrameEvent** and start using the [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex) 
+The last chapter was all about the overall structure of the program. Now we zoom into the **system.FrameEvent** and start using Flexbox. If it's new to you, read up on it first, for example [this one from Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox).
 
 ## Overall structure
+We don't repeat the whole program here, but instead zoom in on the **system.FrameEvent**:
 
 ### Code
-You know the overall strucutre of the program like the back of your hand out from last chapter. So instead of repeating it all, so here we´re only going to focus on what´s happening inside the **system.FrameEvent**:
-
-First look at the Layout
+We start by removing a lot of the details to better see the structure:
 
 ```go
 case system.FrameEvent:
@@ -30,9 +29,9 @@ case system.FrameEvent:
     // ...
     }.Layout( //...
         // We insert two rigid elements:
-        // First a button ...
+        // First one to hold a button ...
         layout.Rigid(),
-        // .. then an empty spacer
+        // .. then one to hold an empty spacer
         layout.Rigid(),
     }
 ```
@@ -40,28 +39,23 @@ case system.FrameEvent:
 ### Comments
 
 This we can work with:
-1. First we define a **Flexbox** through Layout.Flex
-1. Then we place a new **Layout** onto that Flexbox
-1. That 2nd layout contains two **rigids**. 
-  a. First one to contain the button
-  b. Then one to contain a spacer below it.
+1. First we define a **Flexbox** through the struct ```layout.Flex{}```
+1. Then we send it list of children to be laid out through ```Layout(gtx, ...)```. The graphical context, *gtx*, contais the constraints that the kids have to keep within. 
 
-**Flex** lays out a list of children. 
-- Rigid children are laid out first and Flexed children laid out after.
-- Apart from that, children are positioned in the order they are defined.
+The children we list are both created by ```layout.Rigid()```: 
+  a. First a placeholder for the button, 
+  b. Then another placeholder to contain empty space below the button.
 
-**Rigid** is simply a Flex child filling out available space. 
+A [Rigid](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Rigid) fills out the space it is given and is laid out first, while [Flexed](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Flexed) children share the space left after the Rigids. Apart from that, children are positioned in the order they are defined.
 
 #### Constraint and Dimensions
-It´s worth mentioning how a Layout is bound together through [Constraints](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Constraints) and [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions). 
- - Constraints are the Minimum and Maxium size of a widget ´´´Min, Max image.point´´´
-   - I.e. how large **can** it be
- - Dimensions are the Actual size of a widget, effectively ´´´Size image.Point´´´
-   - I.e. how large is it **actually**
+At this point it´s worth mentioning how a Layout is bound together through **Constraints** and **Dimensions**. 
+ - [Constraints](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Constraints) are the Minimum and Maxium size of a widget. How small or large **can** it be
+ - [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions) are the actual size of a widget. How small or large is it **actually**
 
-There are some nuances, like what to do if constraits can't me met, but for the most part this describes the dialoge between parent and child. From the parent, you create a Widget and pass in the context. The widget responds, with it´s own dimensions, effectively laying itself out. 
+There are some nuances, like what to do if constraits can't me met, but for the most part this describes the dialoge between parent and child. From the parent, you create a Widget and pass in the context with constraints. The widget responds with it´s own dimensions, effectively laying itself out. 
 
-Note that layout operations are recursive. A child in a layout can itself be a layout. From generic components you can thus create quite involved user interfaces.
+As we saw above layout operations are recursive. A child in a layout can itself be a layout. From generic components you can thus create quite involved user interfaces.
 
 ## Code in detail
 
@@ -99,19 +93,19 @@ case system.FrameEvent:
 ### Comments
 
 Inside ```Flex { }``` we define two characteristicts:
- - Vertical alignment. Stuff will be be placed or below each other.
- - Leftover space will be at the start
+ - Axis: Vertical alignment means stuff will be be placed or below each other.
+ - Spacing: Leftover space will be at the start
 Sounds like Tetris if you ask me.
 
 Now let's look at the two calls to **layout.Rigid( )**:
- - Rigid accepts a [Widget](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Widget)
-- A Widget is simply something that returns it's own [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions)
+- Rigid accepts a [Widget](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Widget)
+- A Widget is simply something that returns it's own Dimensions
 - Note how this is done in very different ways: 
-  a. In the first Rigid we pass in a ```func ( )``` that returns **Dimensions** from btn.Layout()
-  a. In the second Rigid we create a ```Spacer { }``` struct, calls Layout on it, which again gives back **Dimensions** 
+  a. In the first Rigid we pass in a ```func ( )``` that returns Dimensions from btn.Layout()
+  a. In the second Rigid we create a ```Spacer { }``` struct, calls it's Layout method, which in turn gives us Dimensions 
 - From the parent perspective, it doesn't really matter. As long as the child returns **Dimensions**, it's good.
 
-This takes care of laying the widgets out. But what are they really?
+This takes care of laying the widgets out. But what are the widgets really?
 As the name implies, **material.Button** is a [Button](https://pkg.go.dev/gioui.org/widget/material?utm_source=gopls#Button) based on material design, as we detailed in the last chapter.
 
-**Spacer{ }** simply adds space between widgets. Since we've defined the overall layout to be vertical, and excess space should come at the top, the button would fall all the way to the bottom. I wanted it a bit up, and the spaced did that job for us, wedging itself in between the bottom of the app and the lower end of the button. Handy stuff.
+[Spacer](https://pkg.go.dev/gioui.org@v0.0.0-20210504193539-82fff0178bed/layout?utm_source=gopls#Spacer) adds empty space, here defined by *Height*. Since we've defined the overall layout to be vertical, and excess space should come at the top, this falls to the bottom and the button lands on top of it. Hence some space is created, lifting the button a little from the bottom of the screen. Handy stuff.
