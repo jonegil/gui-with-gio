@@ -37,24 +37,22 @@ func main() {
 			// this is sent when the application should re-render.
 			case system.FrameEvent:
 				gtx := layout.NewContext(&ops, e)
-				// Let's try out the flexbox layout concept
-				// Here's a good reference for the main concepts
-				// https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox
+				// Let's try out the flexbox layout:
 				layout.Flex{
 					// Vertical alignment, from top to bottom
 					Axis: layout.Vertical,
 					//Emtpy space is left at the start, i.e. at the top
 					Spacing: layout.SpaceStart,
 				}.Layout(gtx,
-					// We insert to rigid elements
-					// First a button ...
+					// We insert two rigid elements:
+					// First one to hold a button ...
 					layout.Rigid(
 						func(gtx layout.Context) layout.Dimensions {
 							btn := material.Button(th, &startButton, "Start")
 							return btn.Layout(gtx)
 						},
 					),
-					// .. then an empty spacer
+					// ... then one to hold an empty spacer
 					layout.Rigid(
 						//The height of the spacer is 25 Device independent pixels
 						layout.Spacer{Height: unit.Dp(25)}.Layout,
@@ -63,7 +61,6 @@ func main() {
 				e.Frame(gtx.Ops)
 			}
 		}
-
 	}()
 	app.Main()
 }
