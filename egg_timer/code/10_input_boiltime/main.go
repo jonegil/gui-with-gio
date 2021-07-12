@@ -60,7 +60,7 @@ func loop(w *app.Window) error {
 	var boilLength float32
 	progress := float32(0)
 
-	// th defnes the material design style
+	// this defines the material design style
 	th := material.NewTheme(gofont.Collection())
 
 	// listen for events in the window.
@@ -97,7 +97,7 @@ func loop(w *app.Window) error {
 				}
 			}
 			// Limit the progress to between [0,1]
-			// Try removing and send in negative time. Phsychedelic
+			// Try removing and send in negative time. Psychedelic
 			if progress > 1 {
 				progress = 1
 			}

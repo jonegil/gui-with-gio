@@ -40,7 +40,7 @@ func loop(w *app.Window) error {
 	// startButton is a clickable widget
 	var startButton widget.Clickable
 
-	// th defnes the material design style
+	// this defines the material design style
 	th := material.NewTheme(gofont.Collection())
 
 	// listen for events in the window.
