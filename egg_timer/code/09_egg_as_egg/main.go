@@ -52,7 +52,7 @@ func loop(w *app.Window) error {
 	var boilStart time.Time
 	progress := float32(0)
 
-	// this defines the material design style
+	// th defines the material design style
 	th := material.NewTheme(gofont.Collection())
 
 	// listen for events in the window.

@@ -56,7 +56,7 @@ func loop(w *app.Window) error {
 	// is the egg boiling? When did it start? Used for progress
 	var boiling bool
 
-	// this defines the material design style
+	// th defines the material design style
 	th := material.NewTheme(gofont.Collection())
 
 	for {
