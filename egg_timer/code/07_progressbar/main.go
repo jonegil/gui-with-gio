@@ -20,7 +20,7 @@ var progressIncrementer chan float32
 var progress float32
 
 func main() {
-	//Setup a separate channel to provide ticks to increment progress
+	// Setup a separate channel to provide ticks to increment progress
 	progressIncrementer = make(chan float32)
 	go func() {
 		for {
@@ -56,7 +56,7 @@ func loop(w *app.Window) error {
 	// is the egg boiling? When did it start? Used for progress
 	var boiling bool
 
-	// th defnes the material design style
+	// this defines the material design style
 	th := material.NewTheme(gofont.Collection())
 
 	for {
