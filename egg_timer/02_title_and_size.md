@@ -48,7 +48,7 @@ func main() {
 
 ## Comments
 
-[gioui.org/unit](https://pkg.go.dev/gioui.org/unit) implements device independent units and values. The docs describes a handful of alternatives:
+[gioui.org/unit](https://pkg.go.dev/gioui.org/unit) implements device independent units and values. The docs describe a handful of alternatives:
 
 | Type | Description |
 | dp | Device indepentent pixel - independent of the underlying device. |
@@ -57,13 +57,14 @@ func main() {
  
 In general, **dp** is most used. Also, let's keep device independency when we can. Hence that's what we use when we define the window size inside **app.NewWindow()**
 
-The options of **app.NewWindow()** are fairly self-explanatory. Some commonts though:
+The options of **app.NewWindow()** are fairly self-explanatory. Some comments though:
 
  - Note how size is set as **app.Size(x, y)**.
  - The window can be freely resized. Try it. If you want to limit it, you can add
    - MaxSize
    - MinSize
    - Both, effectively locking the window size 
+
  - There's also a Fullscreen option if you need.
  - If you're building for Android, Status and Navigation colors can be set here. 
  
