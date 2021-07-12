@@ -37,8 +37,8 @@ func main() {
 			// this is sent when the application should re-render.
 			case system.FrameEvent:
 				gtx := layout.NewContext(&ops, e)
-				b := material.Button(th, &startButton, "Start")
-				b.Layout(gtx)
+				btn := material.Button(th, &startButton, "Start")
+				btn.Layout(gtx)
 				e.Frame(gtx.Ops)
 			}
 		}
