@@ -8,4 +8,3 @@ remote_theme: pmarsceill/just-the-docs
 ga_tracking: UA-199918132-1 # Universal access ID. Added on June 25th
 ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings (true/nil by default)
 
-$code-background-color: #4e26af !default;
