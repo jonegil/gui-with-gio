@@ -60,7 +60,7 @@ As we see above, layout operations are recursive. A child can itself have childr
 
 ## Code in detail
 
-OK, that was the high level. Now it's time to look at the whole **system.FrameEvent** in detail:
+OK, that was the high level. Now it's time to dive deep. Let's look at the whole of **system.FrameEvent** in detail:
 
 ### Code
 
@@ -94,20 +94,23 @@ case system.FrameEvent:
 ### Comments
 
 Inside ```layout.Flex{ }``` we define two characteristicts:
- - Axis: Vertical alignment means stuff will be be placed or below each other.
- - Spacing: Leftover space will be at the start
-Sounds like Tetris if you ask me.
+ 1. Axis: Vertical alignment means stuff will be be placed or below each other.
+ 1. Spacing: Leftover space will be at the start
 
+Since ordering plays a role, you might think of it as if widgets grow up from the bottom of the screen. The button arrives first, then the spacer comes from below and wears the button as a hat. Silly, but useful. 
 
 Now let's look at the two calls to **layout.Rigid( )**:
 - Rigid accepts a [Widget](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Widget)
-- A Widget is simply something that returns it's own Dimensions
-- Note how this is done in very different ways: 
-  a. In the first Rigid we pass in a ```func( )``` that returns **Dimensions** from btn.Layout()
-  a. In the second Rigid we create a ```Spacer{ }``` struct, call it's Layout method, which in turn gives us **Dimensions** 
+- A Widget is simply something that returns it's own **Dimensions**
+- *How* this is done doesn't really matter. Here are two very different ways: 
+  a. In the first Rigid we pass in a ```func( )``` that returns **Dimensions** from **btn.Layout()**
+  a. In the second Rigid we create a ```Spacer{ }``` struct, call it's **Layout method**, which in turn gives us **Dimensions** 
 - From the parent perspective, it doesn't really matter. As long as the child returns **Dimensions**, we're good.
 
 This takes care of laying the widgets out. But what are the widgets really?
-As the name implies, **material.Button** is a [Button](https://pkg.go.dev/gioui.org/widget/material?utm_source=gopls#Button) based on material design, as we detailed in the last chapter.
+ - As the name implies, **material.Button** is a [Button](https://pkg.go.dev/gioui.org/widget/material?utm_source=gopls#Button) based on material design, as we detailed in the last chapter.
 
-[Spacer](https://pkg.go.dev/gioui.org@v0.0.0-20210504193539-82fff0178bed/layout?utm_source=gopls#Spacer) adds empty space, here defined by *Height*. Since we've defined the overall layout to be vertical, and excess space should come at the top, this falls to the bottom and the button lands on top of it. Hence some space is created, lifting the button a little from the bottom of the screen. Handy stuff.
+- [Spacer](https://pkg.go.dev/gioui.org@v0.0.0-20210504193539-82fff0178bed/layout?utm_source=gopls#Spacer) adds empty space, here defined by *Height*. Since we've defined the overall layout to be vertical, and excess space should come at the top, this falls to the bottom and the button lands on top of it. Hence some space is created, lifting the button a little from the bottom of the screen. Handy stuff.
+
+**Good work**
+We've come a long way and have covered a lot of ground. Good work, and thank you for staying with me. Let's move on and continue our build.
