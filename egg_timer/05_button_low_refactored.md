@@ -55,7 +55,7 @@ The convention is that a zero exit code indicates success, which is what we send
   
 ### No 2 - Constraints and Dimensions - A handy shortcut
 
-We talked at lenght about **Constraints** and **Dimensions** earlier. Since we're using them quite a lot, it's handy to define two shortcuts, **C** and **D**. Constraints are part of the Context type, which is what we technically pass around.
+We talked at lenght about **Constraints** and **Dimensions** earlier. Since we're using them quite a lot, it's handy to define two shortcuts, **C** and **D**. Constraints are part of the Context.
 
 ```go
 type C = layout.Context
@@ -66,8 +66,11 @@ type D = layout.Dimensions
 
 ### No 3 - The ```draw( )``` function
 
+A simplify version of ```draw( )``` shows the structure.
+
 ```go
 func draw(w *app.Window) error {
+    // ...
 
 	// listen for events in the window.
 	for e := range w.Events() {
@@ -77,7 +80,7 @@ func draw(w *app.Window) error {
 
 		// this is sent when the application should re-render.
 		case system.FrameEvent:
-            ...
+        // ...
 		
         // this is sent when the application is closed.
 		case system.DestroyEvent:
@@ -86,10 +89,15 @@ func draw(w *app.Window) error {
 	}
 	return nil
 }
-
-```draw( )``` is our main worker function to draw the window. 
-
 ```
+
+As before we range through **w.Events()**, detecting their type. **system.FramEvent** is handled as before, but we add a new case for **system.DestroyEvent**. 
+
+As the name implies
+
+
+>  Err is nil for normal window closures. If a window is prematurely closed, Err is the cause.
+
 
 ## Comments
 
