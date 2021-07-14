@@ -28,7 +28,7 @@ func main() {
 			app.Title("Egg timer"),
 			app.Size(unit.Dp(400), unit.Dp(600)),
 		)
-		if err := loop(w); err != nil {
+		if err := draw(w); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
@@ -39,7 +39,7 @@ func main() {
 type C = layout.Context
 type D = layout.Dimensions
 
-func loop(w *app.Window) error {
+func draw(w *app.Window) error {
 
 	// ops are the operations from the UI
 	var ops op.Ops
