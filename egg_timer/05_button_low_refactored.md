@@ -91,13 +91,9 @@ func draw(w *app.Window) error {
 }
 ```
 
-As before we range through **w.Events()**, detecting their type. **system.FramEvent** is handled as before, but we add a new case for **system.DestroyEvent**. 
-
-As the name implies
-
-
->  Err is nil for normal window closures. If a window is prematurely closed, Err is the cause.
-
+As before we range through **w.Events()**, detecting their type. 
+ - **system.FramEvent** is handled as before, 
+ - we add a new case for **system.DestroyEvent**, which returns *nil* for normal window closures, but *Err* if something else is teh cause.
 
 ## Comments
-
+Refactoring is a matter of taste, and this is my take on it. If you have different needs, do what's right for your app. The main point is to keep your applications flexible enough to support continued improvements and future needs. Good luck.
