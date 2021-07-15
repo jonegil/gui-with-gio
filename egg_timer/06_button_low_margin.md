@@ -19,7 +19,11 @@ After looking at the whole code when refactoring in the last section, this time 
 
 ## Code
 
-Let's start with the structure. It will be as easy as one, two three:
+It can be useful to strip away some of the detail, to highlight the structure. 
+There are really only three key lines here:
+ 1. Define margins
+ 2. Lay out the margins
+ 3. Create button within those margins
 
 ```go
 layout.Flex{
@@ -27,20 +31,21 @@ layout.Flex{
 }.Layout(gtx, 
     layout.Rigid(
         func(gtx C) D {
-            // ONE: First we will define margins around the button, using layout.Inset ...
+            // ONE: First define margins around the button using layout.Inset ...
             margin := layout.Inset{
                 // ...
             }
 
-            // TWO: ... then we Layout those margins ...
+            // TWO: ... then we lay out those margins ...
             margins.Layout(
+                
                 // THREE: ... and finally within the margins, we ddefine and lay out the button
                 func(gtx C) D {
                     btn := material.Button(th, &startButton, "Start")
                     return btn.Layout(gtx)
                 },
+            
             )
-    
 
             }
         }
