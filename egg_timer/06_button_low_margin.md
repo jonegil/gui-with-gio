@@ -21,8 +21,8 @@ After looking at the whole code when refactoring in the last section, this time 
 
 It can be useful to strip away some of the detail, to highlight the structure. 
 There are really only three key lines here:
- 1. Define margins
- 2. Lay out the margins
+ 1. Define margins using **layout.Inset**
+ 2. Lay out those margins
  3. Create button within those margins
 
 ```go
@@ -52,40 +52,26 @@ layout.Flex{
     )    
 )
 
-
-```
-
-
-
-
-```go
-layout.Flex{
-    // Vertical alignment, from top to bottom
-    Axis: layout.Vertical,
-    //Emtpy space is left at the start, i.e. at the top
-    Spacing: layout.SpaceStart,
-}.Layout(gtx,
-    layout.Rigid(
-        func(gtx C) D {
-            //We start by defining a set of margins
-            margins := layout.Inset{
-                Top:    unit.Dp(25),
-                Bottom: unit.Dp(25),
-                Right:  unit.Dp(35),
-                Left:   unit.Dp(35),
-            }
-            //Then we lay out a layout within those margins ...
-            return margins.Layout(gtx,
-                // ...the same function we earlier used to create a button
-                func(gtx C) D {
-                    btn := material.Button(th, &startButton, "Start")
-                    return btn.Layout(gtx)
-                },
-            )
-        },
-    ),
-)
 ```
 
 ## Comments
+
+*Some metaphors are useful*, remember? The abvoe is like a donut with a button on the center. Sorry, I couldn´t help myself.
+
+![Button inside inset](06_button_inside_inset.jpeg)
+
+A quick note on the margins. [layout.Inset](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Inset) is nothing more than a struct, and adds space around a widget. Here, those are given as **D**evice independent **p**ixels, [unit.Dp](https://pkg.go.dev/gioui.org/unit?utm_source=gopls#Dp)
+
+```go
+margins := layout.Inset{
+    Top:    unit.Dp(25),
+    Bottom: unit.Dp(25),
+    Right:  unit.Dp(35),
+    Left:   unit.Dp(35),
+}
+```
+Insets are handy, note that there also exists a *UniformInset( )** if the margin is equal on all sides.
+
+
+
 
