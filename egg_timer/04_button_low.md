@@ -95,9 +95,11 @@ case system.FrameEvent:
 
 Inside ```layout.Flex{ }``` we define two characteristicts:
  1. Axis: Vertical alignment means stuff will be be placed or below each other.
- 1. Spacing: Leftover space will be at the start
+ 1. Spacing: Leftover space will be at the start. 
 
-Since ordering plays a role, you might think of it as if widgets grow up from the bottom of the screen. The button arrives first, then the spacer comes from below and wears the button as a hat. Silly, but useful. 
+ ![Button above spacer](04_button_above_spacer.jpg)
+
+Since ordering plays a role, you might think of it as if widgets pop up from the bottom of the screen. The button arrives first, then the spacer comes from below and pushes the button one notch up. *All metaphors are wrong, some are useful*
 
 Now let's look at the two calls to **layout.Rigid( )**:
 - Rigid accepts a [Widget](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Widget)
