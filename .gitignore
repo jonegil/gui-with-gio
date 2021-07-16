@@ -10,3 +10,7 @@
 
 # Macos
 .DS_Store
+
+
+# SVG from graphviz
+*.svg
