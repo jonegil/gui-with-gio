@@ -70,7 +70,7 @@ margins := layout.Inset{
     Left:   unit.Dp(35),
 }
 ```
-Insets are handy, note that there also exists a *UniformInset( )** if the margin is equal on all sides.
+Insets are handy, note that there also exists a **UniformInset( )** if the margin is equal on all sides.
 
 
 
