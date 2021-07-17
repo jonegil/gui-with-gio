@@ -71,11 +71,8 @@ func draw(w *app.Window) error {
 			case system.FrameEvent:
 				gtx := layout.NewContext(&ops, e)
 				// Let's try out the flexbox layout concept
-				// Here's a good reference for the main concepts
-				// https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox
 				if startButton.Clicked() {
 					boiling = !boiling
-					//boilStart = time.Now()
 				}
 
 				layout.Flex{
@@ -86,20 +83,6 @@ func draw(w *app.Window) error {
 				}.Layout(gtx,
 					layout.Rigid(
 						func(gtx C) D {
-							/*
-								progress := float32(0)
-								if boiling {
-									boilTime := time.Since(boilStart)
-									progress = float32(boilTime.Seconds() / 10)
-									if progress < 1 {
-										// The progress bar hasn’t yet finished animating.
-										op.InvalidateOp{}.Add(&ops)
-									} else {
-										progress = 1
-									}
-								}
-							*/
-							//defer op.Save(&ops).Load()
 							bar := material.ProgressBar(th, progress)
 							return bar.Layout(gtx)
 						},
