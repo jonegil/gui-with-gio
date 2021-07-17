@@ -13,7 +13,6 @@ import (
 	"gioui.org/unit"
 	"gioui.org/widget"
 	"gioui.org/widget/material"
-
 )
 
 // Define the progress variables, a channel and a variable
