@@ -17,9 +17,9 @@ The intention of this chapter is to add open space around all sides of the butto
 
 After looking at the whole code when refactoring in the last section, this time we only zoom in on the lines that change. Again, the action is happening within **layout.Flex**
 
-## Code
+## Code - Overall structure
 
-It can be useful to strip away some of the detail, to highlight the structure. 
+To highlight the structure, it can be useful to strip away some of the details
 There are really only three key lines here:
  1. Define margins using **layout.Inset**
  2. Lay out those margins
@@ -56,12 +56,11 @@ layout.Flex{
 
 ## Comments
 
-*Some metaphors are useful*, remember? The abvoe is like a donut with a button on the center. Sorry, I couldn´t help myself.
+*Some metaphors are useful*, remember? The above is like a donut with a button in the center. Sorry, I couldn´t help myself.
 
 ![Button inside inset](06_button_inside_inset.jpeg)
 
-A quick note on the margins. [layout.Inset](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Inset) is nothing more than a struct, and adds space around a widget. Here, those are given as **D**evice independent **p**ixels, [unit.Dp](https://pkg.go.dev/gioui.org/unit?utm_source=gopls#Dp)
-
+The margins are made using [layout.Inset{ }](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Inset).  It's a struct and defines the space around the widget:
 ```go
 margins := layout.Inset{
     Top:    unit.Dp(25),
@@ -70,8 +69,44 @@ margins := layout.Inset{
     Left:   unit.Dp(35),
 }
 ```
-Insets are handy, note that there also exists a **UniformInset( )** if the margin is equal on all sides.
+Here, margins are given as **D**evice independent **p**ixels, [unit.Dp](https://pkg.go.dev/gioui.org/unit?utm_source=gopls#Dp). In case you want the same margin on all sides, there also exists a handy **UniformInset( )**, saving you a few keystrokes.
 
 
 
+## Code - details
 
+To wrap it all up, here's the code for the whole **system.FrameEvent**
+
+```go
+case system.FrameEvent:
+    gtx := layout.NewContext(&ops, e)
+    // Let's try out the flexbox layout concept
+    layout.Flex{
+        // Vertical alignment, from top to bottom
+        Axis: layout.Vertical,
+        //Emtpy space is left at the start, i.e. at the top
+        Spacing: layout.SpaceStart,
+    }.Layout(gtx,
+        layout.Rigid(
+            func(gtx C) D {
+                // ONE: First define margins around the button using layout.Inset ...
+                margins := layout.Inset{
+                    Top:    unit.Dp(25),
+                    Bottom: unit.Dp(25),
+                    Right:  unit.Dp(35),
+                    Left:   unit.Dp(35),
+                }
+                // TWO: ... then we lay out those margins ...
+                return margins.Layout(gtx,
+                    // THREE: ... and finally within the margins, we ddefine and lay out the button
+                    func(gtx C) D {
+                        btn := material.Button(th, &startButton, "Start")
+                        return btn.Layout(gtx)
+                    },
+                )
+            },
+        ),
+    )
+    e.Frame(gtx.Ops)
+
+```
