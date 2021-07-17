@@ -53,8 +53,6 @@ func draw(w *app.Window) error {
 		case system.FrameEvent:
 			gtx := layout.NewContext(&ops, e)
 			// Let's try out the flexbox layout concept
-			// Here's a good reference for the main concepts
-			// https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox
 			layout.Flex{
 				// Vertical alignment, from top to bottom
 				Axis: layout.Vertical,
@@ -63,16 +61,16 @@ func draw(w *app.Window) error {
 			}.Layout(gtx,
 				layout.Rigid(
 					func(gtx C) D {
-						//We start by defining a set of margins
+						// ONE: First define margins around the button using layout.Inset ...
 						margins := layout.Inset{
 							Top:    unit.Dp(25),
 							Bottom: unit.Dp(25),
 							Right:  unit.Dp(35),
 							Left:   unit.Dp(35),
 						}
-						//Then we lay out a layout within those margins ...
+						// TWO: ... then we lay out those margins ...
 						return margins.Layout(gtx,
-							// ...the same function we earlier used to create a button
+							// THREE: ... and finally within the margins, we ddefine and lay out the button
 							func(gtx C) D {
 								btn := material.Button(th, &startButton, "Start")
 								return btn.Layout(gtx)
