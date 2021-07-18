@@ -15,16 +15,92 @@ The intention of this section is to add a progressbar
 
 ## Outline
 
-I've looked forward to writing this cpater, we will do many cool things here.
- - Introduce a new widget, the **material.Progressbar**
+I've looked forward to writing this cpater, we will introduce many new features here.
+ - Try out a new widget, the **material.Progressbar**
  - Start using state variables to control behaviour
  - Use two concurrency technques; one to create and share a beating pulse that progresses the progressbar, one one to select among independent communication operations
 
-Let's look at these new pieces.
+Let's look at these in turn pieces.
 
-## Code - A beating pulse
+## Feature 1 - The progressbar
+
+The progressbar is obviously a bar that displays progress. But which progress? And how to control it? How fast should it grow, can it pause, or even reverse? To answer these questions we need a variable that quantifies the current progress. We set it at root level, outside main, so that its set once and we have access to it throughout the whole program
+
+### Code
+
+```go
+  // root level, outside main ()
+  var progress float32
+```
+
+Later on we will look at the logic used to actually set the progress, but suffice to say it needs to be a decimal number between 0 and 1.
+
+To lay out the progressbar, we turn to our sturdy Flexbox and insert it through a rigid:
+```go
+// Inside System.FrameEvent
+layout.Flex{
+  // ...
+}.Layout(gtx,
+  layout.Rigid(
+    func(gtx C) D {
+      bar := material.ProgressBar(th, progress)  // Here progress is used for display
+      return bar.Layout(gtx)
+    },
+  ),
+
+```
+
+Again we see how the widget is stateless. It knows how to display a progress, but is itself not responsible for what that progress is, not responsible for updating, incrementing, pausing, or progressing it. Pure display, the mission is controled outside the widget. 
+
+
+## Feature 2 - State variables
+
+Another very useful variable is whether or not the start button has been clicked. In our case, is the egg boiling? 
+
+### Code
+
+```go
+	// is the egg boiling?
+	var boiling bool
+```
+
+This boolean is flipped whenever the button is clicked, we listen for that **system.FrameEvent**
+
+```go
+case system.FrameEvent:
+  gtx := layout.NewContext(&ops, e)
+  // Let's try out the flexbox layout concept
+  if startButton.Clicked() {
+    boiling = !boiling
+  }
+```
+
+The only job of the button is to answer yay or nay to weither or not it was just clicked. Beyond that, the rest of the program takes care of any updates that are needed. Among those are for example what the text on the button should be. Here's how that's done, coded where we create and display the button:
+
+```go
+// ...the same function we earlier used to create a button
+func(gtx C) D {
+  var text string
+  if !boiling {
+    text = "Start"
+  } else {
+    text = "Stop"
+  }
+  btn := material.Button(th, &startButton, text)
+  return btn.Layout(gtx)
+},
+```
+
+
+
+
+
+## Feature 3 - A beating pulse
 
 A good progressbar must grow smoothly and precisely. To achieve that, we first create a separate go-routine that beats with a steady pulse. Then, when we listen for events, we pick up on these beats and grow the bar.
+
+
+### Code
 
 Here's the code, first the tick-generator:
 
