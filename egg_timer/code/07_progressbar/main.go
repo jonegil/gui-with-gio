@@ -54,7 +54,7 @@ func draw(w *app.Window) error {
 	// startButton is a clickable widget
 	var startButton widget.Clickable
 
-	// is the egg boiling? When did it start? Used for progress
+	// is the egg boiling?
 	var boiling bool
 
 	// th defines the material design style
@@ -121,7 +121,7 @@ func draw(w *app.Window) error {
 				return e.Err
 			}
 
-		// listen for events from the incrementor channel
+		// listen for events in the incrementor channel
 		case p := <-progressIncrementer:
 			if boiling && progress < 1 {
 				progress += p
