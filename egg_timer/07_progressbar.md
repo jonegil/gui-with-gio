@@ -15,7 +15,7 @@ The intention of this section is to add a progressbar
 
 ## Outline
 
-I've looked forward to writing this cpater, we will introduce many new features here.
+I've looked forward to this chapter ever since I started writing this series. We will cover quite some ground and introduce multiple new ideas:
  - Try out a new widget, the **material.Progressbar**
  - Start using state variables to control behaviour
  - Use two concurrency technques; one to create and share a beating pulse that progresses the progressbar, one one to select among independent communication operations
