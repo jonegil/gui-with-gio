@@ -11,7 +11,7 @@ has_children: false
 ## Goals
 The intention of this section is to 
 
-![An empty window](01_empty_window.gif)
+![Egg as circle](08_egg_as_circle.gif)
 
 ## Outline
 
