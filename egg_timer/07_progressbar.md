@@ -106,14 +106,14 @@ var progressIncrementer chan float32
 var progress float32
 
 func main() {
-	// Setup a separate channel to provide ticks to increment progress
-	progressIncrementer = make(chan float32)
-	go func() {
-		for {
-			time.Sleep(time.Second / 25)
-			progressIncrementer <- 0.004
-		}
-	}()
+  // Setup a separate channel to provide ticks to increment progress
+  progressIncrementer = make(chan float32)
+  go func() {
+    for {
+      time.Sleep(time.Second / 25)
+      progressIncrementer <- 0.004
+    }
+  }()
   
   // ... 
 ```
@@ -126,7 +126,7 @@ Later we pick up from the channel, with this code inside **draw(w *app.window)**
 
 ```go
   // .. inside draw()
-	for {
+  for {
     select {
       // listen for events in the window.
       case e := <-w.Events():
@@ -137,24 +137,25 @@ Later we pick up from the channel, with this code inside **draw(w *app.window)**
         if boiling && progress < 1 {
         progress += p
         w.Invalidate()
-			}
-		}
-	}
+      }
+    }
+  }
 
 ```
 
-In previous chapters, we ranged over events using ```for e := range w.Events() { }```. Here we insted use a for-loop with a [select](https://tour.golang.org/concurrency/5) inside. The select waits patiently for an event one of its cases can run, then executes that case. 
+In previous chapters, we ranged over events using ```for e := range w.Events()```. Here we insted use a for-loop with a [select](https://tour.golang.org/concurrency/5) inside. This is a concurrency feature of go, where ```select``` waits patiently for an event that one of its ```case``` statement can run. 
  - The event can either stem from the window, and if so we extract it using ```e := <- w.Events()```. 
  - Or, the event comes from the progress-pulse, and we get it from ```p := <- progressIncrementer ```
 
-We add the ```p``` to the ```progress``` variable if the control variable ```boiling``` is true, and progress is less than 1. This caps progress at 1, and since it increases by 0.004 every 1/25th of a second, that will take 10 seconds. 
+We add the ```p``` to the ```progress``` variable if the control variable ```boiling``` is true, and progress is less than 1. Since ```p``` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
 
 By using a channel like this we get
 1. Precise timing, where we control the execution exactly as we want it
 1. Consistent timing, simlar across fast and slow hardware
 1. Concurrent timing, the rest of the application continues as before
 
-While all of these make sense, the 2nd point deserves some mention. If you recompile the app without the ```time.Sleep(time.Second / 25)``` (and probably a much smaller increment), your machine will work it's socks off, spinning the loop at insane speeds. That can max the cpu, drain battery, but will not be consistent across machines. For those interested, pprof's from 3 different machines are included in the code folder. These include a 1/25th sleep, ensuring the same end result.
+While all of these make sense, the 2nd point deserves some extra attention. If you recompile the app without the ```time.Sleep(time.Second / 25)``` (and probably a much smaller increment), your machine will work it's socks off, spinning the loop at insane speeds. That can max the cpu, drain battery, but will not be consistent across machines. For those interested, pprof's from 3 different machines are included in the code folder. These include a 1/25th sleep, ensuring the same end result.
 
 ## Comments
 
+By combining all these building blocks we now have a stateful program we can control with ease. The user interface tells us when something happens, and the rest of the program uses that to take care of business. We had to pull a few tricks out of the bag, including both a **channel** and a **select**. Now that we have those tools in our belt, we will be well equipped to add some custom graphics in the next chapter.
