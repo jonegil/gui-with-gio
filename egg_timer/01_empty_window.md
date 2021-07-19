@@ -32,15 +32,15 @@ import (
 )
 
 func main() {
-	go func() {
+  go func() {
 		// create new window
-		w := app.NewWindow()
+	  w := app.NewWindow()
 
 		// listen for events in the window.
-		for range w.Events() {
+	  for range w.Events() {
 		}
 	}()
-	app.Main()
+  app.Main()
 }
 ```
 
