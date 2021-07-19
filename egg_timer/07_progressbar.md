@@ -24,16 +24,16 @@ Let's look at these in turn pieces.
 
 ## Feature 1 - The progressbar
 
-The progressbar is obviously a bar that displays progress. But which progress? And how to control it? How fast should it grow, can it pause, or even reverse? To answer these questions we need a variable that quantifies the current progress. We set it at root level, outside main, so that its set once and we have access to it throughout the whole program
+A progressbar is obviously a bar that displays progress. But which progress? And how to control it? How fast should it grow, can it pause, or even reverse? From the [docsc](https://pkg.go.dev/gioui.org/widget/material?utm_source=gopls#ProgressBar) we find ```ProgressBar(th *Theme, progress float32)``` receives progress as a decimal between 0 and 1.
 
 ### Code
+
+We declare progress at root level, outside main, so that its set once and we have access to it throughout the whole program:
 
 ```go
   // root level, outside main ()
   var progress float32
 ```
-
-Later on we will look at the logic used to actually set the progress, but suffice to say it needs to be a decimal number between 0 and 1.
 
 To lay out the progressbar, we turn to our sturdy Flexbox and insert it through a rigid:
 ```go
@@ -43,28 +43,27 @@ layout.Flex{
 }.Layout(gtx,
   layout.Rigid(
     func(gtx C) D {
-      bar := material.ProgressBar(th, progress)  // Here progress is used for display
+      bar := material.ProgressBar(th, progress)  // Here progress is used
       return bar.Layout(gtx)
     },
   ),
 
 ```
 
-Again we see how the widget is stateless. It knows how to display a progress, but is itself not responsible for what that progress is, not responsible for updating, incrementing, pausing, or progressing it. Pure display, the mission is controled outside the widget. 
-
+Notice how the widget itself has no state. State is maintained in the rest of the program, the widget only knows how to display the progress we send it. Any logic to increase, pause, reverse or reset we control outside the widget.
 
 ## Feature 2 - State variables
 
-Another very useful variable is whether or not the start button has been clicked. In our case, is the egg boiling? 
+We touched upon progress, which is a variable that contains state. Another useful state to track is whether or not the start button has been clicked. Since we're boiling eggs, that means tracking if the egg is boiling.
 
 ### Code
 
 ```go
-	// is the egg boiling?
-	var boiling bool
+// is the egg boiling?
+var boiling bool
 ```
 
-This boolean is flipped whenever the button is clicked, we listen for that **system.FrameEvent**
+This boolean is flipped whenever the button is clicked, an event we for in **system.FrameEvent**:
 
 ```go
 case system.FrameEvent:
@@ -75,7 +74,9 @@ case system.FrameEvent:
   }
 ```
 
-The only job of the button is to answer yay or nay to weither or not it was just clicked. Beyond that, the rest of the program takes care of any updates that are needed. Among those are for example what the text on the button should be. Here's how that's done, coded where we create and display the button:
+Again, the only job of the button is shout out if it just was clicked. Beyond that, the rest of the program takes care of any actions that needs to be taken. 
+
+One example is what should the text on the button be. We decide that before calling the **material.Button( )** function by first checking what the state of ```boiling``` is.
 
 ```go
 // ...the same function we earlier used to create a button
@@ -91,14 +92,9 @@ func(gtx C) D {
 },
 ```
 
-
-
-
-
 ## Feature 3 - A beating pulse
 
-A good progressbar must grow smoothly and precisely. To achieve that, we first create a separate go-routine that beats with a steady pulse. Then, when we listen for events, we pick up on these beats and grow the bar.
-
+A good progressbar must grow smoothly and precisely. To achieve that, we first create a separate go-routine that beats with a steady pulse. Later, where we listen for events, we pick up on these beats and grow the bar.
 
 ### Code
 
@@ -136,7 +132,7 @@ Later we pick up from the channel, with this code inside **draw(w *app.window)**
       case e := <-w.Events():
         // ...    
 
-      // listen for events from the incrementor channel
+      // listen for events in the incrementor channel
       case p := <-progressIncrementer:
         if boiling && progress < 1 {
         progress += p
@@ -153,17 +149,12 @@ In previous chapters, we ranged over events using ```for e := range w.Events() {
 
 We add the ```p``` to the ```progress``` variable if the control variable ```boiling``` is true, and progress is less than 1. This caps progress at 1, and since it increases by 0.004 every 1/25th of a second, that will take 10 seconds. 
 
-By using the progressIncrementor channel like this we get
+By using a channel like this we get
 1. Precise timing, where we control the execution exactly as we want it
 1. Consistent timing, simlar across fast and slow hardware
 1. Concurrent timing, the rest of the application continues as before
 
-While all of these make sense, the 2nd point deserves some mention. If you recompile the app without the ```time.Sleep(time.Second / 25)``` (and probably a much smaller increment), your machine will work it's socks off, spinning the loop at insane speeds. That can max the cpu, drain battery, but will not be consistent across machines. For those interested, pprof's from 3 different machines are included in the code folder. These include a 1/25th sleep though, but still work to show the differenences across architectures.
-
-### Code
-```go
-
-```
+While all of these make sense, the 2nd point deserves some mention. If you recompile the app without the ```time.Sleep(time.Second / 25)``` (and probably a much smaller increment), your machine will work it's socks off, spinning the loop at insane speeds. That can max the cpu, drain battery, but will not be consistent across machines. For those interested, pprof's from 3 different machines are included in the code folder. These include a 1/25th sleep, ensuring the same end result.
 
 ## Comments
 
