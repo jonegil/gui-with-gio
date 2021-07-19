@@ -6,7 +6,7 @@ has_children: false
 # Let's build a Gui with Gio
 
 ```go
-#gioui, #gui, #go, #golang
+#go, #golang, #gui, #gioui
 ```
 
 You want a Gui. Of course you do. 
