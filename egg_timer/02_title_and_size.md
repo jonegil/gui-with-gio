@@ -30,18 +30,18 @@ import (
 )
 
 func main() {
-	go func() {
+  go func() {
 		// create new window
-		w := app.NewWindow(
-			app.Title("Egg timer"),
-			app.Size(unit.Dp(400), unit.Dp(600)),
+	  w := app.NewWindow(
+		  app.Title("Egg timer"),
+		  app.Size(unit.Dp(400), unit.Dp(600)),
 		)
 
 		// listen for events in the window.
-		for range w.Events() {
+	  for range w.Events() {
 		}
 	}()
-	app.Main()
+  app.Main()
 }
 
 ```

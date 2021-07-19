@@ -75,7 +75,7 @@ func draw(w *app.Window) error {
 			)
 			e.Frame(gtx.Ops)
 
-		// this is sent when the application is closed.
+			// this is sent when the application is closed.
 		case system.DestroyEvent:
 			return e.Err
 		}

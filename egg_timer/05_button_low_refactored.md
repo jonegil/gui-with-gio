@@ -30,18 +30,18 @@ Main is too long and does too much. It's better if ```main( )``` starts and cont
 
 ```go
 func main() {
-	go func() {
+  go func() {
 		// create new window
-		w := app.NewWindow(
-			app.Title("Egg timer"),
-			app.Size(unit.Dp(400), unit.Dp(600)),
+	  w := app.NewWindow(
+		  app.Title("Egg timer"),
+		  app.Size(unit.Dp(400), unit.Dp(600)),
 		)
-		if err := draw(w); err != nil {
-			log.Fatal(err)
+	  if err := draw(w); err != nil {
+		  log.Fatal(err)
 		}
-		os.Exit(0)
+	  os.Exit(0)
 	}()
-	app.Main()
+  app.Main()
 }
 ```
 
@@ -73,21 +73,21 @@ func draw(w *app.Window) error {
     // ...
 
 	// listen for events in the window.
-	for e := range w.Events() {
+  for e := range w.Events() {
 
 		// detect what type of event
-		switch e := e.(type) {
+	  switch e := e.(type) {
 
 		// this is sent when the application should re-render.
-		case system.FrameEvent:
+	  case system.FrameEvent:
         // ...
 		
         // this is sent when the application is closed.
-		case system.DestroyEvent:
-			return e.Err
+	  case system.DestroyEvent:
+		  return e.Err
 		}
 	}
-	return nil
+  return nil
 }
 ```
 

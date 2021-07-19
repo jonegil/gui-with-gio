@@ -70,38 +70,38 @@ With imports well out of our way, let's look at the code. It's longer but still 
 
 ```go
 func main() {
-	go func() {
+  go func() {
 		// create new window
-		w := app.NewWindow(
-			app.Title("Egg timer"),
-			app.Size(unit.Dp(400), unit.Dp(600)),
+	  w := app.NewWindow(
+		  app.Title("Egg timer"),
+		  app.Size(unit.Dp(400), unit.Dp(600)),
 		)
 
 		// ops are the operations from the UI
-		var ops op.Ops
+	  var ops op.Ops
 
 		// startButton is a clickable widget
-		var startButton widget.Clickable
+	  var startButton widget.Clickable
 
 		// th defnes the material design style
-		th := material.NewTheme(gofont.Collection())
+	  th := material.NewTheme(gofont.Collection())
 
 		// listen for events in the window.
-		for e := range w.Events() {
+	  for e := range w.Events() {
 
 			// detect what type of event
-			switch e := e.(type) {
+		  switch e := e.(type) {
 
 			// this is sent when the application should re-render.
-			case system.FrameEvent:
-				gtx := layout.NewContext(&ops, e)
-				btn := material.Button(th, &startButton, "Start")
-				btn.Layout(gtx)
-				e.Frame(gtx.Ops)
+		  case system.FrameEvent:
+			  gtx := layout.NewContext(&ops, e)
+			  btn := material.Button(th, &startButton, "Start")
+			  btn.Layout(gtx)
+			  e.Frame(gtx.Ops)
 			}
 		}
 	}()
-	app.Main()
+  app.Main()
 }
 ```
 ### Comments
