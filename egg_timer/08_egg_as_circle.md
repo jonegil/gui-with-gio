@@ -46,13 +46,13 @@ type Rectangle struct {
 }
 ```
 
-> A Point is an X, Y coordinate pair. The axes increase right and down (origin = top left corner). It is neither a pixel nor a grid square. A Point has no intrinsic width, height or color, but the visualizations below use a small colored square.
+A Point is an X, Y coordinate pair. The axes increase right and down (origin = top left corner). It is neither a pixel nor a grid square. A Point has no intrinsic width, height or color, but the visualizations below use a small colored square.
 ![Point](08_image_package_point.png)
 ```go
 p := f32.Point{2, 1}
 ```
 
-> A Rectangle contains the points with Min.X <= X < Max.X, Min.Y <= Y < Max.Y. It has no intrinsic color, but the visualization below outlines it with a thin colored line, and call out their Min and Max Points.
+A Rectangle contains the points with Min.X <= X < Max.X, Min.Y <= Y < Max.Y. It has no intrinsic color, but the visualization below outlines it with a thin colored line, and call out their Min and Max Points.
 
 ![Rectangle](08_image_package_rectangle.png)
 ```go
@@ -85,6 +85,12 @@ layout.Rigid(
 
 ## Comments
 
-Package clip provides operations for clipping paint operations. Drawing outside the current clip area is ignored.
+We first define a circle using **clip.Circle{ }**. It defines the Center point and Radius. 
 
-The current clip is initially the infinite set. An Op sets the clip to the intersection of the current clip and the clip area it represents.
+The positioning is hard-coded, with distance from the top left corner. Just for fun, try commenting the hard coded and uncomment the soft coding below that uses the window area as a reference. 
+
+**color.NRGBA** defines the color of the circle. Note that the Alpha-channel defaults to 0, i.e. invisible, so we bump it to 255 so we can actually see it.
+
+Thereafter we fill the shape will **paint.FillShape**. 
+
+Finally we return the dimensions of our custom graphics, by the **layout.Dimensions** struct containing it's size as X/Y coordinates using a Point struct. Note that since widgets stack on top of each other (```Flex{Spacing: layout.SpaceStart})```)
