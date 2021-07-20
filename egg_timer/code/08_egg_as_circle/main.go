@@ -91,14 +91,14 @@ func draw(w *app.Window) error {
 						func(gtx C) D {
 							circle := clip.Circle{
 								// Hard coding the x coordinate. Try resizing the window
-								Center: f32.Point{X: 200, Y: 200},
+								Center: f32.Point{X: 200, Y: 120},
 								// Soft coding the x coordinate. Try resizing the window
-								//Center: f32.Point{X: float32(gtx.Constraints.Max.X) / 2, Y: 200},
+								// Center: f32.Point{X: float32(gtx.Constraints.Max.X) / 2, Y: 200},
 								Radius: 120,
 							}.Op(gtx.Ops)
 							color := color.NRGBA{R: 200, A: 255}
 							paint.FillShape(gtx.Ops, color, circle)
-							d := image.Point{Y: 500}
+							d := image.Point{Y: 400}
 							return layout.Dimensions{Size: d}
 						},
 					),
