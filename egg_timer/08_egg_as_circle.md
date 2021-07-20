@@ -72,7 +72,7 @@ layout.Rigid(
       // Hard coding the x coordinate. Try resizing the window
       Center: f32.Point{X: 200, Y: 200},
       // Soft coding the x coordinate. Try resizing the window
-      //Center: f32.Point{X: float32(gtx.Constraints.Max.X) / 2, Y: 200},
+      // Center: f32.Point{X: float32(gtx.Constraints.Max.X) / 2, Y: 200},
       Radius: 120,
     }.Op(gtx.Ops)
     color := color.NRGBA{R: 200, A: 255}
@@ -87,10 +87,13 @@ layout.Rigid(
 
 We first define a circle using **clip.Circle{ }**. It defines the Center point and Radius. 
 
-The positioning is hard-coded, with distance from the top left corner. Just for fun, try commenting the hard coded and uncomment the soft coding below that uses the window area as a reference. 
+The origo of the circle is hard-coded, with distance from the top left corner of the *widget*. Note that this is *not* necessarily the top left corner of the app. The size of the widget itself is coded as
+**Dimensions** using ```d := image.Point{Y: 500}```. X represents width and Y represents Height
 
-**color.NRGBA** defines the color of the circle. Note that the Alpha-channel defaults to 0, i.e. invisible, so we bump it to 255 so we can actually see it.
+You can play around with these dimensions, familiarizing yourself with when the circle moves up or down, depending in wheiter you resize the box or move the circle center inside the box. Also, try commenting the hard coded and uncomment the soft coding below that uses the window area as a reference. 
+
+**color.NRGBA** defines the color of the circle. Note that the Alpha-channel defaults to 0, i.e. invisible, so we bump it to 255 so we can actually see it. There are a few alternatives here, so browse through the [image/color](https://blog.golang.org/image/color) package if you have other preferences or needs.
 
 Thereafter we fill the shape will **paint.FillShape**. 
 
-Finally we return the dimensions of our custom graphics, by the **layout.Dimensions** struct containing it's size as X/Y coordinates using a Point struct. Note that since widgets stack on top of each other (```Flex{Spacing: layout.SpaceStart})```)
+But an egg is not a circle, and a circle does not look like an egg. That's what we'll fix next.
