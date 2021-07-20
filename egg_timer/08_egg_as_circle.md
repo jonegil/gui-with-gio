@@ -28,12 +28,12 @@ There are some new imports, namely
 
  - [f32](https://pkg.go.dev/gioui.org/f32). Go's image library is based on ```int```, while Gio prefers to work with ```float32```. Hence f32 reimplements floating point versions of the two main types, ```Points``` and ```Rectangles```
  
- - [clip]()
+ - [op/clip](https://pkg.go.dev/gioui.org/op/clip) is used to define an area to paint within. Drawing outside this area is ignored.
 
- - [paint]()
-
+ - [op/paint](https://pkg.go.dev/gioui.org/op/paint) contains drawing operations to fill a shape with color.
 
 ## Points and Rectangles
+
 Points and Rectangles are used extensively, so it's worth quoting from Nigel's blog mentioned above. Point's are coordinates and Rectangles are defined by Points:
 
 ```go
@@ -58,6 +58,7 @@ p := f32.Point{2, 1}
 ```go
 r := f32.Rect(2, 1, 5, 5)
 ```
+
 For convenience, image.Rect(x0, y0, x1, y1) is equivalent to ```Rectangle{Point{x0, y0}, Point{x1, y1}}```, but is much easier to type. It also swaps Minimum and Maximum to ensure it's well formed.
    
 That's it. Let's look at the code:
@@ -65,7 +66,21 @@ That's it. Let's look at the code:
 ## Code
 
 ```go
-
+layout.Rigid(
+  func(gtx C) D {
+    circle := clip.Circle{
+      // Hard coding the x coordinate. Try resizing the window
+      Center: f32.Point{X: 200, Y: 200},
+      // Soft coding the x coordinate. Try resizing the window
+      //Center: f32.Point{X: float32(gtx.Constraints.Max.X) / 2, Y: 200},
+      Radius: 120,
+    }.Op(gtx.Ops)
+    color := color.NRGBA{R: 200, A: 255}
+    paint.FillShape(gtx.Ops, color, circle)
+    d := image.Point{Y: 500}
+    return layout.Dimensions{Size: d}
+  },
+),
 ```
 
 ## Comments
