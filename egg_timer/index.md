@@ -28,13 +28,12 @@ Over the next 10 steps we will
  - [Chapter 5 - Refactoring](05_button_low_refactored.md)
  - [Chapter 6 - Button with margin](06_button_low_margin.md)
  - [Chapter 7 - Progressbar](07_progressbar.md)
-
-### In writing
  - [Chapter 8 - Drawing a circle](08_egg_as_circle.md)
 
-### Not written
- 
+### In writing
  - [Chapter 9 - Drawing an egg](09_egg_as_egg.md)
+
+### Not written
  - [Chapter 10 - Input boiltime](10_input_boitime.md)
  
 ## Source code
