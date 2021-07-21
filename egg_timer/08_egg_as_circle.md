@@ -92,8 +92,8 @@ The origo of the circle is hard-coded, with distance from the top left corner of
 
 You can play around with these dimensions, familiarizing yourself with when the circle moves up or down, depending in wheiter you resize the box or move the circle center inside the box. Also, try commenting the hard coded and uncomment the soft coding below that uses the window area as a reference. 
 
-**color.NRGBA** defines the color of the circle. Note that the Alpha-channel defaults to 0, i.e. invisible, so we bump it to 255 so we can actually see it. There are a few alternatives here, so browse through the [image/color](https://blog.golang.org/image/color) package if you have other preferences or needs.
+**color.NRGBA** defines the color of the circle. Note that the Alpha-channel defaults to 0, i.e. invisible, so we lift it to 255 so we can actually see it.
 
-Thereafter we fill the shape will **paint.FillShape**. 
+**paint.FillShape** fills the shape with the **color**.
 
-But an egg is not a circle, and a circle does not look like an egg. That's what we'll fix next.
+And finally we return the widget in the form of it's **Dimensions**, height: 400.
