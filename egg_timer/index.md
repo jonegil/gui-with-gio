@@ -29,12 +29,11 @@ Over the next 10 steps we will
  - [Chapter 6 - Button with margin](06_button_low_margin.md)
  - [Chapter 7 - Progressbar](07_progressbar.md)
  - [Chapter 8 - Drawing a circle](08_egg_as_circle.md)
-
-### In writing
  - [Chapter 9 - Drawing an egg](09_egg_as_egg.md)
 
-### Not written
+### In writing
  - [Chapter 10 - Input boiltime](10_input_boitime.md)
+
  
 ## Source code
 All the source-code is in this repo, in the ```egg_timer/code``` folder.
