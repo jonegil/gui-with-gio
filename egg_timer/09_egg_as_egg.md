@@ -79,7 +79,7 @@ From here we rotate a full 360 degrees and continue drawing the outline of the E
 ![Hügelschäffer egg](09_torben_jansen.gif)
 
 
-Regarding Gio, the important line is the last in the for-loop, ```eggPath.LineTo(p)```. At this point, math has found the next point ´´´p´´´ on the 360-degree roundtrip around the egg, and we use [eggPath.LineTo()](https://pkg.go.dev/gioui.org/op/clip#Path.LineTo) to move the pen to this specific coordinate point.
+Regarding Gio, the important line is the last in the for-loop, ```eggPath.LineTo(p)```. At this point, math has found the next point ```p``` on the 360-degree roundtrip around the egg, and we use [eggPath.LineTo()](https://pkg.go.dev/gioui.org/op/clip#Path.LineTo) to move the pen to this specific coordinate point.
 
 After completing the for-loop the egg-shape is almost done. We finalize it explicitly by calling ```eggPath.Close()``` which closes the path.
 
