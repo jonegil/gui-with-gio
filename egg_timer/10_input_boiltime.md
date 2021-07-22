@@ -6,10 +6,10 @@ parent: Egg timer
 has_children: false
 ---
 
-# Chapter 10 - Input the boiltime
+# Chapter 10 - Set the boiltime
 
 ## Goals
-The intention of this section is to 
+The intention of this section is to add an input field to set the boiltime.
 
 ![The complete egg timer](egg_timer.gif)
 
