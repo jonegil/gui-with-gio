@@ -87,4 +87,4 @@ With the path complete, we want to get the area inside that path. ```clip.Outlin
 
 Now we fill the egg with color. Coloring can be static, but wouldn't it be cool if the egg changed color from cold to warm? I think so too. Remember how progress is a variable from 0 to 1. This state variable can now be used to slowly alter the color as well. ``` * (1 - progress) ``` is just another way of saying *gradually turn off Green and Blue please*. When progress is complete, both are 0, and we're left with Red only. Nifty. 
 
-We end by returning **layout.Dimensions**, the height of this widget.
+We end by returning ```layout.Dimensions```, the height of this widget.
