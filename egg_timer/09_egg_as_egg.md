@@ -79,12 +79,12 @@ From here we rotate a full 360 degrees and continue drawing the outline of the E
 ![Hügelschäffer egg](09_torben_jansen.gif)
 
 
-Regarding Gio, the important line is the last in the for-loop, ```eggPath.LineTo(p)```. At this point, math has found the next point ```p``` on the 360-degree roundtrip around the egg, and we use [eggPath.LineTo()](https://pkg.go.dev/gioui.org/op/clip#Path.LineTo) to move the pen to this specific coordinate point.
+Regarding Gio, the important line is the last in the for-loop, ```eggPath.LineTo(p)```. At this point, math has found the next point ```p``` on the 360-degree roundtrip around the egg, and we use ```eggPath.LineTo```) to move the pen to this specific coordinate point.
 
 After completing the for-loop the egg-shape is almost done. We finalize it explicitly by calling ```eggPath.Close()``` which closes the path.
 
-With the path complete, we want to get the area inside that path. [clip.Outline{ }.Op( )](https://pkg.go.dev/gioui.org/op/clip#Outline.Op) gives gives us the clip operation representing this area. 
+With the path complete, we want to get the area inside that path. ```clip.Outline{ }.Op( )``` gives us the clip operation representing this area.
 
-Coloring can either be static, as shown in the uncommented colors, and they work fine. However, wouldn't it be cool if the changed color from cold to warm? I think so at least. Remember how progress is a variable from 0 to 1. This state variable can now be used to slowly alter the color as well. ``` * (1 - progress) ``` is just another way of saying *gradually turn off Green and Blue please*. When progress is complete, both are 0, and we're left with red only. Nifty. 
+Now we fill the egg with color. Coloring can be static, but wouldn't it be cool if the egg changed color from cold to warm? I think so too. Remember how progress is a variable from 0 to 1. This state variable can now be used to slowly alter the color as well. ``` * (1 - progress) ``` is just another way of saying *gradually turn off Green and Blue please*. When progress is complete, both are 0, and we're left with Red only. Nifty. 
 
 We end by returning **layout.Dimensions**, the height of this widget.
