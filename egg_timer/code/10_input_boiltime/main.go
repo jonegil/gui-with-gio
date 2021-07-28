@@ -89,14 +89,14 @@ func draw(w *app.Window) error {
 				if startButton.Clicked() {
 					// Start (or stop) the boil
 					boiling = !boiling
-					//Read from the input box
+					// Read from the input box
 					if progress == 0 {
 						inputString := boilDurationInput.Text()
 						inputString = strings.TrimSpace(inputString)
 						inputFloat, _ := strconv.ParseFloat(inputString, 32)
 						boilDuration = float32(inputFloat)
 					}
-					//Resetting the boil
+					// Resetting the boil
 					if progress >= 1 {
 						progress = 0
 					}
@@ -105,7 +105,7 @@ func draw(w *app.Window) error {
 				layout.Flex{
 					// Vertical alignment, from top to bottom
 					Axis: layout.Vertical,
-					//Emtpy space is left at the start, i.e. at the top
+					// Emtpy space is left at the start, i.e. at the top
 					Spacing: layout.SpaceStart,
 				}.Layout(gtx,
 					// The egg
@@ -137,14 +137,14 @@ func draw(w *app.Window) error {
 								// Draw the line to this point
 								eggPath.LineTo(p)
 							}
-							//Close the path
+							// Close the path
 							eggPath.Close()
 
 							// Get hold of the actual clip
 							eggArea := clip.Outline{Path: eggPath.End()}.Op()
 
 							// Fill the shape
-							//color := color.NRGBA{R: 255, G: 239, B: 174, A: 255}
+							// color := color.NRGBA{R: 255, G: 239, B: 174, A: 255}
 							color := color.NRGBA{R: 255, G: uint8(239 * (1 - progress)), B: uint8(174 * (1 - progress)), A: 255}
 							paint.FillShape(gtx.Ops, color, eggArea)
 
@@ -211,7 +211,7 @@ func draw(w *app.Window) error {
 								Right:  unit.Dp(35),
 								Left:   unit.Dp(35),
 							}
-							//Then we lay out a layout within those margins ...
+							// Then we lay out a layout within those margins ...
 							return margins.Layout(gtx,
 								// ...the same function we earlier used to create a button
 								func(gtx C) D {
