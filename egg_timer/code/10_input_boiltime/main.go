@@ -248,6 +248,7 @@ func draw(w *app.Window) error {
 				if progress >= 1 {
 					progress = 1
 				}
+				//op.InvalidateOp{}.Add(&ops) // Experimented, but couldn't make it perform
 				w.Invalidate()
 			}
 		}
