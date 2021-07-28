@@ -16,8 +16,8 @@ The intention of this section is to add an input field to set the boiltime.
 ## Outline
 
 The code changes in a few ways
- 1. Import ```gioui.org/text``` so we can align the text in that editor. We also import string and number manipulation from the standard library
- 1. Add a rigid with the new **material.Editor**
+ 1. Import [gioui.org/text](https://pkg.go.dev/gioui.org/text) from Gio as well as string and number manipulation from the standard library.
+ 1. Add a new rigid to hold the [widget.Editor()](https://pkg.go.dev/gioui.org/widget#Editor)
  1. Add some logic for the button to make it a little more well behaved. 
 
 That's it. Let's look at the code:
@@ -45,7 +45,7 @@ And finally:
 
 ### 2. The editor widget
 
-We start by declaring a [widget.Editor()]https://pkg.go.dev/gioui.org/widget#Editor variable inside ```draw()```:
+We start by declaring a [widget.Editor()](https://pkg.go.dev/gioui.org/widget#Editor) variable inside ```draw()```:
 ```go
 	//boilDurationInput is a textfield to input boil duration
 	var boilDurationInput widget.Editor
