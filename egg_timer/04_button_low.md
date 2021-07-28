@@ -14,10 +14,10 @@ The button can't fill the screen, obviously. So let's move the button to the bot
 ![A low button with a spacer below](04_button_low.png)
 
 ## Outline
-The last chapter was all about the overall structure of the program. Now we zoom into the **system.FrameEvent** and start using Flexbox. If it's new to you, read up on it first, for example [this one from Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox).
+The last chapter was all about the overall structure of the program. Now we zoom into the ```system.FrameEvent``` and start using Flexbox. If it's new to you, read up on it first, for example [this one from Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox).
 
 ## Overall structure
-We don't repeat the whole program here, but instead zoom in on the **system.FrameEvent**:
+We don't repeat the whole program here, but instead zoom in on the ```system.FrameEvent```:
 
 ### Code
 We start by removing a lot of the details to better see the structure:
@@ -40,7 +40,7 @@ case system.FrameEvent:
 
 Let's examine the structure of this code.
 
-1. First we define a **Flexbox** through the struct ```layout.Flex{ }```
+1. First we define a ```Flexbox``` through the struct ```layout.Flex{ }```
 1. Then we send it a *list of children* to be laid out through ```Layout(gtx, ...)```. The graphical context, *gtx*, contais the constraints that the kids have to keep within, and any number of children can follow.
 
 The children we list are both created by ```layout.Rigid( )```: 

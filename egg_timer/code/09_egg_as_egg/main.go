@@ -85,7 +85,7 @@ func draw(w *app.Window) error {
 				layout.Flex{
 					// Vertical alignment, from top to bottom
 					Axis: layout.Vertical,
-					//Emtpy space is left at the start, i.e. at the top
+					// Empty space is left at the start, i.e. at the top
 					Spacing: layout.SpaceStart,
 				}.Layout(gtx,
 
@@ -117,14 +117,14 @@ func draw(w *app.Window) error {
 								// Draw the line to this point
 								eggPath.LineTo(p)
 							}
-							//Close the path
+							// Close the path
 							eggPath.Close()
 
 							// Get hold of the actual clip
 							eggArea := clip.Outline{Path: eggPath.End()}.Op()
 
 							// Fill the shape
-							//color := color.NRGBA{R: 255, G: 239, B: 174, A: 255}
+							// color := color.NRGBA{R: 255, G: 239, B: 174, A: 255}
 							color := color.NRGBA{R: 255, G: uint8(239 * (1 - progress)), B: uint8(174 * (1 - progress)), A: 255}
 							paint.FillShape(gtx.Ops, color, eggArea)
 
@@ -142,7 +142,7 @@ func draw(w *app.Window) error {
 
 					layout.Rigid(
 						func(gtx C) D {
-							//We start by defining a set of margins
+							// We start by defining a set of margins
 							margins := layout.Inset{
 								Top:    unit.Dp(25),
 								Bottom: unit.Dp(25),
@@ -168,12 +168,12 @@ func draw(w *app.Window) error {
 				)
 				e.Frame(gtx.Ops)
 
-				// this is sent when the application is closed.
+			// this is sent when the application is closed.
 			case system.DestroyEvent:
 				return e.Err
 			}
 
-			// listen for events in the incrementor channel
+		// listen for events in the incrementor channel
 		case p := <-progressIncrementer:
 			if boiling && progress < 1 {
 				progress += p

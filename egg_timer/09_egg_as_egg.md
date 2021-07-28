@@ -49,14 +49,14 @@ layout.Rigid(
       // Draw the line to this point
       eggPath.LineTo(p)
     }
-    //Close the path
+    // Close the path
     eggPath.Close()
 
     // Get hold of the actual clip
     eggArea := clip.Outline{Path: eggPath.End()}.Op()
 
     // Fill the shape
-    //color := color.NRGBA{R: 255, G: 239, B: 174, A: 255}
+    // color := color.NRGBA{R: 255, G: 239, B: 174, A: 255}
     color := color.NRGBA{R: 255, G: uint8(239 * (1 - progress)), B: uint8(174 * (1 - progress)), A: 255}
     paint.FillShape(gtx.Ops, color, eggArea)
 
@@ -67,7 +67,7 @@ layout.Rigid(
 
 ```
 
-The main idea is to define a custom egg shaped **clip.Path**. We draw a line to define it, fill the inside and any drawing on the outside is ignored. 
+The main idea is to define a custom egg shaped ```clip.Path```. We draw a line to define it, fill the inside and any drawing on the outside is ignored. 
 
 ## Comments
 
