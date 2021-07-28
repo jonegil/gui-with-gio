@@ -56,7 +56,7 @@ func draw(w *app.Window) error {
 			layout.Flex{
 				// Vertical alignment, from top to bottom
 				Axis: layout.Vertical,
-				//Emtpy space is left at the start, i.e. at the top
+				// Empty space is left at the start, i.e. at the top
 				Spacing: layout.SpaceStart,
 			}.Layout(gtx,
 				// We insert to rigid elements
@@ -69,7 +69,7 @@ func draw(w *app.Window) error {
 				),
 				// ... then an empty spacer
 				layout.Rigid(
-					//The height of the spacer is 25 Device independent pixels
+					// The height of the spacer is 25 Device independent pixels
 					layout.Spacer{Height: unit.Dp(25)}.Layout,
 				),
 			)

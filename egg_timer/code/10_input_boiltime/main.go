@@ -105,7 +105,7 @@ func draw(w *app.Window) error {
 				layout.Flex{
 					// Vertical alignment, from top to bottom
 					Axis: layout.Vertical,
-					// Emtpy space is left at the start, i.e. at the top
+					// Empty space is left at the start, i.e. at the top
 					Spacing: layout.SpaceStart,
 				}.Layout(gtx,
 					// The egg
@@ -163,8 +163,8 @@ func draw(w *app.Window) error {
 							// Count down the text when boiling
 							if boiling && progress < 1 {
 								boilRemain := (1 - progress) * boilDuration
-								//Format to 1 decimal.
-								//Using the good old multiply-by-10-divide-by-10 trick to get rounded values with 1 decimal
+								// Format to 1 decimal.
+								// Using the good old multiply-by-10-divide-by-10 trick to get rounded values with 1 decimal
 								inputStr := fmt.Sprintf("%.1f", math.Round(float64(boilRemain)*10)/10)
 								boilDurationInput.SetText(inputStr)
 							}
@@ -204,17 +204,17 @@ func draw(w *app.Window) error {
 					// The button
 					layout.Rigid(
 						func(gtx C) D {
-							//We start by defining a set of margins
+							// We start by defining a set of margins
 							margins := layout.Inset{
 								Top:    unit.Dp(25),
 								Bottom: unit.Dp(25),
 								Right:  unit.Dp(35),
 								Left:   unit.Dp(35),
 							}
-							// Then we lay out a layout within those margins ...
+							// Then we lay out within those margins
 							return margins.Layout(gtx,
-								// ...the same function we earlier used to create a button
 								func(gtx C) D {
+									// The text on the button depends on program state
 									var text string
 									if !boiling {
 										text = "Start"

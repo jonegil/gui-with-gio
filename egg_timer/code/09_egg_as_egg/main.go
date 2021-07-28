@@ -149,7 +149,7 @@ func draw(w *app.Window) error {
 								Right:  unit.Dp(35),
 								Left:   unit.Dp(35),
 							}
-							//Then we lay out a layout within those margins ...
+							// Then we lay out within those margins ...
 							return margins.Layout(gtx,
 								// ...the same function we earlier used to create a button
 								func(gtx C) D {

@@ -84,7 +84,7 @@ func draw(w *app.Window) error {
 				layout.Flex{
 					// Vertical alignment, from top to bottom
 					Axis: layout.Vertical,
-					//Emtpy space is left at the start, i.e. at the top
+					// Empty space is left at the start, i.e. at the top
 					Spacing: layout.SpaceStart,
 				}.Layout(gtx,
 					layout.Rigid(
@@ -112,14 +112,14 @@ func draw(w *app.Window) error {
 
 					layout.Rigid(
 						func(gtx C) D {
-							//We start by defining a set of margins
+							// We start by defining a set of margins
 							margins := layout.Inset{
 								Top:    unit.Dp(25),
 								Bottom: unit.Dp(25),
 								Right:  unit.Dp(35),
 								Left:   unit.Dp(35),
 							}
-							//Then we lay out a layout within those margins ...
+							// Then we lay out within those margins ...
 							return margins.Layout(gtx,
 								// ...the same function we earlier used to create a button
 								func(gtx C) D {

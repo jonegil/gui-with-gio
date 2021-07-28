@@ -59,8 +59,11 @@ Later, inside our flexbox we now have 4 separate rigids, one for each of the fou
 // The inputbox
 layout.Rigid(
   func(gtx C) D {
+    // Define characteristics of the input box ...
     boilDurationInput.SingleLine = true
     boilDurationInput.Alignment = text.Middle
+    // ... and wrap it in material design
+    ed := material.Editor(th, &boilDurationInput, "sec")
 ```              
 We start by defining two of it's characteristics
  - ```SingleLine``` forces the box to always be one line high.
