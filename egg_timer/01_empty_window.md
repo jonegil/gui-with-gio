@@ -48,7 +48,7 @@ func main() {
 
 The code looks simple enough, right? Still, let's take the tiime to to look at what's going on.
 
-1. We import **gioui.org/app**. What's that?
+1. We import ```gioui.org/app```. What's that?
    
    Looking at [the docs](https://pkg.go.dev/gioui.org/app) we find:
    > Package app provides a platform-independent interface to operating system functionality for running graphical user interfaces.
@@ -78,7 +78,7 @@ The code looks simple enough, right? Still, let's take the tiime to to look at w
    
    
 
-3. Start it by calling **app.Main()**
+3. Start it by calling ```app.Main()```
    > The Main function must be called from a program's main function, to hand over control of the main thread to operating systems that need it.
   
    From [app.Main documentation](https://pkg.go.dev/gioui.org/app#hdr-Main)
