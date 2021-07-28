@@ -30,8 +30,6 @@ Over the next 10 steps we will
  - [Chapter 7 - Progressbar](07_progressbar.md)
  - [Chapter 8 - Drawing a circle](08_egg_as_circle.md)
  - [Chapter 9 - Drawing an egg](09_egg_as_egg.md)
-
-### In writing
  - [Chapter 10 - Input boiltime](10_input_boiltime.md)
                                  
  
