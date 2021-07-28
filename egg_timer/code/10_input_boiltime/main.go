@@ -108,6 +108,7 @@ func draw(w *app.Window) error {
 					//Emtpy space is left at the start, i.e. at the top
 					Spacing: layout.SpaceStart,
 				}.Layout(gtx,
+					// The egg
 					layout.Rigid(
 						func(gtx C) D {
 							// Draw a custom path, shaped like an egg
@@ -151,12 +152,15 @@ func draw(w *app.Window) error {
 							return layout.Dimensions{Size: d}
 						},
 					),
+
+					// The inputbox
 					layout.Rigid(
 						func(gtx C) D {
-							ed := material.Editor(th, &boilDurationInput, "sec")
-							ed.Editor.SingleLine = true
-							ed.Editor.Alignment = text.Middle
+							// Define characteristics of the input box
+							boilDurationInput.SingleLine = true
+							boilDurationInput.Alignment = text.Middle
 
+							// Count down the text when boiling
 							if boiling && progress < 1 {
 								boilRemain := (1 - progress) * boilDuration
 								//Format to 1 decimal.
@@ -164,17 +168,23 @@ func draw(w *app.Window) error {
 								inputStr := fmt.Sprintf("%.1f", math.Round(float64(boilRemain)*10)/10)
 								boilDurationInput.SetText(inputStr)
 							}
+
+							// Define insets ...
 							margins := layout.Inset{
 								Top:    unit.Dp(0),
 								Right:  unit.Dp(170),
 								Bottom: unit.Dp(40),
 								Left:   unit.Dp(170),
 							}
+							// ... and borders ...
 							border := widget.Border{
 								Color:        color.NRGBA{R: 204, G: 204, B: 204, A: 255},
 								CornerRadius: unit.Dp(3),
 								Width:        unit.Dp(2),
 							}
+							// ... and material design ...
+							ed := material.Editor(th, &boilDurationInput, "sec")
+							// ... before laying it out, one inside the other
 							return margins.Layout(gtx,
 								func(gtx C) D {
 									return border.Layout(gtx, ed.Layout)
@@ -182,12 +192,16 @@ func draw(w *app.Window) error {
 							)
 						},
 					),
+
+					// The progressbar
 					layout.Rigid(
 						func(gtx C) D {
 							bar := material.ProgressBar(th, progress)
 							return bar.Layout(gtx)
 						},
 					),
+
+					// The button
 					layout.Rigid(
 						func(gtx C) D {
 							//We start by defining a set of margins
@@ -225,15 +239,16 @@ func draw(w *app.Window) error {
 				return e.Err
 			}
 
-			// listen for events in the incrementor channel
+		// listen for events in the incrementor channel
 		case <-progressIncrementer:
+			// increase progress if still boiling
 			if boiling && progress < 1 {
 				progress += 1.0 / 25.0 / boilDuration
+				// end precisely on 1
 				if progress >= 1 {
 					progress = 1
 				}
 				w.Invalidate()
-				//op.InvalidateOp{}.Add(&ops)
 			}
 		}
 	}
