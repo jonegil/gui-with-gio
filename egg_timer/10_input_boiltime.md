@@ -123,14 +123,14 @@ Since I'm conciously lazy, I don't really care about what the user inputs in the
 if startButton.Clicked() {
   // Start (or stop) the boil
   boiling = !boiling
-  //Read from the input box
+  // Read from the input box
   if progress >= 0 {
     inputString := boilDurationInput.Text()
     inputString = strings.TrimSpace(inputString)
     inputFloat, _ := strconv.ParseFloat(inputString, 32)
     boilDuration = float32(inputFloat)
   }
-  //Resetting the boil
+  // Resetting the boil
   if progress >= 1 {
     progress = 0
   }
