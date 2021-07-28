@@ -27,7 +27,7 @@ There are really only three key lines here:
 
 ```go
 layout.Flex{
-    //...
+    // ...
 }.Layout(gtx, 
     layout.Rigid(
         func(gtx C) D {
@@ -84,7 +84,7 @@ case system.FrameEvent:
     layout.Flex{
         // Vertical alignment, from top to bottom
         Axis: layout.Vertical,
-        //Emtpy space is left at the start, i.e. at the top
+        // Empty space is left at the start, i.e. at the top
         Spacing: layout.SpaceStart,
     }.Layout(gtx,
         layout.Rigid(

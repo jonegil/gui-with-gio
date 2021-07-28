@@ -27,7 +27,7 @@ case system.FrameEvent:
 
     layout.Flex{
     // ...
-    }.Layout( //...
+    }.Layout( // ...
         // We insert two rigid elements:
         // First one to hold a button ...
         layout.Rigid(),
@@ -71,7 +71,7 @@ case system.FrameEvent:
     layout.Flex{
         // Vertical alignment, from top to bottom
         Axis: layout.Vertical,
-        //Emtpy space is left at the start, i.e. at the top
+        // Empty space is left at the start, i.e. at the top
         Spacing: layout.SpaceStart,
     }.Layout(gtx,
         // We insert two rigid elements:
@@ -84,7 +84,7 @@ case system.FrameEvent:
         ),
         // ... then an empty spacer
         layout.Rigid(
-            //The height of the spacer is 25 Device independent pixels
+            // The height of the spacer is 25 Device independent pixels
             layout.Spacer{Height: unit.Dp(25)}.Layout,
         ),
     )
