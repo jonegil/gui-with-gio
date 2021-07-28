@@ -45,9 +45,11 @@ And finally:
 
 ### 2. The editor widget
 
-We start by declaring a [widget.Editor()](https://pkg.go.dev/gioui.org/widget#Editor) variable inside ```draw()```:
+**Variable for the editor**
+
+We start by declaring a [widget.Editor](https://pkg.go.dev/gioui.org/widget#Editor) variable inside ```draw()```:
 ```go
-	//boilDurationInput is a textfield to input boil duration
+	// boilDurationInput is a textfield to input boil duration
 	var boilDurationInput widget.Editor
 ```
 
@@ -60,10 +62,11 @@ layout.Rigid(
     boilDurationInput.SingleLine = true
     boilDurationInput.Alignment = text.Middle
 ```              
-
 We start by defining two of it's characteristics
  - ```SingleLine``` forces the box to always be one line high.
  - ```Àlignment``` centers text inside the box.
+
+**Countdown**
 
 Next, since it useful to see remaining time, we count down inside  the inputbox:
 ```go
@@ -87,6 +90,9 @@ It's a little compact, but hopefully straight forward
 
 At the end, finally some Gio again. We call
 [SetText](https://pkg.go.dev/gioui.org/widget#Editor.SetText) which replaces the text in the box with our ```inputStr```
+
+
+**Layout**
 
 At this point the input box is complete. We then start laying it out:
 
