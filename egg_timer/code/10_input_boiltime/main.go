@@ -64,7 +64,7 @@ func draw(w *app.Window) error {
 	// startButton is a clickable widget
 	var startButton widget.Clickable
 
-	//boilDurationInput is a textfield to input boil duration
+	// boilDurationInput is a textfield to input boil duration
 	var boilDurationInput widget.Editor
 
 	// is the egg boiling?
