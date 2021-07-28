@@ -50,7 +50,7 @@ And finally:
 We start by declaring a [widget.Editor](https://pkg.go.dev/gioui.org/widget#Editor) variable inside ```draw()```:
 ```go
 	// boilDurationInput is a textfield to input boil duration
-	var boilDurationInput widget.Editor
+  var boilDurationInput widget.Editor
 ```
 
 Later, inside our flexbox we now have 4 separate rigids, one for each of the four components. The input box is the second of these:
@@ -68,6 +68,7 @@ layout.Rigid(
 We start by defining two of it's characteristics
  - ```SingleLine``` forces the box to always be one line high.
  - ```Àlignment``` centers text inside the box.
+ 
 
 **Countdown**
 
@@ -117,9 +118,7 @@ return margins.Layout(gtx,
 )
 ```
 
-
-### 3. Well behaved startButton
-
+### 3. Well behaved button
 Since I'm conciously lazy, I don't really care about what the user inputs in the input field before they push the start button. Hence, I chose to keep the logic for processing what's in the textbox as part of ```startButtion.Clicked()```. Other applications will have other needs and then it's better to do this in other parts of the code.
 
 ```go

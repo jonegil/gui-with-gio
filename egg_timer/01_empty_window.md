@@ -28,18 +28,18 @@ That's it. Let's look at the code:
 package main
 
 import (
-	"gioui.org/app"
+  "gioui.org/app"
 )
 
 func main() {
   go func() {
-		// create new window
-	  w := app.NewWindow()
+    // create new window
+    w := app.NewWindow()
 
-		// listen for events in the window.
-	  for range w.Events() {
-		}
-	}()
+    // listen for events in the window.
+    for range w.Events() {
+    }
+  }()
   app.Main()
 }
 ```
@@ -61,7 +61,7 @@ The code looks simple enough, right? Still, let's take the tiime to to look at w
    
 2. The **event loop** in the goroutine
    
-   - The event.loop is the `for range w.Events()` loop that listens for events in the window. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
+   - The event loop is the `for range w.Events()` loop that listens for events in the window. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
    
      From [app.main](https://pkg.go.dev/gioui.org/app#hdr-Main) we learn:
      > Because Main is also blocking on some platforms, the event loop of a Window must run in a goroutine.
@@ -69,7 +69,7 @@ The code looks simple enough, right? Still, let's take the tiime to to look at w
     - A goroutine with no name, i.e. an *anonymous function*, is created and runs the event loop. Since it's in a goroutine it will spin concurrently with the rest of the program.
    ```go
      go func {
-       ...
+       // ...
      }()
    ```
   

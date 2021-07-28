@@ -17,7 +17,7 @@ The intention of this section is to set a custom title and fixate the size of th
 
 The code is very similar to that of [chapter 1](01_empty_window). We add
  - one more import 
- - two parameters when calling **app.NewWindow()**
+ - two parameters when calling ```app.NewWindow()```
 
 ## Code
 
@@ -55,11 +55,11 @@ func main() {
 | sp | Scaled pixel - used for text sizes |
 | px | Pixels - used for precision for the actual device |
  
-In general, **dp** is most used. Also, let's keep device independency when we can. Hence that's what we use when we define the window size inside **app.NewWindow()**
+In general, ```dp``` is most used. Also, let's keep device independency when we can. Hence that's what we use when we define the window size inside ```app.NewWindow()```
 
-The options of **app.NewWindow()** are fairly self-explanatory. Some comments though:
+The options of ```app.NewWindow()``` are fairly self-explanatory. Some comments though:
 
- - Note how size is set as **app.Size(x, y)**.
+ - Note how size is set as ```app.Size(x, y)```.
  - The window can be freely resized. Try it. If you want to limit it, you can add
    - MaxSize
    - MinSize
