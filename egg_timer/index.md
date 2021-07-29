@@ -20,7 +20,7 @@ Over the next 10 steps we will
 
 ## Outline
 
-### Written
+### The first 10 steps
  - [Chapter 1 - Empty window](01_empty_window.md)
  - [Chapter 2 - Title and size](02_title_and_size.md)
  - [Chapter 3 - Button](03_button.md)
@@ -32,8 +32,8 @@ Over the next 10 steps we will
  - [Chapter 9 - Drawing an egg](09_egg_as_egg.md)
  - [Chapter 10 - Input boiltime](10_input_boiltime.md)
                                  
-### Bonus material
- - [Extra - Improved animation](11_improved_animation.md)
+### Bonus material - In progress
+ - [Bonus - Improved animation](11_improved_animation.md)
 
 
 ## Source code
