@@ -32,6 +32,9 @@ Over the next 10 steps we will
  - [Chapter 9 - Drawing an egg](09_egg_as_egg.md)
  - [Chapter 10 - Input boiltime](10_input_boiltime.md)
                                  
- 
+### Bonus material
+ - [Extra - Improved animation](11_improved_animation.md)
+
+
 ## Source code
 All the source-code is in this repo, in the ```egg_timer/code``` folder.
