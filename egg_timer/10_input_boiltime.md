@@ -45,7 +45,7 @@ And finally:
 
 ### 2. The editor widget
 
-**Variable for the editor**
+**A variable for the editor**
 
 We start by declaring a [widget.Editor](https://pkg.go.dev/gioui.org/widget#Editor) variable inside ```draw()```:
 ```go

@@ -85,15 +85,15 @@ layout.Rigid(
 
 ## Comments
 
-We first define a circle using **clip.Circle{ }**. It defines the Center point and Radius. 
+We first define a circle using ```clip.Circle{ }```. It defines the Center point and Radius. 
 
 The origo of the circle is hard-coded, with distance from the top left corner of the *widget*. Note that this is *not* necessarily the top left corner of the app. The size of the widget itself is coded as
 **Dimensions** using ```d := image.Point{Y: 500}```. X represents width and Y represents Height
 
 You can play around with these dimensions, familiarizing yourself with when the circle moves up or down, depending in wheiter you resize the box or move the circle center inside the box. Also, try commenting the hard coded and uncomment the soft coding below that uses the window area as a reference. 
 
-**color.NRGBA** defines the color of the circle. Note that the Alpha-channel defaults to 0, i.e. invisible, so we lift it to 255 so we can actually see it.
+```color.NRGBA``` defines the color of the circle. Note that the Alpha-channel defaults to 0, i.e. invisible, so we lift it to 255 so we can actually see it.
 
-**paint.FillShape** fills the shape with the **color**.
+```paint.FillShape``` fills the shape with the ```color```.
 
 And finally we return the widget in the form of it's **Dimensions**, height: 400.
