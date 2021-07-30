@@ -149,7 +149,7 @@ In previous chapters, we ranged over events using ```for e := range w.Events()``
 
 We add the ```p``` to the ```progress``` variable if the control variable ```boiling``` is true, and progress is less than 1. Since ```p``` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
 
-**TODO:** Write about ```w.Invalidate()```, what it does, and the alternative in the Bonus chapter.
+**TODO:** Write about ```w.Invalidate()```, what it does, and the alternative in the ][Bonus chapter](11_improved_animation.md).
 
 
 By using a channel like this we get
