@@ -45,9 +45,9 @@ func main() {
 }
 ```
 
-Now, inside ```main( )``` we create a window **w** as before, and immediately hand it over to a dedicated function ```draw( )```.
+Now, inside ```main( )``` we create a window ```w``` as before, and immediately hand it over to a dedicated function ```draw( )```.
 
-By storing the result of ```draw( )``` in **err**, we can examine if the execution went well, and we can handle any errors in an orderly fashion.
+By storing the result of ```draw( )``` in ```err```, we can examine if the execution went well, and we can handle any errors in an orderly fashion.
 
 For that we use [os.Exit()](https://pkg.go.dev/os?utm_source=gopls#Exit) and it's close cousin [log.Fatal(err)](https://pkg.go.dev/log?utm_source=gopls#Fatal). Both come from the standard library and are included as imports.
 
@@ -55,7 +55,7 @@ The convention is that a zero exit code indicates success, which is what we send
   
 ### No 2 - Constraints and Dimensions - A handy shortcut
 
-We talked at lenght about **Constraints** and **Dimensions** earlier. Since we're using them quite a lot, it's handy to define two shortcuts, **C** and **D**. Constraints are part of the Context.
+We talked at lenght about **Constraints** and **Dimensions** earlier. Since we're using them quite a lot, it's handy to define two shortcuts, ```C``` and ```D```. Constraints are part of the Context.
 
 ```go
 type C = layout.Context
@@ -91,9 +91,9 @@ func draw(w *app.Window) error {
 }
 ```
 
-As before we range through **w.Events()**, detecting their type. 
- - **system.FramEvent** is handled as before, 
- - we add a new case for **system.DestroyEvent**, which returns *nil* for normal window closures, but *Err* if something else is teh cause.
+As before we range through ```w.Events()```, detecting their type. 
+ - ```system.FramEvent``` is handled as before, 
+ - we add a new case for ```system.DestroyEvent```, which returns *nil* for normal window closures, but *Err* if something else is teh cause.
 
 ## Comments
 Refactoring is a matter of taste, and this is my take on it. If you have different needs, do what's right for your app. The main point is to keep your applications flexible enough to support continued improvements and future needs. Good luck.

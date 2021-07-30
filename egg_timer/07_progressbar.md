@@ -16,7 +16,7 @@ The intention of this section is to add a progressbar
 ## Outline
 
 I've looked forward to this chapter ever since I started writing this series. We will cover quite some ground and introduce multiple new ideas:
- - Try out a new widget, the **material.Progressbar**
+ - Try out a new widget, the ```material.Progressbar```
  - Start using state variables to control behaviour
  - Use two concurrency technques; one to create and share a beating pulse that progresses the progressbar, one one to select among independent communication operations
 
@@ -63,7 +63,7 @@ We touched upon progress, which is a variable that contains state. Another usefu
 var boiling bool
 ```
 
-This boolean is flipped whenever the button is clicked, an event we for in **system.FrameEvent**:
+This boolean is flipped whenever the button is clicked, an event we for in ```system.FrameEvent```:
 
 ```go
 case system.FrameEvent:
@@ -76,7 +76,7 @@ case system.FrameEvent:
 
 Again, the only job of the button is shout out if it just was clicked. Beyond that, the rest of the program takes care of any actions that needs to be taken. 
 
-One example is what should the text on the button be. We decide that before calling the **material.Button( )** function by first checking what the state of ```boiling``` is.
+One example is what should the text on the button be. We decide that before calling the ```material.Button( )``` function by first checking what the state of ```boiling``` is.
 
 ```go
 // ...the same function we earlier used to create a button
@@ -122,7 +122,7 @@ func main() {
 
 Again, this is done in an anonymous function, called at creation, meaning this for-loop spins for the entirety of the program. Every 1/25th of a second the number 0.004 is injected into the channel. 
 
-Later we pick up from the channel, with this code inside **draw(w *app.window)**:
+Later we pick up from the channel, with this code inside ```draw(w *app.window)```:
 
 ```go
   // .. inside draw()
@@ -149,13 +149,24 @@ In previous chapters, we ranged over events using ```for e := range w.Events()``
 
 We add the ```p``` to the ```progress``` variable if the control variable ```boiling``` is true, and progress is less than 1. Since ```p``` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
 
+**TODO:** Write about ```w.Invalidate()```, what it does, and the alternative in the Bonus chapter.
+
+
 By using a channel like this we get
 1. Precise timing, where we control the execution exactly as we want it
 1. Consistent timing, simlar across fast and slow hardware
 1. Concurrent timing, the rest of the application continues as before
 
-While all of these make sense, the 2nd point deserves some extra attention. If you recompile the app without the ```time.Sleep(time.Second / 25)``` (and probably a much smaller increment), your machine will work it's socks off, spinning the loop at insane speeds. That can max the cpu, drain battery, but will not be consistent across machines. For those interested, pprof's from 3 different machines are included in the code folder. These include a 1/25th sleep, ensuring the same end result.
+While all of these make sense, the 2nd point deserves some extra attention. If you recompile the app without the ```time.Sleep(time.Second / 25)```, your machine will work hard to render as quickly as possible. That can consume a lot of cpu resources, which in turn can drain battery as well. It also ensures consistency across devices, all run at the same pulse. As an example, pprof's from 3 different machines are included in the code folder. These include a 1/25th sleep, ensuring the same end result. Please have a look.
+
+```Update```
+
+On July 28th, [Elias Naur announced](https://lists.sr.ht/~eliasnaur/gio/%3CCD3XWVXUTCG0.23LAQED4PF674%40themachine%3E) an update that speeds up animations:
+> *gpu: [compute] cache and re-use drawing operations from the previous frame This change implements an automatic layering scheme such that only the changed parts of a frame needs to go through the compute programs. Without this optimization CPU fallback would not be practical.* 
+
+It's also explained in more detail on the [July 2020 community call](https://www.youtube.com/watch?v=HC4Cg78l-9U).
+
 
 ## Comments
 
-By combining all these building blocks we now have a stateful program we can control with ease. The user interface tells us when something happens, and the rest of the program uses that to take care of business. We had to pull a few tricks out of the bag, including both a **channel** and a **select**. Now that we have those tools in our belt, we will be well equipped to add some custom graphics in the next chapter.
+By combining all these building blocks we now have a stateful program we can control with ease. The user interface tells us when something happens, and the rest of the program uses that to take care of business. We had to pull a few tricks out of the bag, including both a ```channel``` and a ```select```. Now that we have those tools in our belt, we will be well equipped to add some custom graphics in the next chapter.

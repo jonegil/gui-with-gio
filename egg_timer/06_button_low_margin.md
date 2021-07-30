@@ -15,13 +15,13 @@ The intention of this chapter is to add open space around all sides of the butto
 
 ## Outline
 
-After looking at the whole code when refactoring in the last section, this time we only zoom in on the lines that change. Again, the action is happening within **layout.Flex**
+After looking at the whole code when refactoring in the last section, this time we only zoom in on the lines that change. Again, the action is happening within ```layout.Flex```
 
 ## Code - Overall structure
 
 To highlight the structure, it can be useful to strip away some of the details
 There are really only three key lines here:
- 1. Define margins using **layout.Inset**
+ 1. Define margins using ```layout.Inset```
  2. Lay out those margins
  3. Create button within those margins
 
@@ -69,13 +69,13 @@ margins := layout.Inset{
     Left:   unit.Dp(35),
 }
 ```
-Here, margins are given as **D**evice independent **p**ixels, [unit.Dp](https://pkg.go.dev/gioui.org/unit?utm_source=gopls#Dp). In case you want the same margin on all sides, there also exists a handy **UniformInset( )**, saving you a few keystrokes.
+Here, margins are given as **D**evice independent **p**ixels, [unit.Dp](https://pkg.go.dev/gioui.org/unit?utm_source=gopls#Dp). In case you want the same margin on all sides, there also exists a handy ```UniformInset( )```, saving you a few keystrokes.
 
 
 
 ## Code - details
 
-To wrap it all up, here's the code for the whole **system.FrameEvent**
+To wrap it all up, here's the code for the whole ```system.FrameEvent```
 
 ```go
 case system.FrameEvent:

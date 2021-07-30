@@ -46,7 +46,7 @@ func main() {
 
 ## Comments
 
-The code looks simple enough, right? Still, let's take the tiime to to look at what's going on.
+The code looks simple enough, right? Still, let's take the time to to look at what's going on.
 
 1. We import ```gioui.org/app```. What's that?
    
