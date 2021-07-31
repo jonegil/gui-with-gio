@@ -51,7 +51,7 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
 1. We import ```gioui.org/app```. What's that?
    
    Looking at [the docs](https://pkg.go.dev/gioui.org/app) we find:
-   > Package app provides a platform-independent interface to operating system functionality for running graphical user interfaces.
+   > *Package app provides a platform-independent interface to operating system functionality for running graphical user interfaces.*
    
    This is good news. Gio takes care of all the plaform-dependent stuff for us. I routinely code on Windows and Macos. Gio just works. [GioUI.org](gioui.org) lists even more, iOS and Android included. 
    
@@ -64,13 +64,13 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
    - The event loop is the `for range w.Events()` loop that listens for events in the window. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
    
      From [app.main](https://pkg.go.dev/gioui.org/app#hdr-Main) we learn:
-     > Because Main is also blocking on some platforms, the event loop of a Window must run in a goroutine.
+     > *Because Main is also blocking on some platforms, the event loop of a Window must run in a goroutine.*
 
     - A goroutine with no name, i.e. an *anonymous function*, is created and runs the event loop. Since it's in a goroutine it will spin concurrently with the rest of the program.
    ```go
-     go func {
-       // ...
-     }()
+go func {
+  // ...
+}()
    ```
   
       Jeremy Bytes [writes well about anonymous functions](https://jeremybytes.blogspot.com/2021/02/go-golang-anonymous-functions-inlining.html). They're useful in many contexts, not only with Gio.
