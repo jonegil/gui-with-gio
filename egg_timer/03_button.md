@@ -28,14 +28,14 @@ To make things tidy, let's discuss imports first, then the main function later.
 
 ```go
 import (
-	"gioui.org/app"
-	"gioui.org/font/gofont"
-	"gioui.org/io/system"
-	"gioui.org/layout"
-	"gioui.org/op"
-	"gioui.org/unit"
-	"gioui.org/widget"
-	"gioui.org/widget/material"
+  "gioui.org/app"
+  "gioui.org/font/gofont"
+  "gioui.org/io/system"
+  "gioui.org/layout"
+  "gioui.org/op"
+  "gioui.org/unit"
+  "gioui.org/widget"
+  "gioui.org/widget/material"
 )
 ```
 
@@ -71,36 +71,36 @@ With imports well out of our way, let's look at the code. It's longer but still 
 ```go
 func main() {
   go func() {
-		// create new window
-	  w := app.NewWindow(
-		  app.Title("Egg timer"),
-		  app.Size(unit.Dp(400), unit.Dp(600)),
-		)
+    // create new window
+    w := app.NewWindow(
+      app.Title("Egg timer"),
+      app.Size(unit.Dp(400), unit.Dp(600)),
+    )
 
-		// ops are the operations from the UI
-	  var ops op.Ops
+    // ops are the operations from the UI
+    var ops op.Ops
 
-		// startButton is a clickable widget
-	  var startButton widget.Clickable
+    // startButton is a clickable widget
+    var startButton widget.Clickable
 
-		// th defnes the material design style
-	  th := material.NewTheme(gofont.Collection())
+    // th defnes the material design style
+    th := material.NewTheme(gofont.Collection())
 
-		// listen for events in the window.
-	  for e := range w.Events() {
+    // listen for events in the window.
+    for e := range w.Events() {
 
-			// detect what type of event
-		  switch e := e.(type) {
+      // detect what type of event
+      switch e := e.(type) {
 
-			// this is sent when the application should re-render.
-		  case system.FrameEvent:
-			  gtx := layout.NewContext(&ops, e)
-			  btn := material.Button(th, &startButton, "Start")
-			  btn.Layout(gtx)
-			  e.Frame(gtx.Ops)
-			}
-		}
-	}()
+      // this is sent when the application should re-render.
+      case system.FrameEvent:
+        gtx := layout.NewContext(&ops, e)
+        btn := material.Button(th, &startButton, "Start")
+        btn.Layout(gtx)
+        e.Frame(gtx.Ops)
+      }
+    }
+  }()
   app.Main()
 }
 ```
@@ -112,31 +112,31 @@ func main() {
 
 1. Three new variables are set
 
-	- ```ops``` define the operations from the user interface
+  - ```ops``` define the operations from the user interface
 
-	- ```startButton``` is our button, a clickable widget.
-	
-	- ```th``` is the material theme, and sets the fonts to be gofonts
+  - ```startButton``` is our button, a clickable widget.
+  
+  - ```th``` is the material theme, and sets the fonts to be gofonts
 
 1. The `for e:= range w.Events() ` loop is more intersting: 
     - ```w.Events()``` gets us the *channel* through which events are delivered. We simply listen to this channel forever.
 
-	- Then ... what's this ` e:= e.(type) ` thing. It's actually a neat thing, known as a [type switch](https://tour.golang.org/methods/16) that allows us to take different actions depending on the ```type``` of event that's being processed.
+  - Then ... what's this ` e:= e.(type) ` thing. It's actually a neat thing, known as a [type switch](https://tour.golang.org/methods/16) that allows us to take different actions depending on the ```type``` of event that's being processed.
 
-	- In our case, we're only interested if the event is a ```system.FrameEvent```. If it is:
-	  
-	  - We define a new *graphical context*, or ```gtx```. It receives the pointer to ```ops``` as well as the event
-	  
-	  - ```btn``` is declared as the actual button, with theme ```th```, and a pointer to the ```startButton``` widget. We also define the text that is displayed (note how the text is purely a something that is displayed on the button, not part of the stateful widget the button actually is.)
-	  
-	  - Look here now. The button ```btn``` is asked to *lay itself out* on the context ```gtx```. This is key. The layout doesn't layout the button, the button lays itself out. This is very handy. Try for example to resize the window. No stress, the button just lays itself out again, no matter size or shape of the canvas.
-	  
-	  	- Notice how we got all the mouseover and the click-animation for free. They're all part of the theme. That's pretty nice!
+  - In our case, we're only interested if the event is a ```system.FrameEvent```. If it is:
+    
+    - We define a new *graphical context*, or ```gtx```. It receives the pointer to ```ops``` as well as the event
+    
+    - ```btn``` is declared as the actual button, with theme ```th```, and a pointer to the ```startButton``` widget. We also define the text that is displayed (note how the text is purely a something that is displayed on the button, not part of the stateful widget the button actually is.)
+    
+    - Look here now. The button ```btn``` is asked to *lay itself out* on the context ```gtx```. This is key. The layout doesn't layout the button, the button lays itself out. This is very handy. Try for example to resize the window. No stress, the button just lays itself out again, no matter size or shape of the canvas.
+    
+      - Notice how we got all the mouseover and the click-animation for free. They're all part of the theme. That's pretty nice!
 
-	  - We finalize by actually sending the operations ```ops``` from the context ```gtx``` to the FrameEvent ```e```.
+    - We finalize by actually sending the operations ```ops``` from the context ```gtx``` to the FrameEvent ```e```.
 
 1. Finally we call ` app.Main() `. Don't forget.
-	  
+    
 
 
 Phew, that's a long one. Thanks if you're still along. We can summarize the whole chapter in three lines:
