@@ -75,10 +75,7 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
   
       Jeremy Bytes [writes well about anonymous functions](https://jeremybytes.blogspot.com/2021/02/go-golang-anonymous-functions-inlining.html). They're useful in many contexts, not only with Gio.
 
-   
-   
 
 3. Start it by calling ```app.Main()```
-   > The Main function must be called from a program's main function, to hand over control of the main thread to operating systems that need it.
-  
-   From [app.Main documentation](https://pkg.go.dev/gioui.org/app#hdr-Main)
+From [app.Main documentation](https://pkg.go.dev/gioui.org/app#hdr-Main):
+   > *The Main function must be called from a program's main function, to hand over control of the main thread to operating systems that need it.*
