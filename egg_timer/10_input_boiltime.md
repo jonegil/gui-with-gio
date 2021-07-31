@@ -27,11 +27,11 @@ That's it. Let's look at the code:
 ### 1. New imports
 ```go
 import (
-	"fmt"
-	"strconv"
-	"strings"
+  "fmt"
+  "strconv"
+  "strings"
 
-	"gioui.org/text"
+  "gioui.org/text"
 )
 ```
 The list of imports is looking long now. But we're not importing the whole kitchen sink of Go here. It's more a testament of how useful functionality coming together across multiple parts of the standard library: 
@@ -49,7 +49,7 @@ And finally:
 
 We start by declaring a [widget.Editor](https://pkg.go.dev/gioui.org/widget#Editor) variable inside ```draw()```:
 ```go
-	// boilDurationInput is a textfield to input boil duration
+  // boilDurationInput is a textfield to input boil duration
   var boilDurationInput widget.Editor
 ```
 
