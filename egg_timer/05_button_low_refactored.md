@@ -17,7 +17,7 @@ Up to now, we've built the program by bolting on functionality, bit by bit. This
 
 Going forward however, it's starting to look a little unwieldy. Having all the code inside one big ```main()``` is can make it harder to understand, and harder to continue building. Hence we'll refactor the program a bit, simply breaking it up into smaller pieces. 
  
-> Refectoring is transforming code in a safe and rapid way is vital to keeping it cheap and easy to modify for future needs. 
+> *Refectoring is transforming code in a safe and rapid way is vital to keeping it cheap and easy to modify for future needs.*
 [Martin Fowler](https://martinfowler.com/books/refactoring.html)
 
 In other words, no new functionality will be added, but we'll clear the way for better things to come. 
