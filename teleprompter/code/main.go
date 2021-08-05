@@ -59,8 +59,8 @@ func draw(w *app.Window) error {
 	// y-position for red highlight bar
 	var highlightY float32 = 78
 
-	// margin width
-	var marginWidth float32 = 10
+	// width of text area
+	var textWidth float32 = 10
 
 	// fontSize
 	var fontSize float32 = 35
@@ -106,10 +106,10 @@ func draw(w *app.Window) error {
 
 				// To adjust margin width
 				if e.Name == "W" || e.Name == "L" {
-					marginWidth = marginWidth - stepSize
+					textWidth = textWidth - stepSize
 				}
 				if e.Name == "N" || e.Name == "H" {
-					marginWidth = marginWidth + stepSize
+					textWidth = textWidth + stepSize
 				}
 
 				// To adjust fontsize
@@ -151,7 +151,7 @@ func draw(w *app.Window) error {
 			paint.FillShape(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff}, background)
 
 			// Margins
-
+			//marginWidth := (gtx.Constraints.Max.X - textWidth) / 2
 			margins := layout.Inset{
 				Left:   unit.Dp(float32(marginWidth)),
 				Right:  unit.Dp(float32(marginWidth)),
