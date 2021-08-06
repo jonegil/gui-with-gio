@@ -149,8 +149,7 @@ In previous chapters, we ranged over events using ```for e := range w.Events()``
 
 We add the ```p``` to the ```progress``` variable if the control variable ```boiling``` is true, and progress is less than 1. Since ```p``` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
 
-**TODO:** Write about ```w.Invalidate()```, what it does, and the alternative in the ][Bonus chapter](11_improved_animation.md).
-
+Finally we force the window to draw, by calling ```w.Invalidate()```. What is does is to inform Gio that the old rendring is now, well, invalid, and hence a new drawing must be made. Without such notice, Gio would simply not update until forced to do so by a mouseclick or button press or other events. Invalidating at *every* frame though can be costly, and alternatives exists. It's a bit of an advanced topic though, so for now let's leave it as is, but return to it in the [Bonus chapter on improved animation](11_improved_animation.md).
 
 By using a channel like this we get
 1. Precise timing, where we control the execution exactly as we want it
