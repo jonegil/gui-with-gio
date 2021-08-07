@@ -158,10 +158,10 @@ By using a channel like this we get
 
 While all of these make sense, the 2nd point deserves some extra attention. If you recompile the app without the ```time.Sleep(time.Second / 25)```, your machine will work hard to render as quickly as possible. That can consume a lot of cpu resources, which in turn can drain battery as well. It also ensures consistency across devices, all run at the same pulse. As an example, pprof's from 3 different machines are included in the code folder. These include a 1/25th sleep, ensuring the same end result. Please have a look.
 
-```Update```
+**Update**
 
 On July 28th, [Elias Naur announced](https://lists.sr.ht/~eliasnaur/gio/%3CCD3XWVXUTCG0.23LAQED4PF674%40themachine%3E) an update that speeds up animations:
-> *gpu: [compute] cache and re-use drawing operations from the previous frame This change implements an automatic layering scheme such that only the changed parts of a frame needs to go through the compute programs. Without this optimization CPU fallback would not be practical.* 
+> *gpu: [compute] cache and re-use drawing operations from the previous frame. This change implements an automatic layering scheme such that only the changed parts of a frame needs to go through the compute programs. Without this optimization CPU fallback would not be practical.* 
 
 It's also explained in more detail on the [July 2020 community call](https://www.youtube.com/watch?v=HC4Cg78l-9U).
 
