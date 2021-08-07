@@ -115,4 +115,4 @@ This takes care of laying the widgets out. But what are the widgets really?
 - [Spacer](https://pkg.go.dev/gioui.org@v0.0.0-20210504193539-82fff0178bed/layout?utm_source=gopls#Spacer) adds empty space, here defined by *Height*. Since we've defined the overall layout to be vertical, and excess space should come at the top, this falls to the bottom and the button lands on top of it. Hence some space is created, lifting the button a little from the bottom of the screen. Handy stuff.
 
 **Good work**
-We've come a long way and have covered a lot of ground. Good work, and thank you for staying with me. Let's move on and continue our build.
+We've come a long way and have covered a lot of ground. Good work, and thank you for keeping at it. Let's move on and continue by looking over the codebase in earnest..
