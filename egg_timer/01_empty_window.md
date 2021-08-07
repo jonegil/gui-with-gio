@@ -17,9 +17,9 @@ The intention of this section is to create a blank canvas that we later can draw
 
 The code does three main things:
  - Imports Gio
- - Creates and calls a goroutine that ...
-   - ... creates a new window, called `w`
-   - ... starts an eternal loop that waits for Events in the window (none will come in this example)
+ - Creates and calls a goroutine that: 
+   - Creates a new window, called `w`
+   - Starts an eternal loop that waits for Events in the window (none will come in this example)
 
 That's it. Let's look at the code:
 
