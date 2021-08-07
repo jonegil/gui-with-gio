@@ -198,7 +198,7 @@ func draw(w *app.Window) error {
 						func(gtx C) D {
 							bar := material.ProgressBar(th, progress)
 							if boiling && progress < 1 {
-								op.InvalidateOp{At: gtx.Now.Add(time.Second / 100)}.Add(&ops)
+								op.InvalidateOp{At: gtx.Now.Add(time.Second / 25)}.Add(&ops)
 							}
 							return bar.Layout(gtx)
 						},
@@ -251,7 +251,7 @@ func draw(w *app.Window) error {
 				if progress >= 1 {
 					progress = 1
 				}
-				//op.InvalidateOp{}.Add(&ops) // Experimented, but couldn't make it perform
+				// Try uncommenting this (and commenting op.InvalidateOp{}.Add() on line 201) to compare performance.
 				//w.Invalidate()
 			}
 		}
