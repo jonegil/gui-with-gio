@@ -119,10 +119,11 @@ layout.Rigid(
 
 ```
 
-Take a look in the code for the animation. You'll find the above ```op.InvalidateOp{}``` on [line 201](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L201), and the old ```w.Invalidate()``` on [line 255]https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L255. Try changing running either one or the other to see which one performs best.
+Take a look in the code for the animation. You'll find the above ```op.InvalidateOp{}``` on [line 201](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L201), and the old ```w.Invalidate()``` on [line 255](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L255). Try changing running either one or the other to see which one performs best.
 
-I haven't yet updated to the improved caching, so on my 2015 Macbook Air, ```op.InvalidateOp{}``` runs at about 15% CPU, while ```w.Invalidate()``` consumes around 20%. That's quite a difference. On a newer Dell Latitude, also without caching, both are around 1%. What are your numbers?
+Here's the CPU load for two 60 second boils, one with each Invalidate method. I haven't yet updated to the improved caching, so on my 2017 Macbook Air, ```op.InvalidateOp{}``` runs at about 16-17% CPU, while ```w.Invalidate()``` consumes around 18-19%. That's not a very large difference, but worth knowing about:
 
+![Invalidate CPU load](11_invalidate_cpu_load.png)
 
 ### A general pattern
 
@@ -132,7 +133,7 @@ Describe the final pattern from Chris.
 
 ```go
 
-}
+
 ```
 
 ## Comments
