@@ -1,0 +1,16 @@
+tasklist /FI "IMAGENAME eq 11_improved_animation.exe" /FO csv | set-content temp.csv 
+
+Import-csv temp.csv | 
+  Select-Object *,@{n='CPU %';
+                     e={
+                       $iu = $_.'Image Name'.split('.')[0]; 
+                       (Get-Counter '\Process(*)\% Processor Time' -MaxSamples 70).CounterSamples | 
+                       Where-Object {
+		         $_.InstanceName -eq "$iu"
+                       } |
+                       Select -Expand CookedValue
+                     }
+                   } | 
+                   Export-Csv "cpu_load.csv"
+
+Remove-Item temp.csv
