@@ -45,7 +45,7 @@ import (
 
 - [io/system](https://pkg.go.dev/gioui.org/io/system) - Provides high-level events that are sent from the window. Most important is the ```system.FrameEvent```. It's effectively a list of operations that do one of two things: Details how to handle input and describes what to display.
   
-- [layuot](https://pkg.go.dev/gioui.org/layout) - Defines useful parts of a layout, such as *dimensions*, *constraints* and *directions*. Also, it includes the layout-concept known as [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex). It's widely used web and user interface development. Among the many introductions, I recommend the one from [Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox). 
+- [layout](https://pkg.go.dev/gioui.org/layout) - Defines useful parts of a layout, such as *dimensions*, *constraints* and *directions*. Also, it includes the layout-concept known as [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex). It's widely used web and user interface development. Among the many introductions, I recommend the one from [Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox). 
 
 - [op](https://pkg.go.dev/gioui.org/op) - Operations, or ops, are central in Gio. They are used to update the user interface. There are operations used to draw, handle input, change window properties, scale, rotate and more. Interestingly there are also [macros](https://pkg.go.dev/gioui.org/op#MacroOp), making it possible to record opertions to be executed later. Taken together this means a list of opererations is a *mutable stack*, where you can control the flow.
 
