@@ -126,6 +126,7 @@ layout.Flex{
 Now that we have the overview in place let's examine that second rigid in detail:
 
 **Editor with theme**
+
 We start by wrapping the ```boilDurationInput``` variable in the Material Design theme. We take the occation to add a [hint](https://pkg.go.dev/gioui.org/widget/material#EditorStyle)
 ```go
 // The inputbox
@@ -136,6 +137,7 @@ layout.Rigid(
 ```
 
 **Define characteristics**
+
 At this point, the ```boilDurationInput``` is still just an empty field, so we will do some configuration:
 ```go
     // Define characteristics of the input box
@@ -147,6 +149,7 @@ At this point, the ```boilDurationInput``` is still just an empty field, so we w
 
 
 **Countdown**
+
 Next, since it useful to see remaining time, we count down inside  the inputbox:
 ```go
 if boiling && progress < 1 {
