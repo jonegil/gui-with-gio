@@ -89,17 +89,18 @@ func draw(w *app.Window) error {
 				if startButton.Clicked() {
 					// Start (or stop) the boil
 					boiling = !boiling
-					// Read from the input box
-					if progress == 0 {
-						inputString := boilDurationInput.Text()
-						inputString = strings.TrimSpace(inputString)
-						inputFloat, _ := strconv.ParseFloat(inputString, 32)
-						boilDuration = float32(inputFloat)
-					}
+
 					// Resetting the boil
 					if progress >= 1 {
 						progress = 0
 					}
+
+					// Read from the input box
+					inputString := boilDurationInput.Text()
+					inputString = strings.TrimSpace(inputString)
+					inputFloat, _ := strconv.ParseFloat(inputString, 32)
+					boilDuration = float32(inputFloat)
+					boilDuration = boilDuration / (1 - progress)
 				}
 
 				layout.Flex{
@@ -156,6 +157,9 @@ func draw(w *app.Window) error {
 					// The inputbox
 					layout.Rigid(
 						func(gtx C) D {
+							// Wrap the editor in material design
+							ed := material.Editor(th, &boilDurationInput, "sec")
+
 							// Define characteristics of the input box
 							boilDurationInput.SingleLine = true
 							boilDurationInput.Alignment = text.Middle
@@ -182,8 +186,6 @@ func draw(w *app.Window) error {
 								CornerRadius: unit.Dp(3),
 								Width:        unit.Dp(2),
 							}
-							// ... and material design ...
-							ed := material.Editor(th, &boilDurationInput, "sec")
 							// ... before laying it out, one inside the other
 							return margins.Layout(gtx,
 								func(gtx C) D {
