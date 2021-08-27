@@ -169,6 +169,7 @@ func draw(w *app.Window) error {
 					return speech.Layout(gtx)
 				},
 			)
+			op.Save(&ops).Load()
 
 			// Draw a transparent red rectangle.
 			path := new(clip.Path)
@@ -192,6 +193,8 @@ func draw(w *app.Window) error {
 				paint.Fill(&ops, color.NRGBA{G: 0xff, A: 0x66})
 				stack.Load()
 			*/
+
+			//op.InvalidateOp{}.Add(&ops)
 
 			e.Frame(&ops)
 
