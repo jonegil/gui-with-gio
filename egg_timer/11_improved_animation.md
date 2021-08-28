@@ -133,7 +133,7 @@ My friend Chris Waldon came through with this pattern:
 
 > *In my Gio applications, I have found a pattern that I think works well for encapsulating animation logic. It allows you to hide the management of the invalidation behind an API, and to compute the progress as a function of time. It eliminates the ticker goroutine altogether, though I almost worry that it makes the app less cool.*
 
-Sound's intriguing, no? You can find the raw code in [his repo](https://github.com/whereswaldon/gui-with-gio/commit/83e43a39e75c5e6cb96985046a521ac553615d39), but let's examine it a bit here too:
+Sound's intriguing, right? You can find the raw code in [his repo](https://github.com/whereswaldon/gui-with-gio/commit/83e43a39e75c5e6cb96985046a521ac553615d39), but let's examine it a bit here too:
 
 #### An animation struct
 
@@ -181,8 +181,8 @@ func (a animation) progress(gtx layout.Context) (animating bool, progress float3
 }
 
 ```
-
-With that infrastructure in place we can simplify the ```startButton.Clicked()``` code to:
+#### Start simplifying
+With that in place we can simplify the ```startButton.Clicked()``` code to:
 ```go
 case system.FrameEvent:
   gtx := layout.NewContext(&ops, e)
@@ -203,7 +203,9 @@ case system.FrameEvent:
 
 ```
 
-At the end we simplify the countdown logic by replacing ```boilRemain```with logic around ```anim.duration```:
+#### Tidy up the loose end
+
+At the, since we removed the ```boilDuration``` variable, we instead use ```anim.duration.Seconds()```:
 
 ```go
 // Count down the text when boiling
@@ -211,9 +213,11 @@ if boiling && progress < 1 {
   boilRemain := (1 - progress) * float32(anim.duration.Seconds())
 ```
 
+#### What about our ticker-channel?
+
 All code related to the ```progressIncrementer``` channel, both variables, readning and writing to the chan, is removed.
 
-We're not going into more detail about this pattern here, but know it exists and has some pretty neat functionality that takes care of state and status for your animation.
+We're not going into more detail about the pattern here, but know it exists and has some pretty neat functionality that takes care of state and status for your animation.
 
 ## Comments
 
