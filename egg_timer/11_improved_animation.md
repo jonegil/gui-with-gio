@@ -45,23 +45,23 @@ var startTime = time.Now()
 var duration = 10 * time.Second
 
 func drawProgressBar(ops *op.Ops, now time.Time) {
-	// Calculate how much of the progress bar to draw,
-	// based on the current time.
-	elapsed := now.Sub(startTime)
-	progress := elapsed.Seconds() / duration.Seconds()
-	if progress < 1 {
-		// The progress bar hasn’t yet finished animating.
-		op.InvalidateOp{}.Add(ops)
-	} else {
-		progress = 1
-	}
+  // Calculate how much of the progress bar to draw,
+  // based on the current time.
+  elapsed := now.Sub(startTime)
+  progress := elapsed.Seconds() / duration.Seconds()
+  if progress < 1 {
+    // The progress bar hasn’t yet finished animating.
+    op.InvalidateOp{}.Add(ops)
+  } else {
+    progress = 1
+  }
 
-	defer op.Save(ops).Load()
-	width := 200 * float32(progress)
-	clip.Rect{Max: image.Pt(int(width), 20)}.Add(ops)
-	paint.ColorOp{Color: color.NRGBA{R: 0x80, A: 0xFF}}.Add(ops)
-	paint.ColorOp{Color: color.NRGBA{G: 0x80, A: 0xFF}}.Add(ops)
-	paint.PaintOp{}.Add(ops)
+  defer op.Save(ops).Load()
+  width := 200 * float32(progress)
+  clip.Rect{Max: image.Pt(int(width), 20)}.Add(ops)
+  paint.ColorOp{Color: color.NRGBA{R: 0x80, A: 0xFF}}.Add(ops)
+  paint.ColorOp{Color: color.NRGBA{G: 0x80, A: 0xFF}}.Add(ops)
+  paint.PaintOp{}.Add(ops)
 }
 ```
 
@@ -74,31 +74,31 @@ If however you prefer to set the framerate using a central ticking ```progressIn
 
 ```go
 func main() {
-	// Setup a separate channel to provide ticks to increment progress
-	progressIncrementer = make(chan float32)
-	go func() {
-		for {
-			time.Sleep(time.Second / 25)
-			progressIncrementer <- 0.004
-		}
-	}()
+  // Setup a separate channel to provide ticks to increment progress
+  progressIncrementer = make(chan float32)
+  go func() {
+    for {
+      time.Sleep(time.Second / 25)
+      progressIncrementer <- 0.004
+    }
+  }()
   // ... the rest of main
 }
 
 func draw(w *app.Window) error {
   // ...
   for {
-		select {
+    select {
     // process FrameEvent and generate layout ...
 
-		// outside of layout, listen for events in the incrementor channel
-		case p := <-progressIncrementer:
-			if boiling && progress < 1 {
-				progress += p
-				w.Invalidate()
-			}
-		}
-	}
+    // outside of layout, listen for events in the incrementor channel
+    case p := <-progressIncrementer:
+      if boiling && progress < 1 {
+        progress += p
+        w.Invalidate()
+      }
+    }
+  }
 ```
 
 #### Example 3 - Replacing w.Invalidate() with op.InvalidateOp{} - what's the effecet
