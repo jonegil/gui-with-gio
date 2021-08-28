@@ -213,7 +213,7 @@ if boiling && progress < 1 {
 
 All code related to the ```progressIncrementer``` channel, both variables, readning and writing to the chan, is removed.
 
-We're not going into more detail about this pattern here, but know it exists and has some pretty neat functionality that takes care of state and status for your animation. Please use if useful.
+We're not going into more detail about this pattern here, but know it exists and has some pretty neat functionality that takes care of state and status for your animation.
 
 ## Comments
 
