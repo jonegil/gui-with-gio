@@ -59,9 +59,9 @@ We also create a variable to hold the actual numerical value in the inputfield a
   // boilDurationInput is a textfield to input boil duration
   var boilDurationInput widget.Editor
 
-	// is the egg boiling?
-	var boiling bool
-	var boilDuration float32
+  // is the egg boiling?
+  var boiling bool
+  var boilDuration float32
 ```
 
 ### 3. Reading from the inputbox
