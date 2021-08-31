@@ -38,30 +38,32 @@ There are two alternatives, let's look at both:
 
 #### Example 1 - op.InvalidateOp{}
 
-To showcase ```op.InvaliateOp{}.Add(ops)``` we'll quote the well written animation example from the [architecture document](https://gioui.org/doc/architecture)
+To showcase ```op.InvaliateOp{}.Add(ops)``` we'll quote the well written animation example from the [architecture document](https://gioui.org/doc/architecture#animation):
 
 ```go
+// Source: https://gioui.org/doc/architecture#animation
+
 var startTime = time.Now()
 var duration = 10 * time.Second
 
 func drawProgressBar(ops *op.Ops, now time.Time) {
-	// Calculate how much of the progress bar to draw,
-	// based on the current time.
-	elapsed := now.Sub(startTime)
-	progress := elapsed.Seconds() / duration.Seconds()
-	if progress < 1 {
-		// The progress bar hasn’t yet finished animating.
-		op.InvalidateOp{}.Add(ops)
-	} else {
-		progress = 1
-	}
+  // Calculate how much of the progress bar to draw,
+  // based on the current time.
+  elapsed := now.Sub(startTime)
+  progress := elapsed.Seconds() / duration.Seconds()
+  if progress < 1 {
+    // The progress bar hasn’t yet finished animating.
+    op.InvalidateOp{}.Add(ops)
+  } else {
+    progress = 1
+  }
 
-	defer op.Save(ops).Load()
-	width := 200 * float32(progress)
-	clip.Rect{Max: image.Pt(int(width), 20)}.Add(ops)
-	paint.ColorOp{Color: color.NRGBA{R: 0x80, A: 0xFF}}.Add(ops)
-	paint.ColorOp{Color: color.NRGBA{G: 0x80, A: 0xFF}}.Add(ops)
-	paint.PaintOp{}.Add(ops)
+  defer op.Save(ops).Load()
+  width := 200 * float32(progress)
+  clip.Rect{Max: image.Pt(int(width), 20)}.Add(ops)
+  paint.ColorOp{Color: color.NRGBA{R: 0x80, A: 0xFF}}.Add(ops)
+  paint.ColorOp{Color: color.NRGBA{G: 0x80, A: 0xFF}}.Add(ops)
+  paint.PaintOp{}.Add(ops)
 }
 ```
 
@@ -74,31 +76,31 @@ If however you prefer to set the framerate using a central ticking ```progressIn
 
 ```go
 func main() {
-	// Setup a separate channel to provide ticks to increment progress
-	progressIncrementer = make(chan float32)
-	go func() {
-		for {
-			time.Sleep(time.Second / 25)
-			progressIncrementer <- 0.004
-		}
-	}()
+  // Setup a separate channel to provide ticks to increment progress
+  progressIncrementer = make(chan float32)
+  go func() {
+    for {
+      time.Sleep(time.Second / 25)
+      progressIncrementer <- 0.004
+    }
+  }()
   // ... the rest of main
 }
 
 func draw(w *app.Window) error {
   // ...
   for {
-		select {
+    select {
     // process FrameEvent and generate layout ...
 
-		// outside of layout, listen for events in the incrementor channel
-		case p := <-progressIncrementer:
-			if boiling && progress < 1 {
-				progress += p
-				w.Invalidate()
-			}
-		}
-	}
+    // outside of layout, listen for events in the incrementor channel
+    case p := <-progressIncrementer:
+      if boiling && progress < 1 {
+        progress += p
+        w.Invalidate()
+      }
+    }
+  }
 ```
 
 #### Example 3 - Replacing w.Invalidate() with op.InvalidateOp{} - what's the effecet
@@ -121,21 +123,104 @@ layout.Rigid(
 
 Take a look in the code for the animation. You'll find the above ```op.InvalidateOp{}``` on [line 201](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L201), and the old ```w.Invalidate()``` on [line 255](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L255). Try changing running either one or the other to see which one performs best.
 
-Here's the CPU load for two 60 second boils, one with each Invalidate method. I haven't yet updated to the improved caching, so on my 2017 Macbook Air, ```op.InvalidateOp{}``` runs at about 16-17% CPU, while ```w.Invalidate()``` consumes around 18-19%. That's not a very large difference, but worth knowing about:
+To try it out I ran two 60 second boils, one with each Invalidate method, both on my Macbook and my Windows desktop. I haven't yet updated to the improved caching. The 2017 Macbook Air runs ```op.InvalidateOp{}``` at about 16-17% CPU, while ```w.Invalidate()``` consumes around 18-19%. The level is fairly high, but the difference is not that large. Still it's worth knowing the effect of each invalidate technique. On my Windows machine the load is much smaller with no meaningful difference between the two tehcniques. 
 
 ![Invalidate CPU load](11_invalidate_cpu_load.png)
 
 ### A general pattern
 
-** TODO **
-Describe the final pattern from Chris.
+My friend Chris Waldon came through with this pattern:
 
+> *In my Gio applications, I have found a pattern that I think works well for encapsulating animation logic. It allows you to hide the management of the invalidation behind an API, and to compute the progress as a function of time. It eliminates the ticker goroutine altogether, though I almost worry that it makes the app less cool.*
+
+Sound's intriguing, right? You can find the raw code in [his repo](https://github.com/whereswaldon/gui-with-gio/commit/83e43a39e75c5e6cb96985046a521ac553615d39), but let's examine it a bit here too:
+
+#### An animation struct
+
+First replace the state variables ```boiling``` and ```boilDuration``` with a struct that knows when we started, and how long it should take:
+```go
+// animation tracks the progress of a linear animation across multiple frames.
+type animation struct {
+	start    time.Time
+	duration time.Duration
+}
+
+var anim animation
+```
+
+This allows us to create methods to animate next frame and eventually end the animation. 
+This is where ```op.InvalidateOp{}.Add()``` is called. 
+
+Also, note how it uses ```gtx.Now``` instead of ```time.Now```, most importantly ensuring the animation is synchronized, but also avoids some overhead from ```time.Now```. 
+```go
+// animate starts an animation at the current frame which will last for the provided duration.
+func (a *animation) animate(gtx layout.Context, duration time.Duration) {
+	a.start = gtx.Now
+	a.duration = duration
+	op.InvalidateOp{}.Add(gtx.Ops)
+}
+
+// stop ends the animation immediately.
+func (a *animation) stop() {
+	a.duration = time.Duration(0)
+}
+```
+
+Finally a method to report on progress: 
+- Are we still animating? 
+- And if so, how much is done?
 
 ```go
+// progress returns whether the animation is currently running and (if so) how far through the animation it is.
+func (a animation) progress(gtx layout.Context) (animating bool, progress float32) {
+	if gtx.Now.After(a.start.Add(a.duration)) {
+		return false, 0
+	}
+	op.InvalidateOp{}.Add(gtx.Ops)
+	return true, float32(gtx.Now.Sub(a.start)) / float32(a.duration)
+}
 
+```
+#### Start simplifying
+With that in place we can simplify the ```startButton.Clicked()``` code to:
+```go
+case system.FrameEvent:
+  gtx := layout.NewContext(&ops, e)
+  boiling, progress := anim.progress(gtx)
+
+  if startButton.Clicked() {
+    // Start (or stop) the boil
+    if boiling {
+      anim.stop()
+    } else {
+      // Read from the input box
+      inputString := boilDurationInput.Text()
+      inputString = strings.TrimSpace(inputString)
+      inputFloat, _ := strconv.ParseFloat(inputString, 32)
+      anim.animate(gtx, time.Duration(inputFloat)*time.Second)
+    }
+  }
 
 ```
 
+#### Tidy up the loose end
+
+At the, since we removed the ```boilDuration``` variable, we instead use ```anim.duration.Seconds()```:
+
+```go
+// Count down the text when boiling
+if boiling && progress < 1 {
+  boilRemain := (1 - progress) * float32(anim.duration.Seconds())
+```
+
+#### What about our ticker-channel?
+
+All code related to the ```progressIncrementer``` channel, both variables, readning and writing to the chan, is removed.
+
+We're not going into more detail about the pattern here, but know it exists and has some pretty neat functionality that takes care of state and status for your animation.
+
 ## Comments
 
-Summing it all up, I hope this has shed some more light on the in's and out's of animation in Gio. As so often, it depends what's the best solution. Showcasing a demo to impress? Go for smoothness. Minimizing work? Go for animation in steps. High end vs low end user hardware? Splurge or conserve as you see fit. Just be consious about the tradeoffs and know some of the techniques that can assist.
+Summing it all up, I hope this has shed some more light on the in's and out's of animation in Gio. As so often, it depends what's the best solution. Showcasing a demo to impress? Go for smoothness. Minimizing work? Go for animation in steps. High end vs low end user hardware? Splurge or conserve as you see fit. 
+
+Just be conscious about the tradeoffs and know some of the techniques that can assist.

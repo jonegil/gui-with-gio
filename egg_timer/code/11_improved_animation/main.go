@@ -89,17 +89,18 @@ func draw(w *app.Window) error {
 				if startButton.Clicked() {
 					// Start (or stop) the boil
 					boiling = !boiling
-					// Read from the input box
-					if progress == 0 {
-						inputString := boilDurationInput.Text()
-						inputString = strings.TrimSpace(inputString)
-						inputFloat, _ := strconv.ParseFloat(inputString, 32)
-						boilDuration = float32(inputFloat)
-					}
+
 					// Resetting the boil
 					if progress >= 1 {
 						progress = 0
 					}
+
+					// Read from the input box
+					inputString := boilDurationInput.Text()
+					inputString = strings.TrimSpace(inputString)
+					inputFloat, _ := strconv.ParseFloat(inputString, 32)
+					boilDuration = float32(inputFloat)
+					boilDuration = boilDuration / (1 - progress)
 				}
 
 				layout.Flex{
@@ -251,7 +252,7 @@ func draw(w *app.Window) error {
 				if progress >= 1 {
 					progress = 1
 				}
-				// Try uncommenting this (and commenting op.InvalidateOp{}.Add() on line 201) to compare performance.
+				// Try uncommenting this (and commenting op.InvalidateOp{}.Add() on line 202) to compare performance.
 				//w.Invalidate()
 			}
 		}
