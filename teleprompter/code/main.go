@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"io/ioutil"
 	"log"
+	"math"
 	"os"
 
 	"gioui.org/app"
@@ -17,6 +18,7 @@ import (
 	"gioui.org/op"
 	"gioui.org/op/clip"
 	"gioui.org/op/paint"
+	"gioui.org/text"
 	"gioui.org/unit"
 	"gioui.org/widget/material"
 )
@@ -140,61 +142,44 @@ func draw(w *app.Window) error {
 			// ops are the operations from the UI
 			var ops op.Ops
 
-			// Grafical context
+			// Graphical context
 			gtx := layout.NewContext(&ops, e)
 
-			// Bacground
-			background := clip.Rect{
-				Min: image.Pt(0, 0),
-				Max: image.Pt(gtx.Constraints.Max.X, gtx.Constraints.Max.Y),
-			}.Op()
-			paint.FillShape(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff}, background)
+			// Background
+			paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
 
 			// Margins
 			marginWidth := (float32(gtx.Constraints.Max.X) - textWidth) / 2.0
-			margins := layout.Inset{
-				Left:   unit.Dp(float32(marginWidth)),
-				Right:  unit.Dp(float32(marginWidth)),
-				Top:    unit.Dp(float32(0)),
-				Bottom: unit.Dp(float32(-50000)),
-			}
 
 			// Text
 			speech := material.Label(th, unit.Dp(float32(fontSize)), speech)
-			speech.Alignment = 2 // Center
+			speech.Alignment = text.Middle
 
-			op.Offset(f32.Pt(0, float32(scrollY))).Add(&ops)
-			margins.Layout(gtx,
-				func(gtx C) D {
-					return speech.Layout(gtx)
-				},
-			)
-			op.Save(&ops).Load()
+			// Save our current drawing offset and constraints before
+			// transforming them.
+			saved := op.Save(&ops)
+			originalConstraints := gtx.Constraints
+			// Center the text by offsetting it from the left edge by marginWidth,
+			// and offset it vertically by the current scroll position.
+			op.Offset(f32.Pt(float32(marginWidth), float32(scrollY))).Add(&ops)
+			gtx.Constraints.Max.X = int(textWidth)
+			// Set the vertical constraints to be completely unlimited. Otherwise,
+			// the material.LabelStyle will stop drawing text once it is confident
+			// that the next line won't fit within the provided constraints.
+			gtx.Constraints.Max.Y = math.MaxInt
+			// Actually lay out the text.
+			speech.Layout(gtx)
+			// Reset our offset and constraints.
+			saved.Load()
+			gtx.Constraints = originalConstraints
 
 			// Draw a transparent red rectangle.
-			path := new(clip.Path)
 			stack := op.Save(&ops)
-			path.Begin(&ops)
-			path.MoveTo(f32.Pt(0, 0))
-			path.End()
 			op.Offset(f32.Pt(0, float32(highlightY))).Add(&ops)
 			clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Add(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
 			stack.Load()
-
-			/*
-				path := new(clip.Path)
-				stack = op.Save(&ops)
-				path.Begin(&ops)
-				path.MoveTo(f32.Point{X: 20, Y: 20})
-				path.LineTo(f32.Point{X: 200, Y: 200})
-				clip.Stroke{Path: path.End(), Style: clip.StrokeStyle{Width: 15, Cap: clip.SquareCap, Join: clip.BevelJoin}}.Op().Add(&ops)
-				paint.Fill(&ops, color.NRGBA{G: 0xff, A: 0x66})
-				stack.Load()
-			*/
-
-			//op.InvalidateOp{}.Add(&ops)
 
 			e.Frame(&ops)
 
