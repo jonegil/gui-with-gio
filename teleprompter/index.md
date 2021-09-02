@@ -22,7 +22,7 @@ A [teleprompter](https://en.wikipedia.org/wiki/Teleprompter) is a device that di
   <img src="teleprompter.jpeg" alt="Teleprompter and camera" height="250"/>
 </p>
 
-That souns like something we can build, no? Yup, tool like that is perfectly suited for [Gio](www.gioui.org) I'd say. Along the way we'll touch on animation/scrolling, text formatting, fontsize and user control of the prompter with both mouse and keyboard. 
+That souns like something we can build, right? Yup, tool like that is perfectly suited for [Gio](www.gioui.org) I'd say. Along the way we'll touch on animation/scrolling, text formatting, fontsize and user control of the prompter with both mouse and keyboard. 
 
 All good techniques for any application. 
 
