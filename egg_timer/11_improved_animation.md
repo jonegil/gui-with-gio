@@ -123,7 +123,9 @@ layout.Rigid(
 
 Take a look in the code for the animation. You'll find the above ```op.InvalidateOp{}``` on [line 201](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L201), and the old ```w.Invalidate()``` on [line 255](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L255). Try changing running either one or the other to see which one performs best.
 
-To try it out I ran two 60 second boils, one with each Invalidate method, both on my Macbook and my Windows desktop. I haven't yet updated to the improved caching. The 2017 Macbook Air runs ```op.InvalidateOp{}``` at about 16-17% CPU, while ```w.Invalidate()``` consumes around 18-19%. The level is fairly high, but the difference is not that large. Still it's worth knowing the effect of each invalidate technique. On my Windows machine the load is much smaller with no meaningful difference between the two tehcniques. 
+To try it out I ran three 60 second boils, one with each Invalidate method, both on my Macbook and my Windows desktop. On the Mac one was run with the old renderer, and one with the new using ```GIORENDERER=forcecompute go run main.go```.
+
+Without forcecompute the 2017 Macbook Air runs ```op.InvalidateOp{}``` at about 16-17% CPU, while ```w.Invalidate()``` consumes around 18-19%. Those levels drop to ca 12% and 15% with the compute renderer. The level is fairly high, but the difference is not that large. Still it's worth knowing the effect of each invalidate technique. On my Windows machine the load is much smaller with no meaningful difference between the two tehcniques. 
 
 ![Invalidate CPU load](11_invalidate_cpu_load.png)
 
