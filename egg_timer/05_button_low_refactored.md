@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Chapter 5 
+title: Chapter 5 - Refactoring
 nav_order: 2
 parent: Egg timer
 has_children: false 
