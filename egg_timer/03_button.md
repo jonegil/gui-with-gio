@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Chapter 3 
+title: Chapter 3 - Button
 nav_order: 2
 parent: Egg timer
 has_children: false 

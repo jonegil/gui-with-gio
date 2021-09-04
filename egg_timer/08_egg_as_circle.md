@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Chapter 8 
+title: Chapter 8 - Circle
 nav_order: 2
 parent: Egg timer
 has_children: false

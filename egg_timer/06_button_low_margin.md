@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Chapter 6 
+title: Chapter 6 - Margin
 nav_order: 2
 parent: Egg timer
 has_children: false 
