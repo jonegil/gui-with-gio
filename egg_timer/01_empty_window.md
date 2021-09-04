@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Chapter 1 
+title: Chapter 1 - An empty window 
 nav_order: 2
 parent: Egg timer
 has_children: false
 ---
 
-# Chapter 1 - The empty window
+# Chapter 1 - An empty window
 
 ## Goals
 The intention of this section is to create a blank canvas that we later can draw upon. 
