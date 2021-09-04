@@ -9,6 +9,11 @@
 #   pgrep 11_improved_animation
 #   top -l 0 -s 1  -pid 9144 -stats cpu | awk 'NR%13==0; fflush(stdout)' > opInvalidateOpAdd.txt
 
+# With compute renderer
+#   GIORENDERER=forcecompute go run .
+#   pgrep 11_improved_animation
+#   top -l 0 -s 1  -pid 9144 -stats cpu | awk 'NR%13==0; fflush(stdout)' > opInvalidateOpAdd.txt
+
 # Run Egg timer for 60 seconds
   library(data.table)
   library(ggplot2)
@@ -45,5 +50,5 @@
     facet_wrap(~variable, scales="free_x")
 
 # Save
-  ggsave("../../11_invalidate_cpu_load.png", p1, width=6, height=4, dpi="print")
-  ggsave("../../11_invalidate_cpu_density.png", p2, width=6, height=4, dpi="print")
+  //ggsave("../../11_invalidate_cpu_load.png", p1, width=6, height=4, dpi="print")
+  //ggsave("../../11_invalidate_cpu_density.png", p2, width=6, height=4, dpi="print")
