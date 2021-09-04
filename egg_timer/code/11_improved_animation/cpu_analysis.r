@@ -28,6 +28,7 @@
 
 # Combine and arrange
   d = rbind(d1,d2)
+  setcolorder(d, c(1,3,2))
   d[, sec:=-2:(.N-3), method]
   md = melt(d, id.vars=c("method", "sec"))
 
@@ -38,17 +39,21 @@
            y="CPU load (%)", 
            title="Invalidation CPU load", 
            subtitle="Egg timer 60 second with opInvalidateOpAdd and wInvalidate", 
-           caption="MacOS, MacBook Air (2017) 1.8 GHz Dual-Core Intel Core i5, Aug 8th 2021\nWindows 10, Intel i5 3570K Quad Core, Aug 14th 2021") +
+           caption="MacOS, MacBook Air (2017) 1.8 GHz Dual-Core Intel Core i5, Aug 8th 2021
+           Same Macbook, GIORENDERER=forcecompute, Sep 4th 2021
+           Windows 10, Intel i5 3570K Quad Core, Aug 14th 2021") +
       facet_wrap(~variable)
   
-  p2 = ggplot(md[variable=="Windows" | (variable=="Macbook" & value > 10)], aes(x=value, color=method)) + 
+  p2 = ggplot(md[variable=="Windows" | (variable=="Macbook" & value > 10) | (variable=="Macbook_forcecompute" & value > 10)], aes(x=value, color=method)) + 
     geom_density() +
     labs(x="CPU load (%)", 
          title="Invalidation CPU load", 
          subtitle="Egg timer 60 second with opInvalidateOpAdd and wInvalidate", 
-         caption="MacOS, MacBook Air (2017) 1.8 GHz Dual-Core Intel Core i5, Aug 8th 2021\nWindows 10, Intel i5 3570K Quad Core, Aug 14th 2021") +
+         caption="MacOS, MacBook Air (2017) 1.8 GHz Dual-Core Intel Core i5, Aug 8th 2021
+         Same Macbook, GIORENDERER=forcecompute, Sep 4th 2021
+         Windows 10, Intel i5 3570K Quad Core, Aug 14th 2021") +
     facet_wrap(~variable, scales="free_x")
 
 # Save
-  //ggsave("../../11_invalidate_cpu_load.png", p1, width=6, height=4, dpi="print")
-  //ggsave("../../11_invalidate_cpu_density.png", p2, width=6, height=4, dpi="print")
+  ggsave("../../11_invalidate_cpu_load.png", p1, width=8, height=4, dpi="print")
+  ggsave("../../11_invalidate_cpu_density.png", p2, width=8, height=4, dpi="print")
