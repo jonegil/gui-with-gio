@@ -3,8 +3,8 @@ module main.go
 go 1.16
 
 require (
-	gioui.org v0.0.0-20210830132844-12aa9defe700
-	golang.org/x/exp v0.0.0-20210831011441-b422fde0612a // indirect
-	golang.org/x/sys v0.0.0-20210831042530-f4d43177bf5e // indirect
+	gioui.org v0.0.0-20210904052647-23f6dcb868eb
+	golang.org/x/exp v0.0.0-20210903233438-a2d0902c3ac7 // indirect
+	golang.org/x/sys v0.0.0-20210903071746-97244b99971b // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
