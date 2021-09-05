@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"io/ioutil"
@@ -37,12 +36,10 @@ func main() {
 	//f, err := ioutil.ReadFile("shakespeare_complete.txt")
 	if err == nil {
 		speechList = strings.Split(string(f), "\n")
-		for i := 1; i <= 5; i++ {
+		for i := 1; i <= 10; i++ {
 			speechList = append(speechList, "")
 		}
 	}
-
-	fmt.Println(len(speechList))
 
 	// GUI
 	go func() {
@@ -92,7 +89,7 @@ func draw(w *app.Window) error {
 			if e.State == key.Press {
 				// To set increment
 				stepSize := float32(10)
-				if e.Modifiers == key.ModCtrl {
+				if e.Modifiers == key.ModCommand {
 					stepSize = 1
 				}
 
@@ -136,8 +133,6 @@ func draw(w *app.Window) error {
 				if e.Name == "N" || e.Name == "H" {
 					textWidth = textWidth - stepSize
 				}
-
-				fmt.Println(textWidth)
 
 				// To adjust fontsize
 				// + and - are unmodified
@@ -195,14 +190,6 @@ func draw(w *app.Window) error {
 					},
 				},
 			}
-			speechPrompt := material.List(th, wl).Layout(gtx, len(speechList), func(gtx layout.Context, index int) layout.Dimensions {
-				line := speechList[index]
-				speechLine := material.Label(th, unit.Dp(float32(fontSize)), line)
-				speechLine.Alignment = 2
-				return speechLine.Layout(gtx)
-			},
-			)
-
 			// Margins
 			marginWidth := (float32(gtx.Constraints.Max.X) - textWidth) / 2.0
 			margins := layout.Inset{
@@ -215,7 +202,14 @@ func draw(w *app.Window) error {
 			//Layout within margins
 			margins.Layout(gtx,
 				func(gtx C) D {
-					return speechPrompt
+					return material.List(th, wl).Layout(gtx, len(speechList),
+						func(gtx layout.Context, index int) layout.Dimensions {
+							line := speechList[index]
+							speechLine := material.Label(th, unit.Dp(float32(fontSize)), line)
+							speechLine.Alignment = 2
+							return speechLine.Layout(gtx)
+						},
+					)
 				},
 			)
 			op.Save(&ops).Load()
