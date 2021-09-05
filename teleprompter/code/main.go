@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
+	"time"
 
 	"gioui.org/app"
 	"gioui.org/f32"
@@ -18,21 +21,28 @@ import (
 	"gioui.org/op/clip"
 	"gioui.org/op/paint"
 	"gioui.org/unit"
+	"gioui.org/widget"
 	"gioui.org/widget/material"
 )
 
 type C = layout.Context
 type D = layout.Dimensions
 
-var speech string
+var speechList []string
 
 func main() {
 
 	// read from file
-	dat, err := ioutil.ReadFile("speech.txt")
+	f, err := ioutil.ReadFile("speech.txt")
+	//f, err := ioutil.ReadFile("shakespeare_complete.txt")
 	if err == nil {
-		speech = string(dat)
+		speechList = strings.Split(string(f), "\n")
+		for i := 1; i <= 5; i++ {
+			speechList = append(speechList, "")
+		}
 	}
+
+	fmt.Println(len(speechList))
 
 	// GUI
 	go func() {
@@ -53,7 +63,7 @@ func main() {
 }
 
 func draw(w *app.Window) error {
-	// y-position for scroll text
+	// y-position for text
 	var scrollY float32 = 0
 
 	// y-position for red highlight bar
@@ -65,9 +75,9 @@ func draw(w *app.Window) error {
 	// fontSize
 	var fontSize float32 = 35
 
-	// editor is a text field
-	//var editor widget.Editor
-	//editor.SetText(speech)
+	// Are we auato scrolling?
+	var autoscroll bool = false
+	var autospeed float32 = 1
 
 	// th defines the material design style
 	th := material.NewTheme(gofont.Collection())
@@ -82,25 +92,40 @@ func draw(w *app.Window) error {
 			if e.State == key.Press {
 				// To set increment
 				stepSize := float32(10)
-				if e.Modifiers == key.ModShift {
+				if e.Modifiers == key.ModCtrl {
 					stepSize = 1
 				}
 
 				// To scroll text
-				if e.Name == key.NameDownArrow || e.Name == key.NameSpace {
-					scrollY = scrollY - stepSize*4*1.025
-					highlightY = highlightY + stepSize*4*1.025
-				}
-				if e.Name == key.NameUpArrow {
+				if e.Name == key.NameDownArrow || e.Name == "J" {
 					scrollY = scrollY + stepSize*4*1.025
-					highlightY = highlightY - stepSize*4*1.025
+					if scrollY < 0 {
+						scrollY = 0
+					}
+				}
+				if e.Name == key.NameUpArrow || e.Name == "K" {
+					scrollY = scrollY - stepSize*4*1.025
+				}
+
+				// To turn on/off autoscroll, and set the scrollspeed
+				if e.Name == key.NameSpace {
+					autoscroll = !autoscroll
+				}
+				if e.Name == "F" {
+					autospeed++
+				}
+				if e.Name == "S" {
+					autospeed--
+					if autospeed < 0 {
+						autospeed = 0
+					}
 				}
 
 				// To adjust the highlighter
-				if e.Name == "U" || e.Name == "K" {
+				if e.Name == "U" {
 					highlightY = highlightY - stepSize
 				}
-				if e.Name == "D" || e.Name == "J" {
+				if e.Name == "D" {
 					highlightY = highlightY + stepSize
 				}
 
@@ -112,14 +137,14 @@ func draw(w *app.Window) error {
 					textWidth = textWidth - stepSize
 				}
 
+				fmt.Println(textWidth)
+
 				// To adjust fontsize
 				// + and - are unmodified
-				// Shift and + is ?
-				// Shitf and - is _
-				if e.Name == "+" || e.Name == "?" {
+				if e.Name == "+" {
 					fontSize = fontSize + stepSize
 				}
-				if e.Name == "-" || e.Name == "_" {
+				if e.Name == "-" {
 					fontSize = fontSize - stepSize
 				}
 
@@ -129,9 +154,10 @@ func draw(w *app.Window) error {
 		case pointer.Event:
 			if e.Type == pointer.Scroll {
 				stepSize := e.Scroll.Y
-				scrollY = scrollY - stepSize
-				highlightY = highlightY + stepSize
-
+				scrollY = scrollY + stepSize
+				if scrollY < 0 {
+					scrollY = 0
+				}
 				w.Invalidate()
 			}
 
@@ -140,15 +166,42 @@ func draw(w *app.Window) error {
 			// ops are the operations from the UI
 			var ops op.Ops
 
-			// Grafical context
+			// Graphical context
 			gtx := layout.NewContext(&ops, e)
 
 			// Bacground
-			background := clip.Rect{
-				Min: image.Pt(0, 0),
-				Max: image.Pt(gtx.Constraints.Max.X, gtx.Constraints.Max.Y),
-			}.Op()
-			paint.FillShape(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff}, background)
+			paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
+
+			// Textscroll
+			if autoscroll {
+				scrollY = scrollY + autospeed
+				op.InvalidateOp{At: gtx.Now.Add(time.Second / 25)}.Add(&ops)
+			}
+
+			// Text
+			wl := &widget.List{
+				//Scrollbar: widget.Scrollbar{},
+				List: layout.List{
+					Axis: layout.Vertical,
+					//ScrollToEnd: false,
+					//Alignment:   0,
+					Position: layout.Position{
+						//BeforeEnd:  true,
+						//First:  0,
+						Offset: int(scrollY),
+						//OffsetLast: 	0,
+						//Count:      0,
+						//Length: 0,
+					},
+				},
+			}
+			speechPrompt := material.List(th, wl).Layout(gtx, len(speechList), func(gtx layout.Context, index int) layout.Dimensions {
+				line := speechList[index]
+				speechLine := material.Label(th, unit.Dp(float32(fontSize)), line)
+				speechLine.Alignment = 2
+				return speechLine.Layout(gtx)
+			},
+			)
 
 			// Margins
 			marginWidth := (float32(gtx.Constraints.Max.X) - textWidth) / 2.0
@@ -156,17 +209,13 @@ func draw(w *app.Window) error {
 				Left:   unit.Dp(float32(marginWidth)),
 				Right:  unit.Dp(float32(marginWidth)),
 				Top:    unit.Dp(float32(0)),
-				Bottom: unit.Dp(float32(-50000)),
+				Bottom: unit.Dp(float32(0)),
 			}
 
-			// Text
-			speech := material.Label(th, unit.Dp(float32(fontSize)), speech)
-			speech.Alignment = 2 // Center
-
-			op.Offset(f32.Pt(0, float32(scrollY))).Add(&ops)
+			//Layout within margins
 			margins.Layout(gtx,
 				func(gtx C) D {
-					return speech.Layout(gtx)
+					return speechPrompt
 				},
 			)
 			op.Save(&ops).Load()
@@ -183,24 +232,10 @@ func draw(w *app.Window) error {
 			paint.PaintOp{}.Add(&ops)
 			stack.Load()
 
-			/*
-				path := new(clip.Path)
-				stack = op.Save(&ops)
-				path.Begin(&ops)
-				path.MoveTo(f32.Point{X: 20, Y: 20})
-				path.LineTo(f32.Point{X: 200, Y: 200})
-				clip.Stroke{Path: path.End(), Style: clip.StrokeStyle{Width: 15, Cap: clip.SquareCap, Join: clip.BevelJoin}}.Op().Add(&ops)
-				paint.Fill(&ops, color.NRGBA{G: 0xff, A: 0x66})
-				stack.Load()
-			*/
-
-			//op.InvalidateOp{}.Add(&ops)
-
 			e.Frame(&ops)
 
 		case system.DestroyEvent:
 			return e.Err
-
 		}
 	}
 	return nil
