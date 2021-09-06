@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"io/ioutil"
@@ -87,20 +88,20 @@ func draw(w *app.Window) error {
 		case key.Event:
 			if e.State == key.Press {
 				// To set increment
-				stepSize := float32(10)
-				if e.Modifiers == key.ModCommand {
+				var stepSize float32 = 10
+				if e.Modifiers == key.ModShift {
 					stepSize = 1
 				}
 
 				// To scroll text
 				if e.Name == key.NameDownArrow || e.Name == "J" {
-					scrollY = scrollY + stepSize*4*1.025
+					scrollY = scrollY + stepSize*4
 					if scrollY < 0 {
 						scrollY = 0
 					}
 				}
 				if e.Name == key.NameUpArrow || e.Name == "K" {
-					scrollY = scrollY - stepSize*4*1.025
+					scrollY = scrollY - stepSize*4
 				}
 
 				// To turn on/off autoscroll, and set the scrollspeed
@@ -117,15 +118,7 @@ func draw(w *app.Window) error {
 					}
 				}
 
-				// To adjust the highlighter
-				if e.Name == "U" {
-					highlightY = highlightY - stepSize
-				}
-				if e.Name == "D" {
-					highlightY = highlightY + stepSize
-				}
-
-				// To adjust margin width
+				// To adjust text width
 				if e.Name == "W" {
 					textWidth = textWidth + stepSize
 				}
@@ -134,12 +127,19 @@ func draw(w *app.Window) error {
 				}
 
 				// To adjust fontsize
-				// + and - are unmodified
 				if e.Name == "+" {
 					fontSize = fontSize + stepSize
 				}
 				if e.Name == "-" {
 					fontSize = fontSize - stepSize
+				}
+
+				// To adjust the highlighter
+				if e.Name == "U" {
+					highlightY = highlightY - stepSize
+				}
+				if e.Name == "D" {
+					highlightY = highlightY + stepSize
 				}
 
 				w.Invalidate()
@@ -173,19 +173,13 @@ func draw(w *app.Window) error {
 			}
 
 			// Text
-			wl := &widget.List{
-				//Scrollbar: widget.Scrollbar{},
+			b := widget.Scrollbar{}
+			l := &widget.List{
+				Scrollbar: b,
 				List: layout.List{
 					Axis: layout.Vertical,
-					//ScrollToEnd: false,
-					//Alignment:   0,
 					Position: layout.Position{
-						//BeforeEnd:  true,
-						//First:  0,
 						Offset: int(scrollY),
-						//OffsetLast: 	0,
-						//Count:      0,
-						//Length: 0,
 					},
 				},
 			}
@@ -200,18 +194,24 @@ func draw(w *app.Window) error {
 			}
 
 			//Layout within margins
-			margins.Layout(gtx,
-				func(gtx C) D {
-					return material.List(th, wl).Layout(gtx, len(speechList),
-						func(gtx layout.Context, index int) layout.Dimensions {
-							line := speechList[index]
-							speechLine := material.Label(th, unit.Dp(float32(fontSize)), line)
-							speechLine.Alignment = 2
-							return speechLine.Layout(gtx)
-						},
-					)
-				},
-			)
+			/*
+				margins.Layout(gtx,
+					func(gtx C) D {
+						return material.List(th, l).Layout(gtx, len(speechList),
+							func(gtx layout.Context, index int) layout.Dimensions {
+								line := speechList[index]
+								speechLine := material.Label(th, unit.Dp(float32(fontSize)), line)
+								speechLine.Alignment = 2
+								return speechLine.Layout(gtx)
+							},
+						)
+					},
+				)
+			*/
+
+			layout.UniformInset(unit.Dp(8)).Layout(gtx,
+				material.Body1(&th, fmt.Sprintf("Item %d", index)).Layout)
+
 			op.Save(&ops).Load()
 
 			// Draw a transparent red rectangle.
