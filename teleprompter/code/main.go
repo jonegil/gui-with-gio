@@ -33,7 +33,6 @@ func main() {
 
 	// read from file
 	f, err := ioutil.ReadFile("speech.txt")
-	//f, err := ioutil.ReadFile("shakespeare_complete.txt")
 	if err == nil {
 		speechList = strings.Split(string(f), "\n")
 		for i := 1; i <= 10; i++ {
@@ -127,10 +126,10 @@ func draw(w *app.Window) error {
 				}
 
 				// To adjust margin width
-				if e.Name == "W" || e.Name == "L" {
+				if e.Name == "W" {
 					textWidth = textWidth + stepSize
 				}
-				if e.Name == "N" || e.Name == "H" {
+				if e.Name == "N" {
 					textWidth = textWidth - stepSize
 				}
 
@@ -190,6 +189,7 @@ func draw(w *app.Window) error {
 					},
 				},
 			}
+
 			// Margins
 			marginWidth := (float32(gtx.Constraints.Max.X) - textWidth) / 2.0
 			margins := layout.Inset{
