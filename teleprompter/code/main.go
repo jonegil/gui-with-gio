@@ -26,7 +26,7 @@ import (
 type C = layout.Context
 type D = layout.Dimensions
 
-var speechList []string
+var paragraphList []string
 
 func main() {
 
@@ -34,17 +34,17 @@ func main() {
 	f, err := ioutil.ReadFile("speech.txt")
 	if err == nil {
 		// Convert whole text into a slice of strings.
-		speechList = strings.Split(string(f), "\n")
-		// Add extra empty lines a the end. Easy trick to ensure
+		paragraphList = strings.Split(string(f), "\n")
+		// Add extra empty lines a the end. Cheap but effective trick to ensure
 		// the last line of the speech scrolls out of the screen
 		for i := 1; i <= 10; i++ {
-			speechList = append(speechList, "")
+			paragraphList = append(paragraphList, "")
 		}
 	}
 	/*
 		Alternative to reading from file, we can generate paragraphs
 		for i := 1; i <= 2500; i++ {
-			speechList = append(speechList, fmt.Sprintf("Paragraph %d", i))
+			paragraphList = append(paragraphList, fmt.Sprintf("Paragraph %d", i))
 		}
 	*/
 
@@ -115,27 +115,19 @@ func draw(w *app.Window) error {
 				if e.Name == key.NameSpace {
 					autoscroll = !autoscroll
 					if autoscroll && autospeed == 0 {
-						autospeed = 1
+						autospeed++
 					}
 				}
 				if e.Name == "F" {
-					if autoscroll {
-						autospeed++
-					}
+					autospeed++
 					if !autoscroll {
-						autospeed = 1
 						autoscroll = true
+						autospeed = 1
 					}
 				}
 				if e.Name == "S" {
-					if autoscroll {
+					if autospeed > 0 {
 						autospeed--
-					}
-					if autospeed < 0 {
-						autospeed = 0
-					}
-					if autospeed == 0 {
-						autoscroll = false
 					}
 				}
 
@@ -219,11 +211,11 @@ func draw(w *app.Window) error {
 			margins.Layout(gtx,
 				func(gtx C) D {
 					// 2) ... then the list inside those margins ...
-					return speechViz.Layout(gtx, len(speechList),
+					return speechViz.Layout(gtx, len(paragraphList),
 						// 3) ... where paragraph is it's separate item
 						func(gtx C, index int) D {
 							// One label per paragraph
-							paragraph := material.Label(th, unit.Dp(float32(fontSize)), speechList[index])
+							paragraph := material.Label(th, unit.Dp(float32(fontSize)), paragraphList[index])
 							// The text is centered
 							paragraph.Alignment = 2
 							// Return the laid out paragraph
