@@ -47,6 +47,7 @@ func main() {
 			speechList = append(speechList, fmt.Sprintf("Paragraph %d", i))
 		}
 	*/
+
 	// GUI
 	go func() {
 		// create new window
@@ -77,7 +78,7 @@ func draw(w *app.Window) error {
 	// fontSize
 	var fontSize int = 35
 
-	// Are we auato scrolling?
+	// Are we auto scrolling?
 	var autoscroll bool = false
 	var autospeed int = 1
 
@@ -102,28 +103,34 @@ func draw(w *app.Window) error {
 				// To scroll text
 				if e.Name == key.NameDownArrow || e.Name == "J" {
 					scrollY = scrollY + stepSize*4
-					if scrollY < 0 {
-						scrollY = 0
-					}
 				}
 				if e.Name == key.NameUpArrow || e.Name == "K" {
 					scrollY = scrollY - stepSize*4
+					if scrollY < 0 {
+						scrollY = 0
+					}
 				}
 
 				// To turn on/off autoscroll, and set the scrollspeed
 				if e.Name == key.NameSpace {
 					autoscroll = !autoscroll
+					if autoscroll && autospeed == 0 {
+						autospeed = 1
+					}
 				}
 				if e.Name == "F" {
 					if autoscroll {
 						autospeed++
 					}
 					if !autoscroll {
+						autospeed = 1
 						autoscroll = true
 					}
 				}
 				if e.Name == "S" {
-					autospeed--
+					if autoscroll {
+						autospeed--
+					}
 					if autospeed < 0 {
 						autospeed = 0
 					}
@@ -211,16 +218,16 @@ func draw(w *app.Window) error {
 			// 1) First the margins ...
 			margins.Layout(gtx,
 				func(gtx C) D {
-					// 2) ... then the list inside those margins, ...
+					// 2) ... then the list inside those margins ...
 					return speechViz.Layout(gtx, len(speechList),
-						// 3) ... where each item is a separate paragraph
+						// 3) ... where paragraph is it's separate item
 						func(gtx C, index int) D {
 							// One label per paragraph
-							l := material.Label(th, unit.Dp(float32(fontSize)), speechList[index])
-							// The label is centered
-							l.Alignment = 2
-							// Return the laid out label
-							return l.Layout(gtx)
+							paragraph := material.Label(th, unit.Dp(float32(fontSize)), speechList[index])
+							// The text is centered
+							paragraph.Alignment = 2
+							// Return the laid out paragraph
+							return paragraph.Layout(gtx)
 						},
 					)
 				},
