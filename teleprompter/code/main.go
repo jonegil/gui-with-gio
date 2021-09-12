@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"io/ioutil"
@@ -33,30 +32,27 @@ func main() {
 
 	// Read from file
 	f, err := ioutil.ReadFile("speech.txt")
-	//f, err := ioutil.ReadFile("shakespeare_complete.txt")
-	// Shakespeare has issues from "Painting my age" or the start of sonnet 63
-	// Sometimes a few sonnets earlier too
-	//f, err := ioutil.ReadFile("gatsby.txt")
 	if err == nil {
-		// Convert whole text into a slice of strings,
-		// instead of one huge string. Useful to later
-		// only show the lines which are visible at the moment
+		// Convert whole text into a slice of strings.
 		speechList = strings.Split(string(f), "\n")
 		// Add extra empty lines a the end. Easy trick to ensure
-		// the last line of the speech scrolls up and out of the
-		// screen
+		// the last line of the speech scrolls out of the screen
 		for i := 1; i <= 10; i++ {
 			speechList = append(speechList, "")
 		}
 	}
-
+	/*
+		Alternative to reading from file, we can generate paragraphs
+		for i := 1; i <= 2500; i++ {
+			speechList = append(speechList, fmt.Sprintf("Paragraph %d", i))
+		}
+	*/
 	// GUI
 	go func() {
 		// create new window
 		w := app.NewWindow(
 			app.Title("Teleprompter"),
 			app.Size(unit.Dp(350), unit.Dp(300)),
-			//app.Fullscreen,
 		)
 
 		if err := draw(w); err != nil {
@@ -176,7 +172,7 @@ func draw(w *app.Window) error {
 				w.Invalidate()
 			}
 
-		// A re-render request
+		// A re-render request?
 		case system.FrameEvent:
 			// ops are the operations from the UI
 			var ops op.Ops
@@ -198,13 +194,12 @@ func draw(w *app.Window) error {
 			margins := layout.Inset{
 				Left:   unit.Dp(float32(marginWidth)),
 				Right:  unit.Dp(float32(marginWidth)),
-				Top:    unit.Dp(float32(0)),
-				Bottom: unit.Dp(float32(0)),
+				Top:    unit.Dp(0),
+				Bottom: unit.Dp(0),
 			}
 
-			// Visualisation of the speech, using a list
-			// The offset is the pixel-distance from the top edge to the
-			// first element in our speechlist
+			// Visualisation of the speech, using a list where each paragraph is a separate item.
+			// Offset is the distance from the top of the screen to the first element. I.e. it controls how far we have scrolled.
 			var speechViz = layout.List{
 				Axis: layout.Vertical,
 				Position: layout.Position{
@@ -213,11 +208,13 @@ func draw(w *app.Window) error {
 			}
 
 			// Layout the list inside the margins
+			// 1) First the margins ...
 			margins.Layout(gtx,
 				func(gtx C) D {
+					// 2) ... then the list inside those margins, ...
 					return speechViz.Layout(gtx, len(speechList),
+						// 3) ... where each item is a separate paragraph
 						func(gtx C, index int) D {
-							fmt.Println(index)
 							// One label per paragraph
 							l := material.Label(th, unit.Dp(float32(fontSize)), speechList[index])
 							// The label is centered
