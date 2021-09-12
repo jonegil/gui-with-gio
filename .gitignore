@@ -17,3 +17,4 @@
 
 # R temp files
 *.Rhistory
+teleprompter/code/*.txt
