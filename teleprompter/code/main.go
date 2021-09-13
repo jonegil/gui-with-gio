@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
+	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"gioui.org/app"
@@ -30,23 +31,23 @@ var paragraphList []string
 func main() {
 
 	// Read from file
+	f, err := ioutil.ReadFile("speech.txt")
+	if err == nil {
+		// Convert whole text into a slice of strings.
+		paragraphList = strings.Split(string(f), "\n")
+		// Add extra empty lines a the end. Cheap but effective trick to ensure
+		// the last line of the speech scrolls out of the screen
+		for i := 1; i <= 10; i++ {
+			paragraphList = append(paragraphList, "")
+		}
+	}
+
+	// Alternative to reading from file, we can generate paragraphs programatically
 	/*
-		f, err := ioutil.ReadFile("speech.txt")
-		if err == nil {
-			// Convert whole text into a slice of strings.
-			paragraphList = strings.Split(string(f), "\n")
-			// Add extra empty lines a the end. Cheap but effective trick to ensure
-			// the last line of the speech scrolls out of the screen
-			for i := 1; i <= 10; i++ {
-				paragraphList = append(paragraphList, "")
-			}
+		for i := 1; i <= 2500; i++ {
+			paragraphList = append(paragraphList, fmt.Sprintf("Eloquent speech, interesting phrase %d", i))
 		}
 	*/
-
-	//Alternative to reading from file, we can generate paragraphs
-	for i := 1; i <= 2500; i++ {
-		paragraphList = append(paragraphList, fmt.Sprintf("Eloquent speech, interesting phrase %d", i))
-	}
 
 	// GUI
 	go func() {
@@ -114,16 +115,14 @@ func draw(w *app.Window) error {
 				// To turn on/off autoscroll, and set the scrollspeed
 				if e.Name == key.NameSpace {
 					autoscroll = !autoscroll
-					if autoscroll && autospeed == 0 {
+					if autospeed == 0 {
+						autoscroll = true
 						autospeed++
 					}
 				}
 				if e.Name == "F" {
+					autoscroll = true
 					autospeed++
-					if !autoscroll {
-						autoscroll = true
-						autospeed = 1
-					}
 				}
 				if e.Name == "S" {
 					if autospeed > 0 {
