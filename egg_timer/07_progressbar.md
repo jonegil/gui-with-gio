@@ -2,7 +2,7 @@
 layout: default
 title: Chapter 7 - Progressbar 
 nav_order: 2
-parent: Basics - Egg timer
+parent: Egg timer
 has_children: false
 ---
 
