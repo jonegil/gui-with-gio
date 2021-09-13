@@ -2,7 +2,7 @@
 layout: default
 title: Bonus - Improved animation
 nav_order: 3
-parent: Egg timer
+parent: Basics - Egg timer
 has_children: false
 ---
 
