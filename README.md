@@ -33,7 +33,7 @@ For an interface to work, it must be:
 ### Just do it
 _But I don't know how_
 
-Agreed, the [official Gio website](http://www.gioui.org) is a bit advanced. [Nice repos exist](https://github.com/gioui) with many examples, but where to start? If you're a practical learner, you simply want to get started, code something simple, and learn as you go along. That's me at least, and if you're like that too, we're soulmates. 
+Agreed, the [official Gio website](https://gioui.org) is a bit advanced. [Nice repos exist](https://github.com/gioui) with many examples, but where to start? If you're a practical learner, you simply want to get started, code something simple, and learn as you go along. That's me at least, and if you're like that too, we're soulmates. 
 
 So let's just do exactly that. The point here is to build something simple, from the ground up, and touch upon concepts and ideas as we go along. Every step moves us forward, and every new feature builds on something we've touched upon before. The goal is to change the initial  _I don't know_ to a more optimistic _I don't know how - yet_. 
 
