@@ -246,3 +246,7 @@ Hopefully this get's you started on your own project. And when you do, big or sm
 And make sure to follow Gio on the website, newsletter and community call. 
 
 Now, it's finally time for breakfast. Guess what I'm having.
+
+---
+
+[Next chapter](11_improved_animation.md){: .btn .fs-5 .mb-4 .mb-md-0 }

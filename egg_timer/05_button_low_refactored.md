@@ -97,3 +97,7 @@ As before we range through ```w.Events()```, detecting their type.
 
 ## Comments
 Refactoring is a matter of taste, and this is my take on it. If you have different needs, do what's right for your app. The main point is to keep your applications flexible enough to support continued improvements and future needs. Good luck.
+
+---
+
+[Next chapter](06_button_low_margin.md){: .btn .fs-5 .mb-4 .mb-md-0 }

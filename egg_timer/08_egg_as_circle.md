@@ -97,3 +97,7 @@ You can play around with these dimensions, familiarizing yourself with when the 
 ```paint.FillShape``` fills the shape with the ```color```.
 
 And finally we return the widget in the form of it's ```Dimensions```, height: 400.
+
+---
+
+[Next chapter](09_egg_as_egg.md){: .btn .fs-5 .mb-4 .mb-md-0 }

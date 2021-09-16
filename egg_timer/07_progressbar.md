@@ -169,3 +169,7 @@ It's also explained in more detail on the [July 2020 community call](https://www
 ## Comments
 
 By combining all these building blocks we now have a stateful program we can control with ease. The user interface tells us when something happens, and the rest of the program uses that to take care of business. We had to pull a few tricks out of the bag, including both a ```channel``` and a ```select```. Now that we have those tools in our belt, we will be well equipped to add some custom graphics in the next chapter.
+
+---
+
+[Next chapter](08_egg_as_circle.md){: .btn .fs-5 .mb-4 .mb-md-0 }

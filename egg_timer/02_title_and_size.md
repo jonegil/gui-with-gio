@@ -68,3 +68,6 @@ The [options](https://pkg.go.dev/gioui.org/app#Option) of ```app.NewWindow()``` 
  - There's also a Fullscreen option if you need.
  - If you're building for Android, Status and Navigation colors can be set here. 
  
+---
+
+[Next chapter](03_button.md){: .btn .fs-5 .mb-4 .mb-md-0 }
