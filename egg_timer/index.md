@@ -38,3 +38,8 @@ Over the next 10 steps we will
 
 ## Source code
 All the source-code is in this repo, in the ```egg_timer/code``` folder.
+
+---
+
+[First chapter](01_empty_window.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+
