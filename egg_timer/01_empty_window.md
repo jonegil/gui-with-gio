@@ -79,3 +79,7 @@ go func {
 3. Start it by calling ```app.Main()```
 From [app.Main documentation](https://pkg.go.dev/gioui.org/app#hdr-Main):
    > *The Main function must be called from a program's main function, to hand over control of the main thread to operating systems that need it.*
+
+
+
+[Next](02_title_and_size.md){: .btn .fs-5 .mb-4 .mb-md-0 }
