@@ -41,7 +41,7 @@ case system.FrameEvent:
 Let's examine the structure of this code.
 
 1. First we define a ```Flexbox``` through the struct ```layout.Flex{ }```
-1. Then we send it a *list of children* to be laid out through ```Layout(gtx, ...)```. The graphical context, *gtx*, contais the constraints that the kids have to keep within, and any number of children can follow.
+1. Then we send it a *list of children* to be laid out through ```Layout(gtx, ...)```. The graphical context, *gtx*, contains the constraints that the kids have to keep within, and any number of children can follow.
 
 The children we list are both created by ```layout.Rigid( )```: 
   a. The first is a placeholder for the button, 
@@ -51,10 +51,10 @@ What's a [Rigid](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Rigid) you
 
 #### Constraint and Dimensions
 At this point it serves us well take one step back and look at the concept that binds all this together, namely  **Constraints** and **Dimensions**. 
- - [Constraints](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Constraints) are the Minimum and Maxium size of a widget. How small or large *can* the widghet be
+ - [Constraints](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Constraints) are the Minimum and Maximum size of a widget. How small or large *can* the widget be
  - [Dimensions](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#Dimensions) are the actual size of a widget. How small or large is it *actually*
 
-A parent sets **Constraints**, and a child repsonds with **Dimensions**. The parent creates a Widget and calls ```Layout()```, and the widget responds with it´s own dimensions, effectively laying itself out. As in the real world, not all children are well behaved, and as any child can attest to, some constraints from Mom or Dad might feel unfair - so there are some nuances and negotiation needed. But for the most part, this is it. **Constraints** and **Dimensions** bind it all together.
+A parent sets **Constraints**, and a child responds with **Dimensions**. The parent creates a Widget and calls ```Layout()```, and the widget responds with it´s own dimensions, effectively laying itself out. As in the real world, not all children are well behaved, and as any child can attest to, some constraints from Mom or Dad might feel unfair - so there are some nuances and negotiation needed. But for the most part, this is it. **Constraints** and **Dimensions** bind it all together.
 
 As we see above, layout operations are recursive. A child can itself have children. A layout can itself contain a layout. This goes on, and you can build elaborate structures from simple components. Turtles all the way down. 
 
@@ -93,7 +93,7 @@ case system.FrameEvent:
 
 ### Comments
 
-Inside ```layout.Flex{ }``` we define two characteristicts:
+Inside ```layout.Flex{ }``` we define two characteristics:
  1. Axis: Vertical alignment means stuff will be be placed or below each other.
  1. Spacing: Leftover space will be at the start. 
 

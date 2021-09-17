@@ -18,7 +18,7 @@ The intention of this section is to add a progressbar
 I've looked forward to this chapter ever since I started writing this series. We will cover quite some ground and introduce multiple new ideas:
  - Try out a new widget, the ```material.Progressbar```
  - Start using state variables to control behaviour
- - Use two concurrency technques; one to create and share a beating pulse that progresses the progressbar, one one to select among independent communication operations
+ - Use two concurrency techniques; one to create and share a beating pulse that progresses the progressbar, one one to select among independent communication operations
 
 Let's look at these in turn pieces.
 
@@ -149,11 +149,11 @@ In previous chapters, we ranged over events using ```for e := range w.Events()``
 
 We add the ```p``` to the ```progress``` variable if the control variable ```boiling``` is true, and progress is less than 1. Since ```p``` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
 
-Finally we force the window to draw, by calling ```w.Invalidate()```. What is does is to inform Gio that the old rendring is now, well, invalid, and hence a new drawing must be made. Without such notice, Gio would simply not update until forced to do so by a mouseclick or button press or other events. Invalidating at *every* frame though can be costly, and alternatives exists. It's a bit of an advanced topic though, so for now let's leave it as is, but return to it in the [Bonus chapter on improved animation](11_improved_animation.md).
+Finally we force the window to draw, by calling ```w.Invalidate()```. What is does is to inform Gio that the old rendering is now, well, invalid, and hence a new drawing must be made. Without such notice, Gio would simply not update until forced to do so by a mouse click or button press or other events. Invalidating at *every* frame though can be costly, and alternatives exists. It's a bit of an advanced topic though, so for now let's leave it as is, but return to it in the [Bonus chapter on improved animation](11_improved_animation.md).
 
 By using a channel like this we get
 1. Precise timing, where we control the execution exactly as we want it
-1. Consistent timing, simlar across fast and slow hardware
+1. Consistent timing, similar across fast and slow hardware
 1. Concurrent timing, the rest of the application continues as before
 
 While all of these make sense, the 2nd point deserves some extra attention. If you recompile the app without the ```time.Sleep(time.Second / 25)```, your machine will work hard to render as quickly as possible. That can consume a lot of cpu resources, which in turn can drain battery as well. It also ensures consistency across devices, all run at the same pulse. As an example, pprof's from 3 different machines are included in the code folder. These include a 1/25th sleep, ensuring the same end result. Please have a look.

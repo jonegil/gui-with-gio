@@ -13,11 +13,11 @@ The intention of this section is to organize the code better.
 
 ## Outline
 
-Up to now, we've built the program by bolting on functionality, bit by bit. This has served us well, allowing us to start with an empty canvas, iterate by changing the minimum amount of lines, while still making meaningfull progress.
+Up to now, we've built the program by bolting on functionality, bit by bit. This has served us well, allowing us to start with an empty canvas, iterate by changing the minimum amount of lines, while still making meaningful progress.
 
 Going forward however, it's starting to look a little unwieldy. Having all the code inside one big ```main()``` is can make it harder to understand, and harder to continue building. Hence we'll refactor the program a bit, simply breaking it up into smaller pieces. 
  
-> *Refectoring is transforming code in a safe and rapid way is vital to keeping it cheap and easy to modify for future needs.*
+> *Refactoring is transforming code in a safe and rapid way is vital to keeping it cheap and easy to modify for future needs.*
 [Martin Fowler](https://martinfowler.com/books/refactoring.html)
 
 In other words, no new functionality will be added, but we'll clear the way for better things to come. 
@@ -55,7 +55,7 @@ The convention is that a zero exit code indicates success, which is what we send
   
 ### No 2 - Constraints and Dimensions - A handy shortcut
 
-We talked at lenght about **Constraints** and **Dimensions** earlier. Since we're using them quite a lot, it's handy to define two shortcuts, ```C``` and ```D```. Constraints are part of the Context.
+We talked at length about **Constraints** and **Dimensions** earlier. Since we're using them quite a lot, it's handy to define two shortcuts, ```C``` and ```D```. Constraints are part of the Context.
 
 ```go
 type C = layout.Context
@@ -93,7 +93,7 @@ func draw(w *app.Window) error {
 
 As before we range through ```w.Events()```, detecting their type. 
  - ```system.FramEvent``` is handled as before, 
- - we add a new case for ```system.DestroyEvent```, which returns *nil* for normal window closures, but *Err* if something else is teh cause.
+ - we add a new case for ```system.DestroyEvent```, which returns *nil* for normal window closures, but *Err* if something else is the cause.
 
 ## Comments
 Refactoring is a matter of taste, and this is my take on it. If you have different needs, do what's right for your app. The main point is to keep your applications flexible enough to support continued improvements and future needs. Good luck.

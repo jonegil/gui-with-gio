@@ -41,7 +41,7 @@ The standard library is fairly compartmentalized, useful functionality for strin
  - ```strings``` will be used to trim spaces away from the input string
 
 From Gio:
- - [gioui.org/text](https://pkg.go.dev/gioui.org/text) provides supporting types for working with text. A lot of is Font support and Caching, but we will use it for Aligmnent.
+ - [gioui.org/text](https://pkg.go.dev/gioui.org/text) provides supporting types for working with text. A lot of is Font support and Caching, but we will use it for Alignment.
 
 ### 2. The editor widget
 
