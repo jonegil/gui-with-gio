@@ -27,7 +27,7 @@ Gio only updates what you see when a [FrameEvent](https://pkg.go.dev/gioui.org/i
 
 Quite often. But not always. 
 
-One exception to this rule is animation. When animating, you want it to run as smooth as possible. To achieve this, we need to ask Gio to redraw continuosly. And without triggering events we need to explicitly tell Gio to do so. That is done by calling ```invalidate```. 
+One exception to this rule is animation. When animating, you want it to run as smooth as possible. To achieve this, we need to ask Gio to redraw continuously. And without triggering events we need to explicitly tell Gio to do so. That is done by calling ```invalidate```.
 
 ### 2. To ways to invalidate
 
@@ -103,7 +103,7 @@ func draw(w *app.Window) error {
   }
 ```
 
-#### Example 3 - Replacing w.Invalidate() with op.InvalidateOp{} - what's the effecet
+#### Example 3 - Replacing w.Invalidate() with op.InvalidateOp{} - what's the effect
 
 Can do better than that? Why not use the ```IncrementOp{At time.Time}``` instead of the central ticker? We need to move it into the ```Layout``` section inside FrameEvent. Here's how that rigid would look:
 
@@ -125,7 +125,7 @@ Take a look in the code for the animation. You'll find the above ```op.Invalidat
 
 To try it out I ran three 60 second boils, one with each Invalidate method, both on my Macbook and my Windows desktop. On the Mac one was run with the old renderer, and one with the new using ```GIORENDERER=forcecompute go run main.go```.
 
-Without forcecompute the 2017 Macbook Air runs ```op.InvalidateOp{}``` at about 16-17% CPU, while ```w.Invalidate()``` consumes around 18-19%. Those levels drop to ca 12% and 15% with the compute renderer. The level is fairly high, but the difference is not that large. Still it's worth knowing the effect of each invalidate technique. On my Windows machine the load is much smaller with no meaningful difference between the two tehcniques. 
+Without forcecompute the 2017 Macbook Air runs ```op.InvalidateOp{}``` at about 16-17% CPU, while ```w.Invalidate()``` consumes around 18-19%. Those levels drop to ca 12% and 15% with the compute renderer. The level is fairly high, but the difference is not that large. Still it's worth knowing the effect of each invalidate technique. On my Windows machine the load is much smaller with no meaningful difference between the two techniques.
 
 ![Invalidate CPU load](11_invalidate_cpu_load.png)
 
@@ -217,7 +217,7 @@ if boiling && progress < 1 {
 
 #### What about our ticker-channel?
 
-All code related to the ```progressIncrementer``` channel, both variables, readning and writing to the chan, is removed.
+All code related to the ```progressIncrementer``` channel, both variables, reading and writing to the chan, is removed.
 
 We're not going into more detail about the pattern here, but know it exists and has some pretty neat functionality that takes care of state and status for your animation.
 
@@ -225,4 +225,4 @@ We're not going into more detail about the pattern here, but know it exists and 
 
 Summing it all up, I hope this has shed some more light on the in's and out's of animation in Gio. As so often, it depends what's the best solution. Showcasing a demo to impress? Go for smoothness. Minimizing work? Go for animation in steps. High end vs low end user hardware? Splurge or conserve as you see fit. 
 
-Just be conscious about the tradeoffs and know some of the techniques that can assist.
+Just be conscious about the trade-offs and know some of the techniques that can assist.

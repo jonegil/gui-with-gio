@@ -77,7 +77,7 @@ Then an operation is created to move 200 Points right, 150 Points down, ```op.Of
 
 We're now at the center of our egg. This is where the path begins, ```eggPath.Begin( )```
 
-From here we rotate a full 360 degrees and continue drawing the outline of the Egg. We use the math for a [Hügelschäffer Egg](https://mathcurve.com/courbes2d.gb/oeuf/oeuf.shtml), as presented on Torben Jansen's [excellent interactive blog](https://observablehq.com/@toja/egg-curve). The formula receives an angle, from 0 to 360, calculates an approporiate distance from center and returns the outline as a point. Math is fun!
+From here we rotate a full 360 degrees and continue drawing the outline of the Egg. We use the math for a [Hügelschäffer Egg](https://mathcurve.com/courbes2d.gb/oeuf/oeuf.shtml), as presented on Torben Jansen's [excellent interactive blog](https://observablehq.com/@toja/egg-curve). The formula receives an angle, from 0 to 360, calculates an appropriate distance from center and returns the outline as a point. Math is fun!
 
 ![Hügelschäffer egg](09_torben_jansen.gif)
 

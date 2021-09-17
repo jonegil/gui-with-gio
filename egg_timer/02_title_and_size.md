@@ -50,10 +50,10 @@ go func() {
 
 [gioui.org/unit](https://pkg.go.dev/gioui.org/unit) implements device independent units and values. The docs describe a handful of alternatives:
 
-| Type | Description |
-| dp | Device indepentent pixel - independent of the underlying device. |
-| sp | Scaled pixel - used for text sizes |
-| px | Pixels - used for precision for the actual device |
+| Type | Description                                                      |
+| dp   | Device independent pixel - independent of the underlying device. |
+| sp   | Scaled pixel - used for text sizes                               |
+| px   | Pixels - used for precision for the actual device                |
  
 In general, ```dp``` is most used. Also, let's keep device independency when we can. Hence that's what we use when we define the window size inside ```app.NewWindow()```
 

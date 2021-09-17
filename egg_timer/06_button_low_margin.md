@@ -39,7 +39,7 @@ layout.Flex{
             // TWO: ... then we lay out those margins ...
             margins.Layout(
                 
-                // THREE: ... and finally within the margins, we ddefine and lay out the button
+                // THREE: ... and finally within the margins, we define and lay out the button
                 func(gtx C) D {
                     btn := material.Button(th, &startButton, "Start")
                     return btn.Layout(gtx)
@@ -98,7 +98,7 @@ case system.FrameEvent:
                 }
                 // TWO: ... then we lay out those margins ...
                 return margins.Layout(gtx,
-                    // THREE: ... and finally within the margins, we ddefine and lay out the button
+                    // THREE: ... and finally within the margins, we define and lay out the button
                     func(gtx C) D {
                         btn := material.Button(th, &startButton, "Start")
                         return btn.Layout(gtx)

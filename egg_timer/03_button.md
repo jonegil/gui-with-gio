@@ -106,7 +106,7 @@ func main() {
 ```
 ### Comments
 
-1. From the top, we recognice the main function starting defining and calling the anonymous function.
+1. From the top, we recognize the main function starting defining and calling the anonymous function.
 
 1. We continue to define the window ` w ` 
 
@@ -118,7 +118,7 @@ func main() {
   
   - ```th``` is the material theme, and sets the fonts to be gofonts
 
-1. The `for e:= range w.Events() ` loop is more intersting: 
+1. The `for e:= range w.Events() ` loop is more interesting:
     - ```w.Events()``` gets us the *channel* through which events are delivered. We simply listen to this channel forever.
 
   - Then ... what's this ` e:= e.(type) ` thing. It's actually a neat thing, known as a [type switch](https://tour.golang.org/methods/16) that allows us to take different actions depending on the ```type``` of event that's being processed.
@@ -147,7 +147,7 @@ Phew, that's a long one. Thanks if you're still along. We can summarize the whol
   b.Layout(gtx)
 ```
 
-If you're comfortable with those, your're good.
+If you're comfortable with those, you're good.
 
 ---
 
