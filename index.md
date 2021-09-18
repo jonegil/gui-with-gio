@@ -11,7 +11,7 @@ has_children: false
 
 **You want a Gui. Of course you do.**
 
-Did you know that Go has a great GUI library called [Gio](https://gioui.org/)? In a [10-part tutorial](egg_timer/index.md) we will start completely from scratch, with zero background required, and build a self contained GUI application
+Did you know that Go has a great GUI library called [Gio](https://gioui.org/)? In this [10-part tutorial](egg_timer/index.md) we will start completely from scratch, with zero background required, and build a self contained GUI application:
 
 ![Screenshot of egg_timer](egg_timer/egg_timer.gif)
 
@@ -47,7 +47,7 @@ So let's just do exactly that. The point here is to build something simple, from
 Come along for the ride!
 
 
-#### Disclaimer
+### Disclaimer
 
 I really like Gio, I like the people behind it, I sponsor it financially, and I want it to succeed. But I´m by no means an expert. My goal is simply to share what I've learned in the hope that you find it useful. Hope that works.
 
