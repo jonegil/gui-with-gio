@@ -8,18 +8,16 @@ has_children: false
 ```go
 #go, #golang, #gui, #gioui
 ```
-{: .fs-9 }
-You want a Gui. Of course you do. 
 
----
+You want a Gui. Of course you do. 
+{: .fs-9 }
 
 Did you know that Go has a great GUI library called [Gio](https://gioui.org/)? In a [10-part tutorial](egg_timer/index.md) we will start completely from scratch, with zero background required, and build a self contained GUI application
-{: .fs-6 .fw-300 }
 
 ![Screenshot of egg_timer](egg_timer/egg_timer.gif)
 
 [Get started now](egg_timer/index.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } 
-[Clone all code from GitHub](https://github.com/jonegil/gui-with-gio/){: .btn .fs-5 .mb-4 .mb-md-0 }
+
 
 ## Background
 
@@ -56,3 +54,6 @@ I really like Gio, I like the people behind it, I sponsor it financially, and I 
 
 Cheers
 
+---
+
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/){: .btn .fs-5 .mb-4 .mb-md-0 }
