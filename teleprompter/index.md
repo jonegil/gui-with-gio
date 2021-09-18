@@ -9,7 +9,20 @@ has_toc: false
 
 # Teleprompter - Animation and interaction
 
+```
+
+Welcome friend! 
+
+Please look around while I continue to write out this chapter. 
+
+Code is done though - and honestly quite nifty. 
+
+Cheers
+
+```
+
 ## Goals
+
 
 In this project we continue from the [egg timer](../egg_timer/) and investigate more features in Gio: 
  - Programatic **animation**, using lists
