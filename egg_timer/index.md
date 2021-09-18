@@ -18,9 +18,6 @@ Over the next 10 steps we will
 
 ![Egg timer](egg_timer.gif)
 
-[Get started now](egg_timer/01_empty_window.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } 
-[View it on GitHub](https://github.com/jonegil/gui-with-gio/){: .btn .fs-5 .mb-4 .mb-md-0 }
-
 ## Outline
 
 ### The first 10 steps
@@ -42,5 +39,6 @@ Over the next 10 steps we will
 All the source-code is [available on GitHub](https://github.com/jonegil/gui-with-gio/). Please clone, fork, hack and improve. PR's welcome!
 
 ---
+[Let's start](01_empty_window.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } 
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/){: .btn .fs-5 .mb-4 .mb-md-0 }
 
-[First chapter](01_empty_window.md){: .btn .fs-5 .mb-4 .mb-md-0 }
