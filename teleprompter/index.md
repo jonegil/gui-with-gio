@@ -11,11 +11,12 @@ has_toc: false
 
 ```
 
-Welcome friend! 
+Hi mate!
 
-Please look around while I continue to write out this chapter. 
+Please look around while I continue to write this chapter. 
 
-Code is done though - and honestly quite nifty. 
+Code is done though - and honestly quite nifty.
+Pull this repo and play around.
 
 Cheers
 
@@ -23,9 +24,9 @@ Cheers
 
 ## Goals
 
-This project continues from the [egg timer](../egg_timer/). That was a good start, but we're not done. Especially we should look closer into how to react to user input from mouse and keyboard. 
+This project continues where the [egg timer](../egg_timer/) leaves off. The timer was a good start and gave us the foundation to build an app. Hence those details won't be repeated here. But we're not done. Especially we should look closer into how to react to user input from mouse and keyboard, and use that do control an animation.  
 
-To keep it interesting but still small it's better to start a new project and investigate more features in Gio: 
+For learning it's best with a small codebase. That way it's easier to get an overview. Still it should have many novel and interesting pieces. To achieve that it's best to start a new project and investigate more features in Gio: 
  - User input, both **keyboard** and **mouse**
  - Programatic **animation**, using lists
  - Colors and **transparency**
@@ -43,21 +44,24 @@ Let's (sc)roll!
 
 A [teleprompter](https://en.wikipedia.org/wiki/Teleprompter) is a device that displays text for the presenter to read. From [rolling parchment in a suitcase](https://www.smithsonianmag.com/history/a-brief-history-of-the-teleprompter-88039053/) to modern screens and camera solutions, the core remains the same - display the right text at the right time.
 
-In a digial world, this could be useful for all of us. Full script, que cards or bullet points are up to you - it's smart to prepare and fair to bring notes. Today we build a tool that displays what you need, where you need it.
-
 <p align="center">
   <img src="teleprompter_with_text.jpeg" alt="Teleprompter with text" height="250"/>
   <!--img src="teleprompter.jpeg" alt="Teleprompter and camera" height="250"/-->
 </p>
 
 ## So what will we actually build?
-To build our teleprompter in Gio we will: 
- 1. convert a ```txt``` file to a list of **paragraphs**
- 1. use [layout.List](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#List) to display the paragraphs as a **list of widgets**
- 1. build **auto scrolling**, including start, stop and live speed adjustment
- 1. also add manual scrolling, for full control using both **keyboard** and **mouse**
- 1. allow the user to **resize** and **layout** the text exactly as wanted, live, when scrolling
- 1. add custom graphics to create a **transparent** focusbar, that we **move at will**, making it easier to read the right line.
+This sounds like something we could build ourselves. Here's the plan:
+
+ 1. Read and display content from an external ```txt``` file.
+ 1. Display the text in an efficient manner. That's done by breaking the full text into smaller **paragraphs**
+ 1. Present each paragraph as a separate [material.Label](https://pkg.go.dev/gioui.org/widget/material#Label) widget.
+ 1. Organize the labels into a **list of widgets** using [layout.List](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#List)
+ 1. Build **auto scrolling**, including start, stop and live speed adjustment
+ 1. Add manual scrolling, for full control using both **keyboard** and **mouse**
+ 1. Allow the user to **resize** and **layout** the text exactly as wanted, live, when scrolling
+ 1. Add custom graphics to create a **transparent** focusbar, that we **move at will**, making it easier to read the right line.
+
+Sounds like we have our work cut out for us? Not to worry, we'll tackle them step by step.
 
 ## Source code
 
