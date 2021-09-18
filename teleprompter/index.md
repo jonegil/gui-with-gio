@@ -23,18 +23,21 @@ Cheers
 
 ## Goals
 
+This project continues from the [egg timer](../egg_timer/). That was a good start, but we're not done. Especially we should look closer into how to react to user input from mouse and keyboard. 
 
-In this project we continue from the [egg timer](../egg_timer/) and investigate more features in Gio: 
- - Programatic **animation**, using lists
+To keep it interesting but still small it's better to start a new project and investigate more features in Gio: 
  - User input, both **keyboard** and **mouse**
+ - Programatic **animation**, using lists
  - Colors and **transparency**
  - **Dynamic text**, both size and paragraph layouts
 
 ![Mr_Gorbachev_tear_down_this_wall](teleprompter_Mr_Gorbachev.gif)
 
+This is a simple window with scrolling text. Nothing fancy. But play with the controls and you'll see it's both lively and responsive. And that's worth diving into.
 
-As you can see, this is a simple window with scrolling text. But looks deceive, this guy packs a serious punch. Let's (sc)roll!
+Let's (sc)roll!
 
+(sorry)
 
 ## Outline
 
