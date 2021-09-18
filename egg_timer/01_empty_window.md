@@ -53,7 +53,7 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
    Looking at [the docs](https://pkg.go.dev/gioui.org/app) we find:
    > *Package app provides a platform-independent interface to operating system functionality for running graphical user interfaces.*
    
-   This is good news. Gio takes care of all the plaform-dependent stuff for us. I routinely code on Windows and Macos. Gio just works. [GioUI.org](gioui.org) lists even more, iOS and Android included. 
+   This is good news. Gio takes care of all the platform-dependent stuff for us. I routinely code on Windows and MacOS. Gio just works. [GioUI.org](gioui.org) lists even more, iOS and Android included.
    
    This is deeper than you might realize. Because, even if your app today is single-platform, your *skillset* is now multi-platform. 
    *"We should port to mac"* Consider it done! *"Hot startup seeking app- and desktop experts*" No problem. *"Who here knows tvOS"* You do.
