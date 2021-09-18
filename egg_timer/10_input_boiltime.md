@@ -249,4 +249,4 @@ Now, it's finally time for breakfast. Guess what I'm having.
 
 ---
 
-[Next chapter](11_improved_animation.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Yeah, I've earned the bonus!](11_improved_animation.md){: .btn .fs-5 .mb-4 .mb-md-0 }
