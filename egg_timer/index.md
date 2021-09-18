@@ -35,11 +35,9 @@ Over the next 10 steps we will
 ### Bonus material - In progress
  - [Bonus - Improved animation](11_improved_animation.md)
 
-
 ## Source code
-All the source-code is in this repo, in the ```egg_timer/code``` folder.
+All the source-code is [available on GitHub](https://github.com/jonegil/gui-with-gio/). Please clone, fork, hack and improve. PR's welcome!
 
 ---
 
 [First chapter](01_empty_window.md){: .btn .fs-5 .mb-4 .mb-md-0 }
-
