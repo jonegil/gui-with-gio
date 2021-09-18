@@ -18,6 +18,9 @@ Over the next 10 steps we will
 
 ![Egg timer](egg_timer.gif)
 
+[Get started now](egg_timer/index.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } 
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/){: .btn .fs-5 .mb-4 .mb-md-0 }
+
 ## Outline
 
 ### The first 10 steps
