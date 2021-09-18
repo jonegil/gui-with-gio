@@ -18,7 +18,7 @@ The intention of this section is to draw custom graphics that (vaguely) resemble
 The code introduces custom graphics. The circle in the app is drawn by Gio, not displaying a static picture. Tho achieve that we combine 
  - A **clip** do define the area we can draw within
  - A **paint** operation to fill that area
- - Some paramaters to set color
+ - Some parameters to set color
  
 ## Imports
 
@@ -87,7 +87,7 @@ layout.Rigid(
 
 We first define a circle using ```clip.Circle{ }```. It defines the Center point and Radius. 
 
-The origo of the circle is hard-coded, with distance from the top left corner of the *widget*. Note that this is *not* necessarily the top left corner of the app. The size of the widget itself is coded as
+The origin of the circle is hard-coded, with distance from the top left corner of the *widget*. Note that this is *not* necessarily the top left corner of the app. The size of the widget itself is coded as
 ```Dimensions``` using ```d := image.Point{Y: 500}```. X represents width and Y represents Height
 
 You can play around with these dimensions, familiarizing yourself with when the circle moves up or down, depending in wheiter you resize the box or move the circle center inside the box. Also, try commenting the hard coded and uncomment the soft coding below that uses the window area as a reference. 
