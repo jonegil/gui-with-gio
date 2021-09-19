@@ -13,10 +13,10 @@ has_toc: false
 
 Hi mate!
 
+The code for this part is done - but not the text. 
 Please look around while I continue to write this chapter. 
 
-Code is done though - and honestly quite nifty.
-Pull this repo and play around.
+As always, please pull the repo and play around.
 
 Cheers
 
@@ -24,13 +24,15 @@ Cheers
 
 ## Goals
 
-This project continues where the [egg timer](../egg_timer/) leaves off. The timer was a good start and gave us the foundation to build an app. Hence those details won't be repeated here. But we're not done. Especially we should look closer into how to react to user input from mouse and keyboard, and use that do control an animation.  
+This project continues where the [egg timer](../egg_timer/) leaves off. The timer was a good start and gave us the foundation to build an app. But we're not done. Especially we should look closer at how to process input from the user, both keyboard and mouse.
 
-For learning it's best with a small codebase. That way it's easier to get an overview. Still it should have many novel and interesting pieces. To achieve that it's best to start a new project and investigate more features in Gio: 
+As an example, we'll build a fully functioning teleprompter app. It should be, reacting to keypresses and mouse-scrolls from the user. 
+ 
+More precisely we'll investigate more features in Gio: 
  - User input, both **keyboard** and **mouse**
  - Programatic **animation**, using lists
  - Colors and **transparency**
- - **Dynamic text**, both size and paragraph layouts
+ - **Dynamic text**, both changing font size and layout while we're live
 
 ![Mr_Gorbachev_tear_down_this_wall](teleprompter_Mr_Gorbachev.gif)
 
