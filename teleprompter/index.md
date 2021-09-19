@@ -24,63 +24,130 @@ Cheers
 
 ## Goals
 
-This project continues where the [egg timer](../egg_timer/) leaves off. The timer was a good start and gave us the foundation to build an app. But we're not done. Especially we should look closer at how to process input from the user, both keyboard and mouse.
+This project continues where the [egg timer](../egg_timer/) leaves off. The timer was a good start and gave us the foundation to build an app. But we're not done. Especially we should look closer at how how to deal with user input, both keyboard and mouse. 
 
-As an example, we'll build a fully functioning teleprompter app. It should be, reacting to keypresses and mouse-scrolls from the user. 
- 
-More precisely we'll investigate more features in Gio: 
- - User input, both **keyboard** and **mouse**
- - Programatic **animation**, using lists
- - Colors and **transparency**
- - **Dynamic text**, both changing font size and layout while we're live
+To do that we'll build what's known as a [teleprompter](https://en.wikipedia.org/wiki/Teleprompter). That's simply an app that displays and scrolls text, but we'll make sure it's both lively and responsive for the user to interact with. We'll make sure to look into some other new parts of Gio as well.
 
 ![Mr_Gorbachev_tear_down_this_wall](teleprompter_Mr_Gorbachev.gif)
 
-This is a simple window with scrolling text. Nothing fancy. But play with the controls and you'll see it's both lively and responsive. And that's worth diving into.
+Ready? 
 
 Let's (sc)roll!
-
 (sorry)
+
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/teleprompter/code){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ## Outline
 
-A [teleprompter](https://en.wikipedia.org/wiki/Teleprompter) is a device that displays text for the presenter to read. From [rolling parchment in a suitcase](https://www.smithsonianmag.com/history/a-brief-history-of-the-teleprompter-88039053/) to modern screens and camera solutions, the core remains the same - display the right text at the right time.
+More precisely our teleprompter should
+1. Read text from a ```.txt``` file so the speaker can easily display his or her own scripts
+1. Allow full flexibility to adjust **font-size** and **text width**
+1. Help the speaker by displaying a **focus bar** that can be moved to where it's most useful
+1. **Full control**  of manual scroll, but also **auto scroll** that's easy to start, stop, pause, speed up and slow down.
+1. Easy to remember keyboard controls, and be fully controllable with only one hand. Designed for  guestilating Italians!
 
 <p align="center">
   <img src="teleprompter_with_text.jpeg" alt="Teleprompter with text" height="250"/>
   <!--img src="teleprompter.jpeg" alt="Teleprompter and camera" height="250"/-->
 </p>
 
-## So what will we actually build?
-This sounds like something we could build ourselves. Here's the plan:
-
- 1. Read and display content from an external ```txt``` file.
- 1. Display the text in an efficient manner. That's done by breaking the full text into smaller **paragraphs**
- 1. Present each paragraph as a separate [material.Label](https://pkg.go.dev/gioui.org/widget/material#Label) widget.
- 1. Organize the labels into a **list of widgets** using [layout.List](https://pkg.go.dev/gioui.org/layout?utm_source=gopls#List)
- 1. Build **auto scrolling**, including start, stop and live speed adjustment
- 1. Add manual scrolling, for full control using both **keyboard** and **mouse**
- 1. Allow the user to **resize** and **layout** the text exactly as wanted, live, when scrolling
- 1. Add custom graphics to create a **transparent** focusbar, that we **move at will**, making it easier to read the right line.
-
-Sounds like we have our work cut out for us? Not to worry, we'll tackle them step by step.
-
 ## Source code
 
-Todo: 
+Time for code. We´ll zoom out a bit and look at the main blocks and structure of the program.
+
+
+### Section 1 - Starting up
+
+In the first part of the program we list the imports and start up the app. A slightly shortened version goes like this:
+
 ```go
-Describe the overall structure of the program, with the loop listening for various events
+import (
+  // Two new interesting Gio imports
+  "gioui.org/io/key"
+	"gioui.org/io/pointer"
+)
+
+// the []string to hold the speech as a list of paragraphs
+var paragraphList []string
+
+func main() {
+	// Part 1 - Read the speech from file
+  f, err := ioutil.ReadFile("speech.txt")
+
+  // Part 2 - Start the GUI
+	go func() {
+		// draw on screen
+    w := app.NewWindow
+    draw(w) 
+	}()
+}
+```
+
+[gioui.org/io/key]() and [gioui.org/io/pointer]() are new to us, and as their names suggest give us support for processing keyboard and mouse events.
+
+We then define a ```[]string``` that we'll later fill with contents from the ```.txt``` we read from disk.
+
+Finally create a new window and start the app.
+
+### Section 2 - Define variables to control behaviour
+
+```go
+func draw(w *app.Window) error {
+  // variables that control behviour
+	// y-position for text
+	var scrollY int = 0
+
+	// y-position for red highlight bar
+	var highlightY int = 78
+
+	// width of text area
+	var textWidth int = 300
+
+	// fontSize
+	var fontSize int = 35
+
+	// Are we auto scrolling?
+	var autoscroll bool = false
+	var autospeed int = 1
+  
+```
+
+### Section 3 - Listen for events
+In the second part we listen for events and draw on screen.
+
+```go
+
+	// listen for events in the window.
+	for e := range w.Events() {
+
+		// Detect what type of event
+		switch e := e.(type) {
+
+		// A keypress?
+		case key.Event:
+	
+		// A mouse event?
+		case pointer.Event:
+	
+		// A re-render request?
+		case system.FrameEvent:
+	
+			// Layout the speech as a list of paragraphs
+			// 1) First the margins ...
+
+        // 2) ... then the list inside those margins ...
+				
+          // 3) ... where each paragraph is it's separate item
+			
+			// Draw a transparent red focusbar.
+
+		// Shutdown?
+		case system.DestroyEvent:
+	
+    }
+  }
 
 ```
 
-
-```go
-The go through each main block in detail
- keystroke
- mouse
- rendering 
- quit
-
-```
 
 All the source-code is in this repo, in the ```teleprompter/code``` folder.
