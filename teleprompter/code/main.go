@@ -29,8 +29,7 @@ type D = layout.Dimensions
 var paragraphList []string
 
 func main() {
-
-	// Read from file
+	// Part 1 - Read from file
 	f, err := ioutil.ReadFile("speech.txt")
 	if err == nil {
 		// Convert whole text into a slice of strings.
@@ -50,7 +49,7 @@ func main() {
 		}
 	*/
 
-	// GUI
+	// Part 2 - Start the GUI
 	go func() {
 		// create new window
 		w := app.NewWindow(
@@ -58,6 +57,7 @@ func main() {
 			app.Size(unit.Dp(350), unit.Dp(300)),
 		)
 
+		// draw on screen
 		if err := draw(w); err != nil {
 			log.Fatal(err)
 		}
@@ -198,20 +198,21 @@ func draw(w *app.Window) error {
 			}
 
 			// Visualisation of the speech, using a list where each paragraph is a separate item.
-			// Offset is the distance from the top of the screen to the first element. I.e. it controls how far we have scrolled.
-			var speechViz = layout.List{
+			// Offset is the distance from the top of the screen to the first element.
+			// I.e. it controls how far we have scrolled.
+			var viz = layout.List{
 				Axis: layout.Vertical,
 				Position: layout.Position{
 					Offset: scrollY,
 				},
 			}
 
-			// Layout the list inside the margins
+			// Layout the list inside margins
 			// 1) First the margins ...
 			margins.Layout(gtx,
 				func(gtx C) D {
 					// 2) ... then the list inside those margins ...
-					return speechViz.Layout(gtx, len(paragraphList),
+					return viz.Layout(gtx, len(paragraphList),
 						// 3) ... where paragraph is it's separate item
 						func(gtx C, index int) D {
 							// One label per paragraph
