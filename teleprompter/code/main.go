@@ -43,6 +43,7 @@ func main() {
 	}
 
 	// Alternative to reading from file, we can generate paragraphs programatically
+	// Handy for debugging
 	/*
 		for i := 1; i <= 2500; i++ {
 			paragraphList = append(paragraphList, fmt.Sprintf("Eloquent speech, interesting phrase %d", i))
