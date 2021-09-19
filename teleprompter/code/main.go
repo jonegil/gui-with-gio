@@ -26,6 +26,7 @@ import (
 type C = layout.Context
 type D = layout.Dimensions
 
+// A []string to hold the speech as a list of paragraphs
 var paragraphList []string
 
 func main() {
@@ -44,19 +45,18 @@ func main() {
 	// Alternative to reading from file, we can generate paragraphs programatically
 	// Handy for debugging
 	/*
-		for i := 1; i <= 2500; i++ {
-			paragraphList = append(paragraphList, fmt.Sprintf("Eloquent speech, interesting phrase %d", i))
-		}
+	   for i := 1; i <= 2500; i++ {
+	     paragraphList = append(paragraphList, fmt.Sprintf("Eloquent speech, interesting phrase %d", i))
+	   }
 	*/
 
-	// Part 2 - Start the GUI
+	// Part 2 - Start the gui
 	go func() {
 		// create new window
 		w := app.NewWindow(
 			app.Title("Teleprompter"),
 			app.Size(unit.Dp(350), unit.Dp(300)),
 		)
-
 		// draw on screen
 		if err := draw(w); err != nil {
 			log.Fatal(err)
