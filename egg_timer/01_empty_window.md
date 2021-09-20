@@ -57,7 +57,7 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
    
    This is deeper than you might realize. Because, even if your app today is single-platform, your *skillset* is now multi-platform. 
    *"We should port to mac"* Consider it done! *"Hot startup seeking app- and desktop experts*" No problem. *"Who here knows tvOS"* You do.
-   *"The pilot died, can anyone land this plane*" ... ok, maybe not, but the point still stand. The diversity of Gio is nothing less than amazing.
+   *"The pilot died, can anyone land this plane*" ... ok, maybe not, but the point still stands. The diversity of Gio is nothing less than amazing.
    
 2. The **event loop** in the goroutine
    
