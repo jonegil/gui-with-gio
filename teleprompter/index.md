@@ -26,7 +26,7 @@ Cheers
 
 This project continues where the [egg timer](../egg_timer/) leaves off. The timer was a good start and gave us the foundation to build an app. But we're not done. Especially we should look closer at how how to deal with user input, both keyboard and mouse. 
 
-To do that we'll build what's known as a [teleprompter](https://en.wikipedia.org/wiki/Teleprompter). That's simply an app that displays and scrolls text, but we'll make sure it's both lively and responsive for the user to interact with. We'll make sure to look into some other new parts of Gio as well.
+To do that we'll build what's known as a [teleprompter](https://en.wikipedia.org/wiki/Teleprompter). That's simply an app that displays and scrolls text. But it needs to be lively and responsive for the user. Therefore it's a great example for us to work with when learning to react to keypresses and mouse scrolls. We'll make sure to look into some other new parts of Gio as well.
 
 ![Mr_Gorbachev_tear_down_this_wall](teleprompter_Mr_Gorbachev.gif)
 
@@ -39,10 +39,10 @@ Let's (sc)roll!
 
 More precisely our teleprompter should
 1. Read text from a ```.txt``` file so the speaker can easily display his or her own scripts
+1. **Full control** of manual scroll, as well as **auto scroll** that's easy to start, stop, pause, speed up and slow down.
 1. Allow full flexibility to adjust **font-size** and **text width**
 1. Help the speaker by displaying a **focusbar** that can be moved to where it's most useful
-1. **Full control**  of manual scroll, but also **auto scroll** that's easy to start, stop, pause, speed up and slow down.
-1. Easy to remember keyboard controls, and be fully controllable with only one hand. Designed for  guestilating Italians!
+1. Easy to remember keyboard controls, fully controllable with only one hand. Designed for gesticulation!
 
 <p align="center">
   <img src="teleprompter_with_text.jpeg" alt="Teleprompter with text" height="250"/>
@@ -51,8 +51,7 @@ More precisely our teleprompter should
 
 ## Source code
 
-Time for code. We´ll zoom out a bit and look at the main blocks and structure of the program.
-
+Time for code. We´ll zoom out a bit and start with the main blocks and structure of the program.
 
 ### Section 1 - Starting up
 
@@ -71,6 +70,8 @@ import (
 These two are new to us and gives support for keyboard and mouse events:
  - *Package [io/key](https://pkg.go.dev/gioui.org/io/key) implements key and text events and operations.*
  - *Package [io/pointer](https://pkg.go.dev/gioui.org/io/pointer) implements pointer events and operations. A pointer is either a mouse controlled cursor or a touch object such as a finger.*
+
+Aha - pointer supports both mouse and finger. Nice.
 
 
 #### A placeholder for the speech
