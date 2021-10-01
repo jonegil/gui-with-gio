@@ -30,8 +30,8 @@ import (
 )
 
 func main() {
-go func() {
-// create new window
+  go func() {
+    // create new window
     w := app.NewWindow(
       app.Title("Egg timer"),
       app.Size(unit.Dp(400), unit.Dp(600)),
