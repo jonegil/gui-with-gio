@@ -35,7 +35,7 @@ func main() {
 	if err == nil {
 		// Convert whole text into a slice of strings.
 		paragraphList = strings.Split(string(f), "\n")
-		// Add extra empty lines a the end. Cheap but effective trick to ensure
+		// Add extra empty lines a the end. Simple trick to ensure
 		// the last line of the speech scrolls out of the screen
 		for i := 1; i <= 10; i++ {
 			paragraphList = append(paragraphList, "")
@@ -71,8 +71,8 @@ func draw(w *app.Window) error {
 	// y-position for text
 	var scrollY int = 0
 
-	// y-position for red highlight bar
-	var highlightY int = 78
+	// y-position for red focusBar
+	var focusBarY int = 78
 
 	// width of text area
 	var textWidth int = 300
@@ -147,12 +147,12 @@ func draw(w *app.Window) error {
 					fontSize = fontSize - stepSize
 				}
 
-				// To adjust the highlighter
+				// To adjust the focusBar
 				if e.Name == "U" {
-					highlightY = highlightY - stepSize
+					focusBarY = focusBarY - stepSize
 				}
 				if e.Name == "D" {
-					highlightY = highlightY + stepSize
+					focusBarY = focusBarY + stepSize
 				}
 
 				w.Invalidate()
@@ -185,7 +185,7 @@ func draw(w *app.Window) error {
 			// Textscroll
 			if autoscroll {
 				scrollY = scrollY + autospeed
-				op.InvalidateOp{At: gtx.Now.Add(time.Second / 25)}.Add(&ops)
+				op.InvalidateOp{At: gtx.Now.Add(time.Second / 50)}.Add(&ops)
 			}
 
 			// Margins
@@ -232,7 +232,7 @@ func draw(w *app.Window) error {
 			path.Begin(&ops)
 			path.MoveTo(f32.Pt(0, 0))
 			path.End()
-			op.Offset(f32.Pt(0, float32(highlightY))).Add(&ops)
+			op.Offset(f32.Pt(0, float32(focusBarY))).Add(&ops)
 			clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Add(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
