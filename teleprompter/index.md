@@ -51,16 +51,17 @@ The goals for our teleprompter are to:
 
 ## Source code
 
-The structure of this walkthrough is as follows:
-1. New imports to handle user input
+To structure the walkthrough of the code, it's broken into the following main sections:
+
+1. Introduce new imports to handle user input
 1. Read the ```.txt``` file into a ```[]string``` slice
 1. Start the application
-1. State variables to control behaviour
+1. Define state variables to control behaviour
 1. Listen for events from the user. 
 
 Of these, the four first are relatively straight forward, while the final one on events deserves some extra attention. That's where the we actually will deal with the various inputs from the user, and visualise the application. 
 
-### Part 1 - New imports
+### Section 1 - New imports
 
 Many imports are well known, but some are new:
 
@@ -78,7 +79,7 @@ These two are new to us and gives support for keyboard and mouse events:
 
 Notice how pointer supports both mouse gestures on a desktop/laptop and fingers on a screen. Nice, again an example of how learning a cross-platform framework gives you tools to multiple devices.
 
-### Part 2 - Read the speach into a slice
+### Section 2 - Read the speach into a slice
 
 First we define variables for the program, inlcuding a slice to keep the speech in.
 
@@ -107,7 +108,7 @@ The first sectioin of ```main``` reads the text and splits it by ```\n```, newli
 
 To allow enough space after the line so that it actually scrolls off screeen, we simply add a handful of empty paragraphs at the end of the list. 
 
-### Part 3 - Start the application 
+### Section 3 - Start the application 
 
 The last section of ```main``` starts the Gui in a normal manner:
 ```go
@@ -129,7 +130,7 @@ The last section of ```main``` starts the Gui in a normal manner:
 }
 ```
 
-### Part 4 - Variables to control behaviour
+### Section 4 - Variables to control behaviour
 
 ```go
 func draw(w *app.Window) error {
@@ -173,7 +174,7 @@ Now we're getting into the meat of things. In order to control the behaviour of 
  - ```autoscroll``` and ```autospeed``` - Should we scroll automatically? And if so, how fast? 
    - Start and stop with ```space```. Make it ```f```aster or ```s```lower
 
-### Part 5 - Listen for events
+### Section 5 - Listen for events
 
 Finally, we get to listen for events. As outlined above, there are quite a few inputs here, and they can have mutual impact on each other. For example, if ```textWdith```increases, the line breaks will adjust since there are now space for more words on each line. But if the user increases ```fontSize```, each word requires more space and line break changes again. Luckily for us Gio takes care of all of the underlying details, our job is the keep track of the state variables used to define the constraints of the visualisation. 
 
