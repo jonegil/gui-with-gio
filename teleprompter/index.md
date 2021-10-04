@@ -111,21 +111,21 @@ To allow enough space after the line so that it actually scrolls off screeen, we
 
 The last section of ```main``` starts the Gui in a normal manner:
 ```go
-// Part 2 - Start the gui
-	go func() {
-		// create new window
-		w := app.NewWindow(
-			app.Title("Teleprompter"),
-			app.Size(unit.Dp(350), unit.Dp(300)),
-		)
-		// draw on screen
-		if err := draw(w); err != nil {
-			log.Fatal(err)
-		}
-		os.Exit(0)
-	}()
-
-	app.Main()
+  // ... continuing inside main()
+  // Part 2 - Start the gui
+  go func() {
+    // create new window
+    w := app.NewWindow(
+      app.Title("Teleprompter"),
+      app.Size(unit.Dp(350), unit.Dp(300)),
+    )
+    // draw on screen
+    if err := draw(w); err != nil {
+      log.Fatal(err)
+    }
+    os.Exit(0)
+  }()
+  app.Main()
 }
 ```
 
@@ -155,17 +155,21 @@ func draw(w *app.Window) error {
 Now we're getting into the meat of things. In order to control the behaviour of the program we need multiple state variables. The user will adjust all of these while using the program, so we can't have them hard coded into the various portions of the visualisation. Instead we collect them here to keep the program tidy.
 
  - ```scrollY``` - How far into the speech are we? It starts on top of course, and its value increments as the speaker scrolls down into the speech. This is the variable we adjust either manually or automatically to progress the speech. 
-   - Move text with trackpad or mouse ```scroll```, ```arrow keys```, ```j``` and ```k``` (vim :heart:)
+   - Move text with trackpad or mouse ```scroll```, ```arrow keys```, ```j``` and ```k``` (vim ⭐️)
  
+
  - ```focusBarY``` - The red focusbar helps keep the speeker's attention on one single line. At the same time it's helpful to see the current line with some context around it. Hence we choose to initiate the focusbar near, but not at, the top. 
    - Move it up with ```u``` and down with ```d```
 
+
  - ```textWidth``` - Should the speech fill the full width of the window, or a narrower portion of it. I prefer the speech to be fairly narrow, but that all depends on screen-setup, distance to screen, where the camera is, or if there even is one. On a laptop, the camera is very close to your face, so narrow text will not create too much eye-movement. Experiment and find what works.
    - Make the text ```w```ider or ```n```arrower 
- 
+
+
  - ```fontSize``` - The size of the font, obviously 
    - Tune it with ```+``` and ```-```
- 
+
+
  - ```autoscroll``` and ```autospeed``` - Should we scroll automatically? And if so, how fast? 
    - Start and stop with ```space```. Make it ```f```aster or ```s```lower
 
@@ -176,31 +180,30 @@ Finally, we get to listen for events. As outlined above, there are quite a few i
 As before the switch statement uses type assertions, ```e.(type)``` to deterimine what just happened:
 
 ```go
+// listen for events in the window.
+for e := range w.Events() {
 
-  // listen for events in the window.
-  for e := range w.Events() {
+  // Detect what type of event
+  switch e := e.(type) {
 
-    // Detect what type of event
-    switch e := e.(type) {
+  // A keypress?
+  case key.Event:
+    // Update and store state for size, width and positioning
 
-    // A keypress?
-    case key.Event:
-      // Update and store state for size, width and positioning
+  // A mouse event?
+  case pointer.Event:
+    // Update and store positioning state
+    
+  // A re-render request?
+  case system.FrameEvent:
+    // Layout the speech as a list 
 
-    // A mouse event?
-    case pointer.Event:
-      // Update and store positioning state
-      
-    // A re-render request?
-    case system.FrameEvent:
-      // Layout the speech as a list 
+  // Shutdown?
+  case system.DestroyEvent:
+    // Break out and end
 
-    // Shutdown?
-    case system.DestroyEvent:
-      // Break out and end
-
-    }
   }
+}
 
 ```
 
