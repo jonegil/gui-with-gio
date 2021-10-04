@@ -51,7 +51,14 @@ The goals for our teleprompter are to:
 
 ## Source code
 
-Time for code. We´ll take one step back and start with the overall structure of the program.
+The structure of this walkthrough is as follows:
+1. New imports to handle user input
+1. Read the ```.txt``` file into a ```[]string``` slice
+1. Start the application
+1. State variables to control behaviour
+1. Listen to events from the user. 
+
+Of these, the four first are relatively straight forward, while the final one on how to deal with user input will require a bit more attention. But they're all useful so lets get started.
 
 ### Part 1 - New imports
 
@@ -122,7 +129,7 @@ The last section of ```main``` starts the Gui in a normal manner:
 }
 ```
 
-### Part 5 - Variables to control behaviour
+### Part 4 - Variables to control behaviour
 
 ```go
 func draw(w *app.Window) error {
@@ -162,7 +169,7 @@ Now we're getting into the meat of things. In order to control the behaviour of 
  - ```autoscroll``` and ```autospeed``` - Should we scroll automatically? And if so, how fast? 
    - Start and stop with ```space```. Make it ```f```aster or ```s```lower
 
-### Part 6 - Listen for events
+### Part 5 - Listen for events
 
 Finally, we get to listen for events. As outlined above, there are quite a few inputs here, and they can have mutual impact on each other. For example, if ```textWdith```increases, the line breaks will adjust since there are now space for more words on each line. But if the user increases ```fontSize```, each word requires more space and line break changes again. Luckily for us Gio takes care of all of the underlying details, as long as we're keeping track of the value of those state variables. 
 
