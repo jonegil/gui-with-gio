@@ -56,9 +56,9 @@ The structure of this walkthrough is as follows:
 1. Read the ```.txt``` file into a ```[]string``` slice
 1. Start the application
 1. State variables to control behaviour
-1. Listen to events from the user. 
+1. Listen for events from the user. 
 
-Of these, the four first are relatively straight forward, while the final one on how to deal with user input will require a bit more attention. But they're all useful so lets get started.
+Of these, the four first are relatively straight forward, while the final one on events deserves some extra attention. That's where the we actually will deal with the various inputs from the user, and visualise the application. 
 
 ### Part 1 - New imports
 
@@ -171,9 +171,9 @@ Now we're getting into the meat of things. In order to control the behaviour of 
 
 ### Part 5 - Listen for events
 
-Finally, we get to listen for events. As outlined above, there are quite a few inputs here, and they can have mutual impact on each other. For example, if ```textWdith```increases, the line breaks will adjust since there are now space for more words on each line. But if the user increases ```fontSize```, each word requires more space and line break changes again. Luckily for us Gio takes care of all of the underlying details, as long as we're keeping track of the value of those state variables. 
+Finally, we get to listen for events. As outlined above, there are quite a few inputs here, and they can have mutual impact on each other. For example, if ```textWdith```increases, the line breaks will adjust since there are now space for more words on each line. But if the user increases ```fontSize```, each word requires more space and line break changes again. Luckily for us Gio takes care of all of the underlying details, our job is the keep track of the state variables used to define the constraints of the visualisation. 
 
-The structure is quite rich:
+As before the switch statement uses type assertions, ```e.(type)``` to deterimine what just happened:
 
 ```go
 
@@ -197,12 +197,36 @@ The structure is quite rich:
 
     // Shutdown?
     case system.DestroyEvent:
-      // Sayonara
+      // Break out and end
 
     }
   }
 
 ```
 
+The three main events here are:
+ - ```key.Event``` - Was a key just pressed? 
+ - ```pointer.Event``` - Was a mouse or trackpad just used?
+ - ```system.FrameEvent``` - Was a re-rendering just requested ?
 
-All the source-code is in this repo, in the ```teleprompter/code``` folder.
+
+#### key.Event
+If a key is pressed, Gio receives it as a key.Event. Once we detect it, with ```case key.Event:``` it is up to us to write code that deals with it. Here's the code inside that case:
+
+```go
+//TODO DESCRIBE KEY EVENT CODE HERE
+```
+
+#### pointer.Event
+If the mouse is used, Gio receives it as a pointer.Event. That can be any type, such as movement, scrolling or clicking. Once we detect with ```case pointer.Event:``` it is up to us to define what to do with it. Here's the code inside that case:
+
+```go
+//TODO DESCRIBE POINTER EVENT CODE HERE
+```
+
+#### system.FramveEvent
+If a request to re-render is sent, typically from a call to ```invalidate```, program redraws. Here's the layout:
+
+```go
+//TODO DESCRIBE LAYOUT HERE
+```
