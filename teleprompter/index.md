@@ -213,6 +213,8 @@ The three main events here are:
  - ```pointer.Event``` - Was a mouse or trackpad just used?
  - ```system.FrameEvent``` - Was a re-rendering just requested ?
 
+Let's go through them one for one:
+
 
 #### key.Event
 If a key is pressed, Gio receives it as a key.Event. Once we detect it, with ```case key.Event:``` it is up to us to write code that deals with it. Here's the code inside that case:
