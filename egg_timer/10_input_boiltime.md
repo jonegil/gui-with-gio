@@ -239,14 +239,18 @@ More bells and whistles could be added here. Might I for example challenge you t
 
 And that's it. Thank you for coming along and I hope you've been tempted to try your hand at GUI development. 
 
-We've only scratched the surface, and there's much more capability in the framework than we've exposed here. But, now that we have ve boiled that egg together, we've come quite far as well, right? 
+We've only scratched the surface, and there's much more capability in the framework than we've exposed here. But, now that we have ve boiled that egg together, we've come quite far as well, right? Now, can I ask something of you? 
 
-Hopefully this get's you started on your own project. And when you do, big or small, please drop me a line, I would love to hear from you.
+If you liked what you've read, please star it on Github. I'm only human, and honestly it's tremedously motivating to receive those tokens of appreciation. 
 
-And make sure to follow Gio on the website, newsletter and community call. 
+And ~~if~~ when you get started on your own project, big or small, please drop me a line. I would love to hear from you.
+
+Also, please make sure to follow Gio on the website, newsletter and community call. 
 
 Now, it's finally time for breakfast. Guess what I'm having.
 
 ---
+
+But wait - there's more. After completing the ten chapters, I got wind of some extra features you might be interested in. Ready?
 
 [Yeah, I've earned the bonus!](11_improved_animation.md){: .btn .fs-5 .mb-4 .mb-md-0 }
