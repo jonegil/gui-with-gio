@@ -156,6 +156,7 @@ func draw(w *app.Window) error {
 Now we're getting into the meat of things. In order to control the behaviour of the program we need multiple state variables. The user will adjust all of these while using the program, so we can't have them hard coded into the various portions of the visualisation. Instead we collect them here to keep the program tidy.
 
  The state variables in play here are:
+ 
  |Variable        |Description                                       | Changed with                              |
  |---             |---                                               |---                                        |
  |```scrollY```   | Scroll the text                                  | Mouse/Trackpad scroll, Arrow Up/Down, J/K |
