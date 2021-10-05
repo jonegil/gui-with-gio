@@ -176,7 +176,7 @@ Now we're getting into the meat of things. In order to control the behaviour of 
 
 ### Section 5 - Listen for events
 
-Finally, we get to listen for events. As outlined above, there are quite a few inputs here, and they can have mutual impact on each other. For example, if ```textWdith```increases, the line breaks will adjust since there are now space for more words on each line. But if the user increases ```fontSize```, each word requires more space and line break changes again. Luckily for us Gio takes care of all of the underlying details, our job is the keep track of the state variables used to define the constraints of the visualisation. 
+Finally, we get to listen for events. As mentioned above, there are quite a few inputs here, with the various keys and also the use of the mouues. These can mutually impact each other. For example, if ```textWdith``` increases, more words can be shown per line since there is now space. But if ```fontSize``` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, our job is the keep track of the required state variables used to define the visualisation. 
 
 As before the switch statement uses type assertions, ```e.(type)``` to deterimine what just happened:
 
@@ -213,14 +213,96 @@ The three main events here are:
  - ```pointer.Event``` - Was a mouse or trackpad just used?
  - ```system.FrameEvent``` - Was a re-rendering just requested ?
 
-Let's go through them one for one:
+Let's go through them one by one:
 
 
 #### key.Event
-If a key is pressed, Gio receives it as a key.Event. Once we detect it, with ```case key.Event:``` it is up to us to write code that deals with it. Here's the code inside that case:
+If a key is pressed, Gio receives it as a [key.Event](https://pkg.go.dev/gioui.org/io/key#Event). A we see from the docs, the Event is a struct with three variables, ```Name```, ```Modifiers``` and ```State```:
+```go
+type Event struct {
+  // Name of the key. For letters, the upper case form is used, via
+  // unicode.ToUpper. The shift modifier is taken into account, all other
+  // modifiers are ignored. For example, the "shift-1" and "ctrl-shift-1"
+  // combinations both give the Name "!" with the US keyboard layout.
+  Name string
+  // Modifiers is the set of active modifiers when the key was pressed.
+  Modifiers Modifiers
+  // State is the state of the key when the event was fired.
+  State State
+}
+```
+- ```Name``` is simply the letter pressed, or [special keys](https://pkg.go.dev/gioui.org/io/key#pkg-constants) such as ```key.NameUpArrow``` and ```key.NameSpace```
+- ```Modifiers``` are keys like ```key.ModShift``` or ```key.ModCommand```, listede [here](https://pkg.go.dev/gioui.org/io/key#Modifiers). Note the comment on how Shift is taken into account, but not others, which can be worth knowing about. 
+- ```State``` can be either Press or Release, if the distinction is needed
+
+Once we detect a keypress with ```case key.Event:``` it is up to us to do something with it. Here's the code inside that case:
 
 ```go
-//TODO DESCRIBE KEY EVENT CODE HERE
+// A keypress?
+case key.Event:
+  if e.State == key.Press {
+    // To set increment
+    var stepSize int = 10
+    if e.Modifiers == key.ModShift {
+      stepSize = 1
+    }
+    // To scroll text down
+    if e.Name == key.NameDownArrow || e.Name == "J" {
+      scrollY = scrollY + stepSize*4
+    }
+    // To scroll text up
+    if e.Name == key.NameUpArrow || e.Name == "K" {
+      scrollY = scrollY - stepSize*4
+      if scrollY < 0 {
+        scrollY = 0
+      }
+    }
+    // To turn on/off autoscroll, and set the scrollspeed
+    if e.Name == key.NameSpace {
+      autoscroll = !autoscroll
+      if autospeed == 0 {
+        autoscroll = true
+        autospeed++
+      }
+    }
+    // Faster scrollspeed
+    if e.Name == "F" {
+      autoscroll = true
+      autospeed++
+    }
+    // Slower scrollspeed
+    if e.Name == "S" {
+      if autospeed > 0 {
+        autospeed--
+      }
+    }
+    // Set Wider space for text to be displayed
+    if e.Name == "W" {
+      textWidth = textWidth + stepSize
+    }
+    // Set Narrower space for text to be displayed
+    if e.Name == "N" {
+      textWidth = textWidth - stepSize
+    }
+    // To increase the fontsize
+    if e.Name == "+" {
+      fontSize = fontSize + stepSize
+    }
+    // To decrease the fontsize
+    if e.Name == "-" {
+      fontSize = fontSize - stepSize
+    }
+    // Move the focusBar Up
+    if e.Name == "U" {
+      focusBarY = focusBarY - stepSize
+    }
+    // Move the focusBar Down
+    if e.Name == "D" {
+      focusBarY = focusBarY + stepSize
+    }
+    w.Invalidate()
+  }
+
 ```
 
 #### pointer.Event

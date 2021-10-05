@@ -101,18 +101,17 @@ func draw(w *app.Window) error {
 				if e.Modifiers == key.ModShift {
 					stepSize = 1
 				}
-
-				// To scroll text
+				// To scroll text down
 				if e.Name == key.NameDownArrow || e.Name == "J" {
 					scrollY = scrollY + stepSize*4
 				}
+				// To scroll text up
 				if e.Name == key.NameUpArrow || e.Name == "K" {
 					scrollY = scrollY - stepSize*4
 					if scrollY < 0 {
 						scrollY = 0
 					}
 				}
-
 				// To turn on/off autoscroll, and set the scrollspeed
 				if e.Name == key.NameSpace {
 					autoscroll = !autoscroll
@@ -121,40 +120,41 @@ func draw(w *app.Window) error {
 						autospeed++
 					}
 				}
+				// Faster scrollspeed
 				if e.Name == "F" {
 					autoscroll = true
 					autospeed++
 				}
+				// Slower scrollspeed
 				if e.Name == "S" {
 					if autospeed > 0 {
 						autospeed--
 					}
 				}
-
-				// To adjust text width
+				// Set Wider space for text to be displayed
 				if e.Name == "W" {
 					textWidth = textWidth + stepSize
 				}
+				// Set Narrower space for text to be displayed
 				if e.Name == "N" {
 					textWidth = textWidth - stepSize
 				}
-
-				// To adjust fontsize
+				// To increase the fontsize
 				if e.Name == "+" {
 					fontSize = fontSize + stepSize
 				}
+				// To decrease the fontsize
 				if e.Name == "-" {
 					fontSize = fontSize - stepSize
 				}
-
-				// To adjust the focusBar
+				// Move the focusBar Up
 				if e.Name == "U" {
 					focusBarY = focusBarY - stepSize
 				}
+				// Move the focusBar Down
 				if e.Name == "D" {
 					focusBarY = focusBarY + stepSize
 				}
-
 				w.Invalidate()
 			}
 
