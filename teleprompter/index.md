@@ -156,7 +156,7 @@ Now we're getting into the meat of things. In order to control the behaviour of 
 
  The state variables in play here are:
 
- |Variable        |Description                                       | Changed with (```Shift```=large change)   |
+ |Variable        |Description                                       | Changed with                              |
  |---             |---                                               |---                                        |
  |```scrollY```   | Scroll the text                                  | Mouse/Trackpad scroll, Arrow Up/Down, J/K |
  |```focusBarY``` | How high up is the red focus bar                 | U (up) and D (down)                       |
@@ -165,6 +165,8 @@ Now we're getting into the meat of things. In order to control the behaviour of 
  |```autoscroll```| Start/stop automatic scrolling                   | Space                                     |
  |```autospeed``` | How fast / slow the text should scroll           | F (faster) or S (slower)                  |
  
+For keypresses, ```Shift``` increases the rate of change when making adjustments
+
 ### Section 5 - Listen for events
 
 Finally, we get to listen for events. As mentioned above, there are quite a few inputs here, with the various keys and also the use of the mouse. In this application, these can mutually impact each other. For example, if ```textWdith``` increases, more words can be shown per line since there is now space. But if ```fontSize``` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, our job is the keep track of the required state variables used to define the visualisation. 
