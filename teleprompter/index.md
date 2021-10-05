@@ -26,7 +26,7 @@ Cheers
 This project continues where the [egg timer](../egg_timer/) leaves off. The timer was a good start and gave us the foundation to build an app. But we're not done. Especially we should look closer at how how to deal with user input, both keyboard and mouse. 
 
 ![Mr_Gorbachev_tear_down_this_wall](teleprompter_Mr_Gorbachev.gif)
-[View it on GitHub](https://github.com/jonegil/gui-with-gio/teleprompter/code){: .btn .fs-5 .mb-4 .mb-md-0 }
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/teleprompter){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 To do that we'll build what's known as a [teleprompter](https://en.wikipedia.org/wiki/Teleprompter). A teleprompter is simply a device that displays and scrolls text. Sophisticated and expensive equipment exists, but it can just as easily be done with an app that displays and scrolls text. And that's the version we will build here. Since it needs to be lively and responsive for the user, it it's a great example for how we can react to keypresses and mouse scrolls. We'll make sure to look into some other new parts of Gio as well.
 
@@ -156,16 +156,15 @@ func draw(w *app.Window) error {
 Now we're getting into the meat of things. In order to control the behaviour of the program we need multiple state variables. The user will adjust all of these while using the program, so we can't have them hard coded into the various portions of the visualisation. Instead we collect them here to keep the program tidy.
 
  The state variables in play here are:
- 
+
  |Variable        |Description                                       | Changed with                              |
  |---             |---                                               |---                                        |
  |```scrollY```   | Scroll the text                                  | Mouse/Trackpad scroll, Arrow Up/Down, J/K |
+ |```focusBarY``` | How high up is the red focus bar                 | U (up) and D (down)                       |
+ |```textWidth``` | How wide is the area in which we display text    | W (wider) and N (narrower)                |
+ |```fontSize```  | How large is the text                            | + (larger) and - (smaller)                |
  |```autoscroll```| Start/stop automatic scrolling                   | Space                                     |
  |```autospeed``` | How fast / slow the text should scroll           | F (faster) or S (slower)                  |
- |```focusBarY``` | How high up is the red focus bar                 | U (up) and D (down)                       |
- |```fontSize```  | How large is the text                            | + (larger) and - (smaller)                |
- |```textWidth``` | How wide is the area in which we display text    | W (wider) and N (narrower)                |
- |```stepSize```  | When changing the above, how large is the change | Smaller steps when pressing Shift         |
  
 ### Section 5 - Listen for events
 
@@ -295,7 +294,8 @@ case key.Event:
     w.Invalidate()
   }
 ```
-
+We described all the variables earlier, with the exception of ```stepSize``` which indicates how much we change the others once pressing any of the keys.
+ 
 
 #### pointer.Event
 If the mouse is used, Gio receives it as a pointer.Event. That can be any type, such as movement, scrolling or clicking. Once we detect with ```case pointer.Event:``` it is up to us to define what to do with it. Here's the code inside that case:
