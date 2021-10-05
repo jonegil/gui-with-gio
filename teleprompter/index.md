@@ -31,9 +31,8 @@ This project continues where the [egg timer](../egg_timer/) leaves off. The time
 To do that we'll build what's known as a [teleprompter](https://en.wikipedia.org/wiki/Teleprompter). A teleprompter is simply a device that displays and scrolls text. Sophisticated and expensive equipment exists, but it can just as easily be done with an app that displays and scrolls text. And that's the version we will build here. Since it needs to be lively and responsive for the user, it it's a great example for how we can react to keypresses and mouse scrolls. We'll make sure to look into some other new parts of Gio as well.
 
 ---
-<div  bgcolor="#f6f5fa">
-*Sidenote. We're not doing politics here, but when researching this piece, it's more fun with famous speeches. And most famous speaches are given by, well, famous politicians. No matter your origin or partisanship, [Ronald Reagan's 1987 Berlin Wall Speech](https://www.nytimes.com/video/world/europe/100000006815729/reagan-berlin-wall.html) is fairly counted among those, playing it's part in ending the cold war without the massive bloodshed the world feared. Both sides, East and West, deserve respect and praise for seeking and finding a mostly peaceful solution. Let us together repeat the best of our past, and learn from the worst. The future needs it.*
-</div>
+**Please note:** We're not doing politics here, but when presenting this piece, it's more fun with famous speeches. And most famous speaches are given by, well, famous politicians. No matter your origin or partisanship, [Ronald Reagan's 1987 Berlin Wall Speech](https://www.nytimes.com/video/world/europe/100000006815729/reagan-berlin-wall.html) is among those, playing it's part in ending the cold war without the massive bloodshed the world feared. Both sides, East and West, deserve respect and praise for seeking and finding a mostly peaceful solution. Let us together repeat the best of our past, and learn from the worst. The future needs it.
+
 ---
 
 On that note, let's (sc)roll!
@@ -204,12 +203,11 @@ for e := range w.Events() {
 }
 ```
 
-The three main events here are:
+The two new events here are:
  - ```key.Event``` - Was a key just pressed? 
  - ```pointer.Event``` - Was a mouse or trackpad just used?
- - ```system.FrameEvent``` - Was a re-rendering just requested ?
 
-Let's go through them one by one:
+So let's go through those in more detail:
 
 #### key.Event
 If a key is pressed, Gio receives it as a [key.Event](https://pkg.go.dev/gioui.org/io/key#Event). As we see from the docs, the Event is a struct with three variables, ```Name```, ```Modifiers``` and ```State```:
@@ -319,7 +317,7 @@ If the mouse is used, Gio receives it as a pointer.Event. That can be any type, 
 ```
 
 #### system.FramveEvent
-If a request to re-render is sent, typically from a call to ```invalidate```, program redraws. Here's the layout:
+If a request to re-render is sent, typically from a call to ```invalidate```, program redraws. The layout deserves it's own section though
 
 ```go
 //TODO DESCRIBE LAYOUT HERE
