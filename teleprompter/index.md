@@ -2,7 +2,7 @@
 layout: default
 title: Teleprompter
 nav_order: 3
-has_children: true
+has_children: false
 has_toc: false
 ---
 
@@ -34,7 +34,6 @@ Ready?
 
 Let's (sc)roll!
 (sorry)
-
 
 ## Outline
 
@@ -157,7 +156,7 @@ Now we're getting into the meat of things. In order to control the behaviour of 
 
  The state variables in play here are:
 
- |Variable        |Description                                       | Changed with                              |
+ |Variable        |Description                                       | Changed with (```Shift```=large change)   |
  |---             |---                                               |---                                        |
  |```scrollY```   | Scroll the text                                  | Mouse/Trackpad scroll, Arrow Up/Down, J/K |
  |```focusBarY``` | How high up is the red focus bar                 | U (up) and D (down)                       |
@@ -168,9 +167,9 @@ Now we're getting into the meat of things. In order to control the behaviour of 
  
 ### Section 5 - Listen for events
 
-Finally, we get to listen for events. As mentioned above, there are quite a few inputs here, with the various keys and also the use of the mouues. These can mutually impact each other. For example, if ```textWdith``` increases, more words can be shown per line since there is now space. But if ```fontSize``` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, our job is the keep track of the required state variables used to define the visualisation. 
+Finally, we get to listen for events. As mentioned above, there are quite a few inputs here, with the various keys and also the use of the mouse. In this application, these can mutually impact each other. For example, if ```textWdith``` increases, more words can be shown per line since there is now space. But if ```fontSize``` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, our job is the keep track of the required state variables used to define the visualisation. 
 
-As before the switch statement uses type assertions, ```e.(type)``` to deterimine what just happened:
+As before the switch statement uses type assertion, ```e.(type)``` to deterimine what just happened:
 
 ```go
 // listen for events in the window.
@@ -207,9 +206,9 @@ The three main events here are:
 
 Let's go through them one by one:
 
-
 #### key.Event
-If a key is pressed, Gio receives it as a [key.Event](https://pkg.go.dev/gioui.org/io/key#Event). A we see from the docs, the Event is a struct with three variables, ```Name```, ```Modifiers``` and ```State```:
+If a key is pressed, Gio receives it as a [key.Event](https://pkg.go.dev/gioui.org/io/key#Event). As we see from the docs, the Event is a struct with three variables, ```Name```, ```Modifiers``` and ```State```:
+
 ```go
 type Event struct {
   // Name of the key. For letters, the upper case form is used, via
@@ -227,15 +226,16 @@ type Event struct {
 - ```Modifiers``` are keys like ```key.ModShift``` or ```key.ModCommand```, listede [here](https://pkg.go.dev/gioui.org/io/key#Modifiers). Note the comment on how Shift is taken into account, but not others, which can be worth knowing about. 
 - ```State``` can be either Press or Release, if the distinction is needed
 
-Once we detect a keypress with ```case key.Event:``` it is up to us to do something with it. Here's the code inside that case:
+Ok, that gives us something to work with. Once a key is pressed, this will help us detect which key it was, and weither a modifier like Shift is pressed. Here's the code for this section:
+
 ```go
 // A keypress
 case key.Event:
   if e.State == key.Press {
     // To set increment
-    var stepSize int = 10
+    var stepSize int = 1
     if e.Modifiers == key.ModShift {
-      stepSize = 1
+      stepSize = 10
     }
     // To scroll text down
     if e.Name == key.NameDownArrow || e.Name == "J" {
@@ -269,11 +269,11 @@ case key.Event:
     }
     // Set Wider space for text to be displayed
     if e.Name == "W" {
-      textWidth = textWidth + stepSize
+      textWidth = textWidth + stepSize*10
     }
     // Set Narrower space for text to be displayed
     if e.Name == "N" {
-      textWidth = textWidth - stepSize
+      textWidth = textWidth - stepSize*10
     }
     // To increase the fontsize
     if e.Name == "+" {
@@ -291,11 +291,20 @@ case key.Event:
     if e.Name == "D" {
       focusBarY = focusBarY + stepSize
     }
+    // Force re-rendering to use the new states set above
     w.Invalidate()
   }
 ```
-We described all the variables earlier, with the exception of ```stepSize``` which indicates how much we change the others once pressing any of the keys.
- 
+
+With the expception of ```stepSize``` all these variables are explained earlier. The role of ```stepSize``` is to control how large the change to the other parameters will be. Should a scroll be long or short? Should the focus bar move by lot or a little? Should text size adjustments be considerable or minor? Should ... you get it. 
+
+The point is that for a user it can sometimes be important to quickly navigate or adjust quite quickly, and thereafter finetune to perfection. Therefor it's useful to define a variable that controls the rate of change. This defaults to 1, but when ```Shift``` is pressed it increases to 10. Why those value? Well, it worked well in my experimentation. Try it out.
+
+For all the other keypresses, the code adjusts one or two state variables. These are all used later when rendering the actual frame. I went a bit back and forth on the logic around adjusting speed, but conlcuded that if you ask for ```F```aster scrolling, that should start up the autoscroll if it wasn't running already. Conversely, if speed is 0 and the user presses ```Space``` to start the scroll, speed must increase. Negative speed is avoided, although it was fun times before I nerfed it. 
+
+The point is that for interacting behaviour, it makes sense to experiemnt and think through how the various state variables should be tuned in relation to each other. Keeping it all togehter in this input section makes the code easier to grasp than if these states were handled in various other parts of the program. 
+
+Finally, at the end we call ```w.Invalidate()```, forcing the program to re-render so that any new state information is take into account at once. Try commenting this out and re-run. What happens now, and why?
 
 #### pointer.Event
 If the mouse is used, Gio receives it as a pointer.Event. That can be any type, such as movement, scrolling or clicking. Once we detect with ```case pointer.Event:``` it is up to us to define what to do with it. Here's the code inside that case:

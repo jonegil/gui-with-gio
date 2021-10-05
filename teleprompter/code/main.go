@@ -97,9 +97,9 @@ func draw(w *app.Window) error {
 		case key.Event:
 			if e.State == key.Press {
 				// To set increment
-				var stepSize int = 10
+				var stepSize int = 1
 				if e.Modifiers == key.ModShift {
-					stepSize = 1
+					stepSize = 10
 				}
 				// To scroll text down
 				if e.Name == key.NameDownArrow || e.Name == "J" {
@@ -133,11 +133,11 @@ func draw(w *app.Window) error {
 				}
 				// Set Wider space for text to be displayed
 				if e.Name == "W" {
-					textWidth = textWidth + stepSize
+					textWidth = textWidth + stepSize*10
 				}
 				// Set Narrower space for text to be displayed
 				if e.Name == "N" {
-					textWidth = textWidth - stepSize
+					textWidth = textWidth - stepSize*10
 				}
 				// To increase the fontsize
 				if e.Name == "+" {
@@ -155,16 +155,17 @@ func draw(w *app.Window) error {
 				if e.Name == "D" {
 					focusBarY = focusBarY + stepSize
 				}
+				// Force re-rendering to use the new states set above
 				w.Invalidate()
 			}
 
 		// A mouse event?
 		case pointer.Event:
 			if e.Type == pointer.Scroll {
-				// How far did the pointer scroll?
-				step := e.Scroll.Y
-				// Increment the Y-scroll with that distance
-				scrollY = scrollY + int(step)
+				// How far did the pointer scroll this time?
+				thisScroll := int(e.Scroll.Y)
+				// Increment scrollY with that distance
+				scrollY = scrollY + thisScroll
 				if scrollY < 0 {
 					scrollY = 0
 				}
