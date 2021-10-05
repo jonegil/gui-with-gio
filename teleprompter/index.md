@@ -30,9 +30,11 @@ This project continues where the [egg timer](../egg_timer/) leaves off. The time
 
 To do that we'll build what's known as a [teleprompter](https://en.wikipedia.org/wiki/Teleprompter). A teleprompter is simply a device that displays and scrolls text. Sophisticated and expensive equipment exists, but it can just as easily be done with an app that displays and scrolls text. And that's the version we will build here. Since it needs to be lively and responsive for the user, it it's a great example for how we can react to keypresses and mouse scrolls. We'll make sure to look into some other new parts of Gio as well.
 
-Ready? 
+---
+*Sidenote. We're not doing politics here, but when researching this piece, it's more fun with famous speeches. And most famous speaches are given by, you guessed it, famous politicians. No matter your origin or partisanship, [Ronald Reagan's 1987 Berlin Wall Speech](https://www.nytimes.com/video/world/europe/100000006815729/reagan-berlin-wall.html) is fairly counted among those, playing it's part in ending the cold war without the massive bloodshed the world feared. Both sides, East and West, deserve respect and praise for seeking and finding a mostly peaceful solution. Let us together repeat the best of our past, and learn from the worst. The future needs it.*
+---
 
-Let's (sc)roll!
+On that note, let's (sc)roll!
 (sorry)
 
 ## Outline
@@ -198,7 +200,6 @@ for e := range w.Events() {
 
   }
 }
-
 ```
 
 The three main events here are:
@@ -321,3 +322,5 @@ If a request to re-render is sent, typically from a call to ```invalidate```, pr
 ```go
 //TODO DESCRIBE LAYOUT HERE
 ```
+
+### TODO - Describe the layout
