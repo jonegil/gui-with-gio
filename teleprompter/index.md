@@ -155,25 +155,17 @@ func draw(w *app.Window) error {
 
 Now we're getting into the meat of things. In order to control the behaviour of the program we need multiple state variables. The user will adjust all of these while using the program, so we can't have them hard coded into the various portions of the visualisation. Instead we collect them here to keep the program tidy.
 
- - ```scrollY``` - How far into the speech are we? It starts on top of course, and its value increments as the speaker scrolls down into the speech. This is the variable we adjust either manually or automatically to progress the speech. 
-   - Move text with trackpad or mouse ```scroll```, ```arrow keys```, ```j``` and ```k``` (vim ⭐️)
+ The state variables in play here are:
+ |Variable        |Description                                       | Changed with                              |
+ |---             |---                                               |---                                        |
+ |```scrollY```   | Scroll the text                                  | Mouse/Trackpad scroll, Arrow Up/Down, J/K |
+ |```autoscroll```| Start/stop automatic scrolling                   | Space                                     |
+ |```autospeed``` | How fast / slow the text should scroll           | F (faster) or S (slower)                  |
+ |```focusBarY``` | How high up is the red focus bar                 | U (up) and D (down)                       |
+ |```fontSize```  | How large is the text                            | + (larger) and - (smaller)                |
+ |```textWidth``` | How wide is the area in which we display text    | W (wider) and N (narrower)                |
+ |```stepSize```  | When changing the above, how large is the change | Smaller steps when pressing Shift         |
  
-
- - ```focusBarY``` - The red focusbar helps keep the speeker's attention on one single line. At the same time it's helpful to see the current line with some context around it. Hence we choose to initiate the focusbar near, but not at, the top. 
-   - Move it up with ```u``` and down with ```d```
-
-
- - ```textWidth``` - Should the speech fill the full width of the window, or a narrower portion of it. I prefer the speech to be fairly narrow, but that all depends on screen-setup, distance to screen, where the camera is, or if there even is one. On a laptop, the camera is very close to your face, so narrow text will not create too much eye-movement. Experiment and find what works.
-   - Make the text ```w```ider or ```n```arrower 
-
-
- - ```fontSize``` - The size of the font, obviously 
-   - Tune it with ```+``` and ```-```
-
-
- - ```autoscroll``` and ```autospeed``` - Should we scroll automatically? And if so, how fast? 
-   - Start and stop with ```space```. Make it ```f```aster or ```s```lower
-
 ### Section 5 - Listen for events
 
 Finally, we get to listen for events. As mentioned above, there are quite a few inputs here, with the various keys and also the use of the mouues. These can mutually impact each other. For example, if ```textWdith``` increases, more words can be shown per line since there is now space. But if ```fontSize``` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, our job is the keep track of the required state variables used to define the visualisation. 
@@ -236,9 +228,8 @@ type Event struct {
 - ```State``` can be either Press or Release, if the distinction is needed
 
 Once we detect a keypress with ```case key.Event:``` it is up to us to do something with it. Here's the code inside that case:
-
 ```go
-// A keypress?
+// A keypress
 case key.Event:
   if e.State == key.Press {
     // To set increment
@@ -302,8 +293,8 @@ case key.Event:
     }
     w.Invalidate()
   }
-
 ```
+
 
 #### pointer.Event
 If the mouse is used, Gio receives it as a pointer.Event. That can be any type, such as movement, scrolling or clicking. Once we detect with ```case pointer.Event:``` it is up to us to define what to do with it. Here's the code inside that case:
