@@ -18,7 +18,7 @@ This project continues where the [egg timer](../egg_timer/) leaves off. The time
 To do that we'll build what's known as a [teleprompter](https://en.wikipedia.org/wiki/Teleprompter). A teleprompter is simply a device that displays and scrolls text. Sophisticated and expensive equipment exists, but it can just as easily be done with an app that displays and scrolls text. And that's the version we will build here. Since it needs to be lively and responsive for the user, it it's a great example for how we can react to keypresses and mouse scrolls. We'll make sure to look into some other new parts of Gio as well.
 
 ---
-**Please note:** We're not doing politics here, but when presenting this piece, it's more fun with famous speeches. And most famous speaches are given by, well, famous politicians. No matter your origin or partisanship, [Ronald Reagan's 1987 Berlin Wall Speech](https://www.nytimes.com/video/world/europe/100000006815729/reagan-berlin-wall.html) is among those, playing it's part in ending the cold war without the massive bloodshed the world feared. Both sides, East and West, deserve respect and praise for seeking and finding a mostly peaceful solution. Let us together repeat the best of our past, and learn from the worst. The future needs it.
+**Please note:** We're not doing politics here, but when presenting this piece, it's more fun with famous speeches. And famous speeches are given by, well, famous politicians. No matter your origin or partisanship, [Ronald Reagan's 1987 Berlin Wall Speech](https://www.nytimes.com/video/world/europe/100000006815729/reagan-berlin-wall.html) is among those, playing it's part in ending the cold war without the massive bloodshed the world feared. Both sides, East and West, deserve respect and praise for seeking and finding a mostly peaceful solution. Let us together repeat the best of our past, and learn from the worst. The future needs it.
 
 ---
 
@@ -157,9 +157,13 @@ Now we're getting into the meat of things. In order to control the behaviour of 
  
 For keypresses, ```Shift``` increases the rate of change when making adjustments
 
+<p align="center">
+  <img src="teleprompter_news.jpeg" alt="Television studio - Teleprompter with camera" height="250"/>
+</p>
+
 ### Section 5 - Listen for events
 
-Finally, we get to listen for events. As mentioned above, there are quite a few inputs here, with the various keys and also the use of the mouse. In this application, these can mutually impact each other. For example, if ```textWdith``` increases, more words can be shown per line since there is now space. But if ```fontSize``` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, our job is the keep track of the required state variables used to define the visualisation. 
+Now it's time get to listen for events. This is the heart of the application. As mentioned above, there are quite a few inputs here, with the various keys and also the use of the mouse. In this application, these can mutually impact each other. For example, if ```textWdith``` increases, more words can be shown per line since there is now space. But if ```fontSize``` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, our job is the keep track of the required state variables used to define the visualisation. 
 
 As before the switch statement uses type assertion, ```e.(type)``` to deterimine what just happened:
 
@@ -294,7 +298,7 @@ For all the other keypresses, the code adjusts one or two state variables. These
 
 The point is that for interacting behaviour, it makes sense to experiemnt and think through how the various state variables should be tuned in relation to each other. Keeping it all togehter in this input section makes the code easier to grasp than if these states were handled in various other parts of the program. 
 
-Finally, at the end we call ```w.Invalidate()```, forcing the program to re-render so that any new state information is take into account at once. Try commenting this out and re-run. What happens now, and why?
+At the end we call ```w.Invalidate()```, forcing the program to re-render so that any new state information is take into account at once. Try commenting this out and re-run. What happens now, and why?
 
 With this in place, here's an example of how it looks to change fontsize:
 
@@ -371,6 +375,7 @@ And just as for ```key.Event``` we end by invalidating the frame. Show it to me!
 Now that we have processed all incoming input, both ```key.Event``` and ```pointer.Scroll```, it's time to wait for a request to redraw. Those are sent when we call ```w.Invalidate``` at the end of the key and pointer event sections. An ```op.InvlidateOp{}``` operation will also be added when we're autoscrolling as we'll see below. 
 
 **Layout part 1**
+
 Since this is where we redraw, it is also here we do the actual layout. As we'll get into, it's a nested structure with three main components. But first the setup:
 
 ```go
@@ -391,11 +396,12 @@ case system.FrameEvent:
     op.InvalidateOp{At: gtx.Now.Add(time.Second / 50)}.Add(&ops)
   }
 ```
-We have identified a ```FrameEvent```.  First we define ```ops```, the list of operations, as well as the graphical context we will work within. The background then is filled with a soothing papyris-like color. Finally we check if ```autoscroll``` is activated. If so, we move the starting point for text by a small amount, ```autospeed```, and request a redraw in 0.02 seconds. This last part is interesting, effectively setting the framerate of our change. The higher the smoother, but also effectively alter the speed. As you remember, [there are some nuances](../egg_timer/11_improved_animation.md), between ```w.Invalidate``` and ```op.InvalidateOp{}.Add```. Maybe most interesting here is the timing functionality though. Feel free to experiment.
+We have identified a ```FrameEvent```.  First we define ```ops```, the list of operations, as well as the graphical context we will work within. The background then is filled with a soothing papyrus-like color. Finally we check if ```autoscroll``` is activated. If so, we move the starting point for text by a small amount, ```autospeed```, and request a redraw in 0.02 seconds. This last part is interesting, effectively setting the framerate of our change. The higher the smoother, but also effectively alter the speed. As you remember, [there are some nuances](../egg_timer/11_improved_animation.md), between ```w.Invalidate``` and ```op.InvalidateOp{}.Add```. Maybe most interesting here is the timing functionality though. Feel free to experiment.
 
 Let's continue the coding.
 
 **Layout part 2**
+
 The three parts of the layout are 
  - Margins: [layout.Inset](https://pkg.go.dev/gioui.org/layout#Inset)
  - A list of paragraphs: [layout.List](https://pkg.go.dev/gioui.org/layout#List)
@@ -456,6 +462,7 @@ The third nested block reads as follows:
 By using a list, Gio takes care of only showing the elements currently on screen. Off screen elements are not processed until they appear, reducing the load on the system and allowing for really long lists. In developing this app I played around with some really long ones, like [The Complete Works of William Shakespeare](https://www.gutenberg.org/ebooks/100) for example. No problem.. 
 
 **Layout part 3**
+
 Finally we add the focusbar. This is done in the following steps:
 - Use ```op.Offset()``` to move to a new Y position, the one defined by our state variable ```focusBarY```.
 - From there, create a new rectangle, width = fullscreen and height = 50
@@ -477,7 +484,7 @@ e.Frame(&ops)
 
 #### system.DestroyEvent
 
-And finally, we're done. Return a simple err and we close the program.
+Are we done? Return a simple err and close the program:
 
 ```go
 // Shutdown?
@@ -489,7 +496,7 @@ case system.DestroyEvent:
 
 ## Wrapping it all up
 
-And that´s it. We've got yet another Gio project in our belt. This one was all about processing input, which we did by listening to events, ```key.Event``` and ```pointer.Event``` respectively, and using custom logic to update a set of state variables. Later, in ```system.FrameEvent``` we used those state variables to control our layout. 
+That´s it. We've got yet another Gio project in our belt. This one was all about processing input, which we did by listening to events, ```key.Event``` and ```pointer.Event``` respectively, and using custom logic to update a set of state variables. Later, in ```system.FrameEvent``` we used those state variables to control our layout. 
 
 Thank you again so much for following the writeup. If you found this useful, share it with a friend, star it on Github or drop me a line. It's really motivating to hear back from you. Good luck with all your projects!
 
