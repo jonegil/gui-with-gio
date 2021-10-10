@@ -459,7 +459,7 @@ The third nested block reads as follows:
   - Once each element in the list is visited, return the list
 - Done
 
-By using a list, Gio takes care of only showing the elements currently on screen. Off screen elements are not processed until they appear, reducing the load on the system and allowing for really long lists. In developing this app I played around with some really long ones, like [The Complete Works of William Shakespeare](https://www.gutenberg.org/ebooks/100) for example. No problem.. 
+By using a list, Gio takes care of only showing the elements currently on screen. Off screen elements are not processed until they appear, reducing the load on the system and allowing for really long lists. In developing this app I played around with some really long ones, like [The Complete Works of William Shakespeare](https://www.gutenberg.org/ebooks/100) for example. No problem.
 
 **Layout part 3**
 
