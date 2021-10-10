@@ -123,7 +123,7 @@ e.Frame(&ops)
 ```
 
 ## system.DestroyEvent
-To ensure the program terminates gracefully we receive the ```system.DestroyEvent``` which returns an ```Err``` and breaks the ```draw()``` loop.
+Finally, just to complete the picture, it's worth mentioning the final event we listen for, namely the ```system.DestroyEvent```. It helps us end the program gracefull, returns an ```Err``` and breaks the ```range w.Events()``` loop were in to listen for events. 
 
 ```go
 // Shutdown?
@@ -131,7 +131,6 @@ case system.DestroyEvent:
   return e.Err
 }
 ```
-
 
 ## Wrapping it all up
 
