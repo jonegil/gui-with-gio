@@ -8,19 +8,6 @@ has_toc: false
 
 # Teleprompter - Animation and interaction
 
-```
-
-Hi mate!
-
-The code for this part is done - but not the text. 
-Please look around while I continue to write this chapter. 
-
-As always, please pull the repo and play around.
-
-Cheers
-
-```
-
 ## Goals
 
 This project continues where the [egg timer](../egg_timer/) leaves off. The timer was a good start and gave us the foundation to build an app. But we're not done. Especially we should look closer at how how to deal with user input, both keyboard and mouse. 
@@ -458,33 +445,54 @@ The ```margins``` are on the right and left side of the screen. There role is to
 
 The list of visualised paragraphs is defined in ```visList```. As the struct defines it aligns vertically, i.e. elements are above and below each other. Most interesting is the ```Offset: scrollY``` which defines the distance in pixels from the top of the screen to the first element in the list. In other words, by setting the offset to the value of our ```scrollY``` state variable we move the whole list up and down. And voila, we're scrolling.  
 
-The third block reads as follows:
+The third nested block reads as follows:
 - First define the margins
   - Within those margins define a list
     - Within each element of the list, define a paragraph
-    - Once the parapgrah is defined, return id
+    - Return the paragraph
   - Once each element in the list is visited, return the list
 - Done
 
-By using the list, Gio takes care of only showing the list-elements currently on screen. Off screen elements are not processed until they appear, reducing the load on the system and allowing for really long lists. In developing this app I played around with some really long ones, like [The Complete Works of William Shakespeare](https://www.gutenberg.org/ebooks/100) for example. No problem for Gio. 
+By using a list, Gio takes care of only showing the elements currently on screen. Off screen elements are not processed until they appear, reducing the load on the system and allowing for really long lists. In developing this app I played around with some really long ones, like [The Complete Works of William Shakespeare](https://www.gutenberg.org/ebooks/100) for example. No problem.. 
 
 **Layout part 3**
-Red triagle
+Finally we add the focusbar. This is done in the following steps:
+- Use ```op.Offset()``` to move to a new Y position, the one defined by our state variable ```focusBarY```.
+- From there, create a new rectangle, width = fullscreen and height = 50
+- Color it with transparent red. ```A: 0x66``` controls the transparency, where 0 means zero visibility (full transparency) and 0xff means full visibility (no transparency). 
+- Add the Paint
+
+At the end we complete the FrameEvent by ```e.Frame()```.
 
 ```go
-  // Draw a transparent red rectangle.
-  path := new(clip.Path)
-  stack := op.Save(&ops)
-  path.Begin(&ops)
-  path.MoveTo(f32.Pt(0, 0))
-  path.End()
-  op.Offset(f32.Pt(0, float32(focusBarY))).Add(&ops)
-  clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Add(&ops)
-  paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
-  paint.PaintOp{}.Add(&ops)
-  stack.Load()
+// Draw a transparent red rectangle.
+op.Offset(f32.Pt(0, float32(focusBarY))).Add(&ops)
+clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Add(&ops)
+paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
+paint.PaintOp{}.Add(&ops)
 
-  e.Frame(&ops)
+// Frame completes the FrameEvent by drawing the graphical operations from ops into the window.
+e.Frame(&ops)
 ```
 
-### TODO - Describe the layout
+#### system.DestroyEvent
+
+And finally, we're done. Return a simple err and we close the program.
+
+```go
+// Shutdown?
+case system.DestroyEvent:
+  return e.Err
+}
+```
+
+
+## Wrapping it all up
+
+And that´s it. We've got yet another Gio project in our belt. This one was all about processing input, which we did by listening to events, ```key.Event``` and ```pointer.Event``` respectively, and using custom logic to update a set of state variables. Later, in ```system.FrameEvent``` we used those state variables to control our layout. 
+
+Thank you again so much for following the writeup. If you found this useful, share it with a friend, star it on Github or drop me a line. It's really motivating to hear back from you. Good luck with all your projects!
+
+---
+
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/teleprompter){: .btn .fs-5 .mb-4 .mb-md-0 }
