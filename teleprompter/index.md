@@ -81,7 +81,7 @@ These two are new to us and gives support for keyboard and mouse events:
 
 Notice how pointer supports both mouse gestures on a desktop/laptop and fingers on a screen. Nice, again an example of how learning a cross-platform framework gives you tools to multiple devices.
 
-### Section 2 - Read the speach into a slice
+### Section 2 - Read the speech into a slice
 
 First we define variables for the program, inlcuding a slice to keep the speech in.
 
@@ -232,7 +232,7 @@ type Event struct {
 Ok, that gives us something to work with. Once a key is pressed, this will help us detect which key it was, and weither a modifier like Shift is pressed. Here's the code for this section:
 
 ```go
-// A keypress
+// A keypress?
 case key.Event:
   if e.State == key.Press {
     // To set increment
@@ -309,12 +309,75 @@ The point is that for interacting behaviour, it makes sense to experiemnt and th
 
 Finally, at the end we call ```w.Invalidate()```, forcing the program to re-render so that any new state information is take into account at once. Try commenting this out and re-run. What happens now, and why?
 
+With this in place, here's an example of how it looks to change fontsize:
+
+![Size adjustments](teleprompter_fontsize.gif)
+
+
 #### pointer.Event
-If the mouse is used, Gio receives it as a pointer.Event. That can be any type, such as movement, scrolling or clicking. Once we detect with ```case pointer.Event:``` it is up to us to define what to do with it. Here's the code inside that case:
+If the mouse is used, Gio receives it as a pointer.Event. That can be any type, such as movement, scrolling or clicking. Once we detect with ```case pointer.Event:``` it is up to us to define what to do with it. 
+
+From [pointer.Event](https://pkg.go.dev/gioui.org/io/pointer#Event) we learn that the pointer event is quite a rich struct:
+```go
+type Event struct {
+	Type   Type
+	Source Source
+	// PointerID is the id for the pointer and can be used
+	// to track a particular pointer from Press to
+	// Release or Cancel.
+	PointerID ID
+	// Priority is the priority of the receiving handler
+	// for this event.
+	Priority Priority
+	// Time is when the event was received. The
+	// timestamp is relative to an undefined base.
+	Time time.Duration
+	// Buttons are the set of pressed mouse buttons for this event.
+	Buttons Buttons
+	// Position is the position of the event, relative to
+	// the current transformation, as set by op.TransformOp.
+	Position f32.Point
+	// Scroll is the scroll amount, if any.
+	Scroll f32.Point
+	// Modifiers is the set of active modifiers when
+	// the mouse button was pressed.
+	Modifiers key.Modifiers
+}
+```
+What we need here are the two bottom entries, ```Scroll``` and ```Modifiers```. The former returns a ```Point```, which is simply a set of X and Y float32 variables that indicate how far the user scrolled in those directions.   
+```go
+type Point struct {
+	X, Y float32
+}
+```
+With a scrollwheel on a mouse it's always Y only and often in fixed clicking amounts. On a laptop trackpad however it can often be both, and with various amounts.
+
+```Modifiers``` are just as for the ```key.Event``` a helper to indicate if ```Shift``` or ```Alt``` or any of those are pressed when the mouse event occurs. We'll continute to listen for the former of those. Like this:
 
 ```go
-//TODO DESCRIBE POINTER EVENT CODE HERE
+// A mouse event?
+case pointer.Event:
+  if e.Type == pointer.Scroll {
+    var stepSize int = 1
+    if e.Modifiers == key.ModShift {
+      stepSize = 3
+    }
+    // By how much should the user scroll this time?
+    thisScroll := int(e.Scroll.Y)
+    // Increment scrollY with that distance
+    scrollY = scrollY + thisScroll*stepSize
+    if scrollY < 0 {
+      scrollY = 0
+    }
+    w.Invalidate()
+  }
 ```
+
+As with keys we listen for certain events, in this case only the ```pointer.Scroll```. We want to scroll faster if ```Shift``` is pressed, but the stepSize of 10 from key.Events proved excessive. So we're content by increasing it to 3 this time. 
+
+After some manipulations, the Y value of a scroll is added to the state variable ```scrollY``` which indicates how far down into the speech we have reached. To reduce confusion we disallow scrolling to before the start by limiting ```scrollY``` to minimum 0
+
+And just as for ```key.Event``` we end by invalidating the frame.
 
 #### system.FramveEvent
 If a request to re-render is sent, typically from a call to ```invalidate```, program redraws. The layout deserves it's own section though

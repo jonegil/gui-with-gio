@@ -162,10 +162,14 @@ func draw(w *app.Window) error {
 		// A mouse event?
 		case pointer.Event:
 			if e.Type == pointer.Scroll {
-				// How far did the pointer scroll this time?
+				var stepSize int = 1
+				if e.Modifiers == key.ModShift {
+					stepSize = 3
+				}
+				// By how much should the user scroll this time?
 				thisScroll := int(e.Scroll.Y)
 				// Increment scrollY with that distance
-				scrollY = scrollY + thisScroll
+				scrollY = scrollY + thisScroll*stepSize
 				if scrollY < 0 {
 					scrollY = 0
 				}
