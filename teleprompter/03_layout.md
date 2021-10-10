@@ -1,4 +1,3 @@
-@ -0,0 +1,225 @@
 ---
 layout: default
 title: Chapter 3 - Layout
