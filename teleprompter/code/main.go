@@ -205,7 +205,7 @@ func draw(w *app.Window) error {
 			// Visualisation of the speech, using a list where each paragraph is a separate item.
 			// Offset is the distance from the top of the screen to the first element.
 			// I.e. it controls how far we have scrolled.
-			var viz = layout.List{
+			var visList = layout.List{
 				Axis: layout.Vertical,
 				Position: layout.Position{
 					Offset: scrollY,
@@ -217,8 +217,8 @@ func draw(w *app.Window) error {
 			margins.Layout(gtx,
 				func(gtx C) D {
 					// 2) ... then the list inside those margins ...
-					return viz.Layout(gtx, len(paragraphList),
-						// 3) ... where paragraph is it's separate item
+					return visList.Layout(gtx, len(paragraphList),
+						// 3) ... where each paragraph is a separate item
 						func(gtx C, index int) D {
 							// One label per paragraph
 							paragraph := material.Label(th, unit.Dp(float32(fontSize)), paragraphList[index])

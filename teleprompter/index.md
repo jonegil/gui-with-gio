@@ -344,13 +344,14 @@ type Event struct {
 	Modifiers key.Modifiers
 }
 ```
-What we need here are the two bottom entries, ```Scroll``` and ```Modifiers```. The former returns a ```Point```, which is simply a set of X and Y float32 variables that indicate how far the user scrolled in those directions.   
+
+What we need here are the two bottom entries, ```Scroll``` and ```Modifiers```. The former returns a ```Point```, which is simply a set of X and Y variables that indicate how far the user scrolled in those directions:   
 ```go
 type Point struct {
 	X, Y float32
 }
 ```
-With a scrollwheel on a mouse it's always Y only and often in fixed clicking amounts. On a laptop trackpad however it can often be both, and with various amounts.
+With a scroll-wheel on a mouse it's always Y only and often in fixed clicking amounts. On a laptop trackpad however it can often be both, and with various amounts.
 
 ```Modifiers``` are just as for the ```key.Event``` a helper to indicate if ```Shift``` or ```Alt``` or any of those are pressed when the mouse event occurs. We'll continute to listen for the former of those. Like this:
 
@@ -373,17 +374,117 @@ case pointer.Event:
   }
 ```
 
-As with keys we listen for certain events, in this case only the ```pointer.Scroll```. We want to scroll faster if ```Shift``` is pressed, but the stepSize of 10 from key.Events proved excessive. So we're content by increasing it to 3 this time. 
+As with keys we listen for certain events, in this case only the ```pointer.Scroll```. We want to scroll faster if ```Shift``` is pressed, but the stepSize of 10 from ```key.Event``` proved excessive. So we're content by increasing it by x3 this time. 
 
 After some manipulations, the Y value of a scroll is added to the state variable ```scrollY``` which indicates how far down into the speech we have reached. To reduce confusion we disallow scrolling to before the start by limiting ```scrollY``` to minimum 0
 
-And just as for ```key.Event``` we end by invalidating the frame.
+And just as for ```key.Event``` we end by invalidating the frame. Show it to me!
 
 #### system.FramveEvent
-If a request to re-render is sent, typically from a call to ```invalidate```, program redraws. The layout deserves it's own section though
+Now that we have processed all incoming input, both ```key.Event``` and ```pointer.Scroll```, it's time to wait for a request to redraw. Those are sent when we call ```w.Invalidate``` at the end of the key and pointer event sections. An ```op.InvlidateOp{}``` operation will also be added when we're autoscrolling as we'll see below. 
+
+**Layout part 1**
+Since this is where we redraw, it is also here we do the actual layout. As we'll get into, it's a nested structure with three main components. But first the setup:
 
 ```go
-//TODO DESCRIBE LAYOUT HERE
+// A re-render request?
+case system.FrameEvent:
+  // ops are the operations from the UI
+  var ops op.Ops
+
+  // Graphical context
+  gtx := layout.NewContext(&ops, e)
+
+  // Bacground
+  paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
+
+  // Textscroll
+  if autoscroll {
+    scrollY = scrollY + autospeed
+    op.InvalidateOp{At: gtx.Now.Add(time.Second / 50)}.Add(&ops)
+  }
+```
+We have identified a ```FrameEvent```.  First we define ```ops```, the list of operations, as well as the graphical context we will work within. The background then is filled with a soothing papyris-like color. Finally we check if ```autoscroll``` is activated. If so, we move the starting point for text by a small amount, ```autospeed```, and request a redraw in 0.02 seconds. This last part is interesting, effectively setting the framerate of our change. The higher the smoother, but also effectively alter the speed. As you remember, [there are some nuances](../egg_timer/11_improved_animation.md), between ```w.Invalidate``` and ```op.InvalidateOp{}.Add```. Maybe most interesting here is the timing functionality though. Feel free to experiment.
+
+Let's continue the coding.
+
+**Layout part 2**
+The three parts of the layout are 
+ - Margins: [layout.Inset](https://pkg.go.dev/gioui.org/layout#Inset)
+ - A list of paragraphs: [layout.List](https://pkg.go.dev/gioui.org/layout#List)
+ - Each single paragraph: [material.Label](https://pkg.go.dev/gioui.org/widget/material#Label)
+
+```go
+  // Margins
+  marginWidth := (gtx.Constraints.Max.X - textWidth) / 2
+  margins := layout.Inset{
+    Left:   unit.Dp(float32(marginWidth)),
+    Right:  unit.Dp(float32(marginWidth)),
+    Top:    unit.Dp(0),
+    Bottom: unit.Dp(0),
+  }
+
+  // Visualisation of the speech, using a list where each paragraph is a separate item.
+  // Offset is the distance from the top of the screen to the first element.
+  // I.e. it controls how far we have scrolled.
+  var visList = layout.List{
+    Axis: layout.Vertical,
+    Position: layout.Position{
+      Offset: scrollY,
+    },
+  }
+
+  // Layout the list inside margins
+  // 1) First the margins ...
+  margins.Layout(gtx,
+    func(gtx C) D {
+      // 2) ... then the list inside those margins ...
+      return visList.Layout(gtx, len(paragraphList),
+        // 3) ... where each paragraph is a separate item
+        func(gtx C, index int) D {
+          // One label per paragraph
+          paragraph := material.Label(th, unit.Dp(float32(fontSize)), paragraphList[index])
+          // The text is centered
+          paragraph.Alignment = 2
+          // Return the laid out paragraph
+          return paragraph.Layout(gtx)
+        },
+      )
+    },
+  )
+```
+
+The ```margins``` are on the right and left side of the screen. There role is to grow and shring so that the text in the middle is squeezed together or can flow wide to fill the screen. Since wide text requres narrow margins, the ```marginWidth``` is calculated by subtracting the ```textWidth``` state variable from full screenwidth from ```gtx.Constraints.Max.X```.
+
+The list of visualised paragraphs is defined in ```visList```. As the struct defines it aligns vertically, i.e. elements are above and below each other. Most interesting is the ```Offset: scrollY``` which defines the distance in pixels from the top of the screen to the first element in the list. In other words, by setting the offset to the value of our ```scrollY``` state variable we move the whole list up and down. And voila, we're scrolling.  
+
+The third block reads as follows:
+- First define the margins
+  - Within those margins define a list
+    - Within each element of the list, define a paragraph
+    - Once the parapgrah is defined, return id
+  - Once each element in the list is visited, return the list
+- Done
+
+By using the list, Gio takes care of only showing the list-elements currently on screen. Off screen elements are not processed until they appear, reducing the load on the system and allowing for really long lists. In developing this app I played around with some really long ones, like [The Complete Works of William Shakespeare](https://www.gutenberg.org/ebooks/100) for example. No problem for Gio. 
+
+**Layout part 3**
+Red triagle
+
+```go
+  // Draw a transparent red rectangle.
+  path := new(clip.Path)
+  stack := op.Save(&ops)
+  path.Begin(&ops)
+  path.MoveTo(f32.Pt(0, 0))
+  path.End()
+  op.Offset(f32.Pt(0, float32(focusBarY))).Add(&ops)
+  clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Add(&ops)
+  paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
+  paint.PaintOp{}.Add(&ops)
+  stack.Load()
+
+  e.Frame(&ops)
 ```
 
 ### TODO - Describe the layout
