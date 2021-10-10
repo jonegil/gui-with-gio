@@ -12,7 +12,7 @@ In this chapter we'll make use of the updated state variables and lay out our pr
 
 Now that we have processed all incoming input, both ```key.Event``` and ```pointer.Scroll```, it's time to wait for a request to redraw. Those are sent by call ```w.Invalidate``` at the end of the key and pointer event sections. Also, we'll add an ```op.InvlidateOp{}``` operation will also when autoscroll is turned on as we'll see below. 
 
-## system.FramveEvent
+## system.FrameEvent
 When we receive a ```system.FrameEvent``` it is time to lay out and redraw. As we'll get into, it's a nested structure with three main components. 
 
 ### Setup
