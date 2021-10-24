@@ -10,7 +10,7 @@ func main() {
 		w := app.NewWindow()
 
 		// listen for events in the window.
-		for e := range w.Events() {
+		for range w.Events() {
 		}
 	}()
 	app.Main()
