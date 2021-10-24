@@ -66,7 +66,7 @@ type D = layout.Dimensions
 
 ### No 3 - The ```draw( )``` function
 
-A simplify version of ```draw( )``` shows the structure.
+A simplified version of ```draw( )``` shows the structure.
 
 ```go
 func draw(w *app.Window) error {
