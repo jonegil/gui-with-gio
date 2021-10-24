@@ -24,9 +24,9 @@ In other words, no new functionality will be added, but we'll clear the way for 
 
 ## Code
 
-### No 1 - ```main( )``` is too long
+### No 1 - ```main()``` is too long
 
-Main is too long and does too much. It's better if ```main( )``` starts and controls the program, but apart from that delegates to others. Here's the new one:
+Main is too long and does too much. It's better if ```main()``` starts and controls the program, but apart from that delegates to others. Here's the new one:
 
 ```go
 func main() {
@@ -45,9 +45,9 @@ func main() {
 }
 ```
 
-Now, inside ```main( )``` we create a window ```w``` as before, and immediately hand it over to a dedicated function ```draw( )```.
+Now, inside ```main()``` we create a window ```w``` as before, and immediately hand it over to a dedicated function ```draw()```.
 
-By storing the result of ```draw( )``` in ```err```, we can examine if the execution went well, and we can handle any errors in an orderly fashion.
+By storing the result of ```draw()``` in ```err```, we can examine if the execution went well, and we can handle any errors in an orderly fashion.
 
 For that we use [os.Exit()](https://pkg.go.dev/os?utm_source=gopls#Exit) and it's close cousin [log.Fatal(err)](https://pkg.go.dev/log?utm_source=gopls#Fatal). Both come from the standard library and are included as imports.
 

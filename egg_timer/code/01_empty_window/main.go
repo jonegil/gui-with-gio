@@ -2,9 +2,7 @@ package main
 
 import (
 	"gioui.org/app"
-"fmt"
 )
-
 
 func main() {
 	go func() {
@@ -12,8 +10,7 @@ func main() {
 		w := app.NewWindow()
 
 		// listen for events in the window.
-		for e:= range w.Events() {
-fmt.Println(e)
+		for e := range w.Events() {
 		}
 	}()
 	app.Main()

@@ -56,7 +56,7 @@ layout.Flex{
 
 ## Comments
 
-*Some metaphors are useful*, remember? The above is like a donut with a button in the center. Sorry, I couldn´t help myself.
+The above is like a donut with a button in the center. *Some metaphors are useful*, remember? 
 
 ![Button inside inset](06_button_inside_inset.jpeg)
 
