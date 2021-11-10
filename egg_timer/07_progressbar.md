@@ -18,13 +18,13 @@ The intention of this section is to add a progressbar
 I've looked forward to this chapter ever since I started writing this series. We will cover quite some ground and introduce multiple new ideas:
  - Try out a new widget, the ```material.Progressbar```
  - Start using state variables to control behaviour
- - Use two concurrency techniques; one to create and share a beating pulse that progresses the progressbar, one one to select among independent communication operations
+ - Use two concurrency techniques; one to create and share a beating pulse that progresses the progressbar, one to select among independent communication operations
 
 Let's look at these in turn pieces.
 
 ## Feature 1 - The progressbar
 
-A progressbar is obviously a bar that displays progress. But which progress? And how to control it? How fast should it grow, can it pause, or even reverse? From the [docsc](https://pkg.go.dev/gioui.org/widget/material?utm_source=gopls#ProgressBar) we find ```ProgressBar(th *Theme, progress float32)``` receives progress as a decimal between 0 and 1.
+A progressbar is obviously a bar that displays progress. But which progress? And how to control it? How fast should it grow, can it pause, or even reverse? From the [docs](https://pkg.go.dev/gioui.org/widget/material?utm_source=gopls#ProgressBar) we find ```ProgressBar(th *Theme, progress float32)``` receives progress as a decimal between 0 and 1.
 
 ### Code
 
