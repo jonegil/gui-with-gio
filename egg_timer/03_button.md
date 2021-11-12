@@ -57,7 +57,7 @@ import (
 
   This is on purpose to improve reusability and flexibility of the widgets. We'll make use of this later.
   
-  The default looks good, and is what we'll use, but it's just as easy to adjust by setting propoerties such as color, text size font properties etc.
+  The default looks good, and is what we'll use, but it's just as easy to adjust by setting properties such as color, text size font properties etc.
   
   - Note: Gio expands the base functionality in a dedicated repo called [gio-x](https://pkg.go.dev/gioui.org/x) where [more material components](https://pkg.go.dev/gioui.org/x/component) are in development, including navigation bars and tooltips.
 

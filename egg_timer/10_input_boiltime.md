@@ -37,11 +37,11 @@ import (
 The standard library is fairly compartmentalized, useful functionality for string-and-number manipulation comes together across these packages:
 
  - ```fmt``` will be used to convert float to string
- - ```strconv```will be used to convert string to float
+ - ```strconv``` will be used to convert string to float
  - ```strings``` will be used to trim spaces away from the input string
 
 From Gio:
- - [gioui.org/text](https://pkg.go.dev/gioui.org/text) provides supporting types for working with text. A lot of is Font support and Caching, but we will use it for Alignment.
+ - [gioui.org/text](https://pkg.go.dev/gioui.org/text) provides supporting types for working with text. A lot of it is Font support and Caching, but we will use it for Alignment.
 
 ### 2. The editor widget
 
@@ -84,9 +84,9 @@ The first lines are self evident:
  - ```strings.TrimSpace()``` removes leading and lagging space characters, if any
  - ```strconv.ParseFloat()``` converts the text to float. Note the second argument, bitsize, which is 32. From the [standard library docs](https://pkg.go.dev/strconv#ParseFloat):
    - *ParseFloat converts the string s to a floating-point number with the precision specified by bitSize: 32 for float32, or 64 for float64. When bitSize=32, the result still has type float64, but it will be convertible to float32 without changing its value.*
- - Aha. We need to explicitly convert to ```float32()````
+ - Aha. We need to explicitly convert to ```float32()```
  
- Finally, a trick to link the ```progress``` and ```boilDuration```. If a boil is, for example 20% done and the user enters a new time of 10 seconds, it's fair to assume the user want's 10 more seconds, not only 8. So we scale it up to 12.5 by dividing by ```(1-progress)```.
+ Finally, a trick to link the ```progress``` and ```boilDuration```. If a boil is, for example 20% done and the user enters a new time of 10 seconds, it's fair to assume the user wants 10 more seconds, not only 8. So we scale it up to 12.5 by dividing by ```(1-progress)```.
 
  Other solutions exist, like rescaling the progressbar, but adjusting the ```progress``` state variable. For simplicity we skip that step here, but just be mindful in your application how state variables might be logically related.
 
