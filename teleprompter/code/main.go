@@ -233,9 +233,10 @@ func draw(w *app.Window) error {
 
 			// Draw a transparent red rectangle.
 			op.Offset(f32.Pt(0, float32(focusBarY))).Add(&ops)
-			clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Add(&ops)
+			stack := clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Push(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
+			stack.Pop()
 
 			// Frame completes the FrameEvent by drawing the graphical operations from ops into the window.
 			e.Frame(&ops)
