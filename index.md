@@ -8,7 +8,6 @@ has_children: false
 ```go
 #go, #golang, #gui, #gioui
 ```
-(If you like these pages, a ⭐ really makes my day. Thanks!)
 
 **You want a Gui. Of course you do.**
 
