@@ -19,9 +19,9 @@ The code does three main things:
  - Imports Gio
  - Creates and calls a goroutine that: 
    - Creates a new window, called `w`
-   - Starts an eternal loop that waits for Events in the window (none will come in this example)
+   - Starts a never-ending loop that waits for Events in the window (no Event will ever occur in this example)
 
-That's it. Let's look at the code:
+That's it! Let's look at the code:
 
 ## Code
 ```go
@@ -53,11 +53,11 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
    Looking at [the docs](https://pkg.go.dev/gioui.org/app) we find:
    > *Package app provides a platform-independent interface to operating system functionality for running graphical user interfaces.*
    
-   This is good news. Gio takes care of all the platform-dependent stuff for us. I routinely code on Windows and MacOS. Gio just works. [GioUI.org](gioui.org) lists even more, iOS and Android included.
+   This is good news. Gio takes care of all the platform dependent stuff for us. I routinely code on Windows and MacOS. Gio just works. [GioUI.org](https://gioui.org/#installation) lists even more, iOS and Android included.
    
-   This is deeper than you might realize. Because, even if your app today is single-platform, your *skillset* is now multi-platform. 
-   *"We should port to mac"* Consider it done! *"Hot startup seeking app- and desktop experts*" No problem. *"Who here knows tvOS"* You do.
-   *"The pilot died, can anyone land this plane*" ... ok, maybe not, but the point still stands. The diversity of Gio is nothing less than amazing.
+   This is deeper than you might realize. Even if your app today is single-platform, your *skillset* is now multi-platform. 
+   *"We should port to Mac."* &nbsp;Consider it done! *"Hot startup seeking app and desktop experts.*" &nbsp;No problem. *"Who here knows tvOS?"* &nbsp;You do!
+   *"The pilot died, can anyone land this plane?!*" &nbsp;OK, maybe not that last one but the point still stands. The diversity of Gio is nothing less than amazing.
    
 2. The **event loop** in the goroutine
    
@@ -66,7 +66,7 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
      From [app.main](https://pkg.go.dev/gioui.org/app#hdr-Main) we learn:
      > *Because Main is also blocking on some platforms, the event loop of a Window must run in a goroutine.*
 
-    - A goroutine with no name, i.e. an *anonymous function*, is created and runs the event loop. Since it's in a goroutine it will spin concurrently with the rest of the program.
+    - A goroutine with no name (i.e. an *anonymous function*) is created and runs the event loop. Since it's in a goroutine it will spin concurrently with the rest of the program.
    ```go
 go func {
   // ...
