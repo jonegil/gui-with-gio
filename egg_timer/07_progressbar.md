@@ -9,7 +9,7 @@ has_children: false
 # Chapter 7 - Progressbar
 
 ## Goals
-The intention of this section is to add a progressbar
+The intent of this section is to add a progressbar
 
 ![Progressbar](07_progressbar.gif)
 
