@@ -9,7 +9,7 @@ has_children: false
 # Chapter 9 - Egg as egg
 
 ## Goals
-The intention of this section is to draw an actual egg.
+The intent of this section is to draw an actual egg.
 
 ![An actual egg](09_egg_as_egg.gif)
 
