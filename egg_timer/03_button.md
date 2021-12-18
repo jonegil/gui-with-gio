@@ -9,7 +9,7 @@ has_children: false
 # Chapter 3 - Button 
 
 ## Goals
-The intention of this section is to add a button. Not only can we click it, but it will have a nice hover and click animations.
+The intent of this section is to add a button. Not only can we click it, but it will have a nice hover and click animations.
 
 ![A button](03_button.gif)
 

@@ -9,7 +9,7 @@ has_children: false
 # Chapter 6 - Low button with margin
 
 ## Goals
-The intention of this chapter is to add open space around all sides of the button.
+The intent of this chapter is to add open space around all sides of the button.
 
 ![Button with margin](06_button_low_margin.png)
 
