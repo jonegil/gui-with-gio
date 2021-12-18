@@ -82,10 +82,10 @@ To allow enough space after the line so that it actually scrolls off screeen, we
 
 ## Section 3 - Start the application 
 
-The last section of ```main``` starts the Gui in a normal manner:
+The last section of ```main``` starts the GUI in a normal manner:
 ```go
   // ... continuing inside main()
-  // Part 2 - Start the gui
+  // Part 2 - Start the GUI
   go func() {
     // create new window
     w := app.NewWindow(

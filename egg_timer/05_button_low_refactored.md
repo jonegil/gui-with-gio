@@ -9,7 +9,7 @@ has_children: false
 # Chapter 5 - Low button refactored
 
 ## Goals
-The intention of this section is to organize the code better. 
+The intent of this section is to organize the code better. 
 
 ## Outline
 
