@@ -50,7 +50,7 @@ func main() {
 	   }
 	*/
 
-	// Part 2 - Start the gui
+	// Part 2 - Start the GUI
 	go func() {
 		// create new window
 		w := app.NewWindow(
