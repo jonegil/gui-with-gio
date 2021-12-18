@@ -13,7 +13,7 @@ has_toc: false
 Over the next 10 steps we will
 
  - Start completely from scratch
- - Code a stand-alone Go application with a gui using the Gio toolkit
+ - Code a stand-alone Go application with a GUI using the Gio toolkit
  - Take our time and explain each step along the way
 
 ![Egg timer](egg_timer.gif)
