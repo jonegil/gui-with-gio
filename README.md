@@ -1,9 +1,8 @@
-
 ```go
 #go, #golang, #gui, #gioui
 ```
 
-You want a GUI. Of course you do. 
+You want a GUI. Of course you do.
 
 Did you know that Go has a great GUI library called [Gio](https://gioui.org/)? In a [10-part tutorial](https://jonegil.github.io/gui-with-gio/egg_timer/) we will start completely from scratch, with zero background required, and build a self contained GUI application:
 
@@ -13,13 +12,14 @@ Did you know that Go has a great GUI library called [Gio](https://gioui.org/)? I
 
 ## Background
 
-Command-lines are great and all, but let's face it, 95% of users aren't power users. They want buttons to push, toggles to switch and simply get on with their lives. Enter [Gio](https://gioui.org/) - a great toolkit to build stunningly beautiful, lightning fast, flexible interfaces that meet _your_ needs. 
+Command-lines are great and all, but let's face it, 95% of users aren't power users. They want buttons to push, toggles to switch and simply get on with their lives. Enter [Gio](https://gioui.org/) - a great toolkit to build stunningly beautiful, lightning fast, flexible interfaces that meet _your_ needs.
 
 ### Three out of three
+
 For an interface to work, it must be:
 
 1. **Beautiful**
-    - No one will use an app that looks like #$%$#!"#
+   - No one will use an app that looks like #$%$#!"#
 2. **Fast**
    - Snappy, instant, responsive, immediate, direct
    - Quick to code, easy to test
@@ -31,14 +31,14 @@ For an interface to work, it must be:
 1 and 2 and 3. Beautiful AND Fast AND Flexible. No compromises.
 
 ### Just do it
+
 _But I don't know how_
 
-Agreed, the [official Gio website](https://gioui.org) is a bit advanced. [Nice repos exist](https://github.com/gioui) with many examples, but where to start? If you're a practical learner, you simply want to get started, code something simple, and learn as you go along. That's me at least, and if you're like that too, we're soulmates. 
+Agreed, the [official Gio website](https://gioui.org) is a bit advanced. [Nice repos exist](https://github.com/gioui) with many examples, but where to start? If you're a practical learner, you simply want to get started, code something simple, and learn as you go along. That's me at least, and if you're like that too, we're soulmates.
 
-So let's just do exactly that. The point here is to build something simple, from the ground up, and touch upon concepts and ideas as we go along. Every step moves us forward, and every new feature builds on something we've touched upon before. The goal is to change the initial  _I don't know_ to a more optimistic _I don't know how - yet_. 
+So let's just do exactly that. The point here is to build something simple, from the ground up, and touch upon concepts and ideas as we go along. Every step moves us forward, and every new feature builds on something we've touched upon before. The goal is to change the initial _I don't know_ to a more optimistic _I don't know how - yet_.
 
 Come along for the ride!
-
 
 #### Disclaimer
 

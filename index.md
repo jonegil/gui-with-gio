@@ -3,6 +3,7 @@ title: Overview
 nav_order: 1
 has_children: false
 ---
+
 # Let's build a GUI with Gio
 
 ```go
@@ -15,18 +16,19 @@ Did you know that Go has a great GUI library called [Gio](https://gioui.org/)? I
 
 ![Screenshot of egg_timer](egg_timer/egg_timer.gif)
 
-[Get started now](egg_timer/index.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } 
+[Get started now](egg_timer/index.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [View it on GitHub](https://github.com/jonegil/gui-with-gio/){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ## Background
 
-Command lines are great and all, but let's face it, 95% of users aren't power users. They want buttons to push, toggles to switch, and then to simply get on with their lives. Enter [Gio](https://gioui.org/), a great toolkit to build stunningly beautiful, lightning fast and flexible interfaces that meet _your_ needs. 
+Command lines are great and all, but let's face it, 95% of users aren't power users. They want buttons to push, toggles to switch, and then to simply get on with their lives. Enter [Gio](https://gioui.org/), a great toolkit to build stunningly beautiful, lightning fast and flexible interfaces that meet _your_ needs.
 
 ### Three out of three
+
 For an interface to work, it must be:
 
 1. **Beautiful**
-    - No one will use an app that looks like #$%$#!"#
+   - No one will use an app that looks like #$%$#!"#
 2. **Fast**
    - Snappy, instant, responsive, immediate, direct
    - Quick to code, easy to test
@@ -38,14 +40,14 @@ For an interface to work, it must be:
 1 and 2 and 3. Beautiful AND Fast AND Flexible. No compromises.
 
 ### Just do it
+
 _"But I don't know how."_
 
-Agreed, the [official Gio website](https://gioui.org) is a bit advanced. [Nice repos exist](https://github.com/gioui) with many examples, but where should you start? If you're a practical learner you simply want to get started, code something simple, and learn as you go along. That's me at least, and if you're like that too, we're soulmates. 
+Agreed, the [official Gio website](https://gioui.org) is a bit advanced. [Nice repos exist](https://github.com/gioui) with many examples, but where should you start? If you're a practical learner you simply want to get started, code something simple, and learn as you go along. That's me at least, and if you're like that too, we're soulmates.
 
-So let's just do exactly that. The point here is to build something simple from the ground up, and touch upon concepts and ideas as we go along. Every step moves us forward, and every new feature builds on something we've touched upon before. The goal is to change the initial  _"I don't know how."_ to a more optimistic _"I don't know how - yet!"_. 
+So let's just do exactly that. The point here is to build something simple from the ground up, and touch upon concepts and ideas as we go along. Every step moves us forward, and every new feature builds on something we've touched upon before. The goal is to change the initial _"I don't know how."_ to a more optimistic _"I don't know how - yet!"_.
 
 Come along for the ride!
-
 
 ### Disclaimer
 
