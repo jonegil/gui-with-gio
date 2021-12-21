@@ -9,6 +9,7 @@ has_children: false
 # Chapter 9 - Egg as egg
 
 ## Goals
+
 The intent of this section is to draw an actual egg.
 
 ![An actual egg](09_egg_as_egg.gif)
@@ -18,7 +19,8 @@ The intent of this section is to draw an actual egg.
 Here we utilize basic Gio functionality to draw totally custom graphics, in the shape of an egg.
 
 ## Code
-All the new code is within the rigid that previously displayed the circle. 
+
+All the new code is within the rigid that previously displayed the circle.
 
 ```go
 layout.Rigid(
@@ -67,30 +69,29 @@ layout.Rigid(
 
 ```
 
-The main idea is to define a custom egg shaped ```clip.Path```. We draw a line to define it, fill the inside and any drawing on the outside is ignored. 
+The main idea is to define a custom egg shaped `clip.Path`. We draw a line to define it, fill the inside and any drawing on the outside is ignored.
 
 ## Comments
 
 First the new path is defined, ```var eggPath clip.Path````
 
-Then an operation is created to move 200 Points right, 150 Points down, ```op.Offset( )```. As before, this is from the top-left corner inside this widget.
+Then an operation is created to move 200 Points right, 150 Points down, `op.Offset( )`. As before, this is from the top-left corner inside this widget.
 
-We're now at the center of our egg. This is where the path begins, ```eggPath.Begin( )```
+We're now at the center of our egg. This is where the path begins, `eggPath.Begin( )`
 
 From here we rotate a full 360 degrees and continue drawing the outline of the Egg. We use the math for a [Hügelschäffer Egg](https://mathcurve.com/courbes2d.gb/oeuf/oeuf.shtml), as presented on Torben Jansen's [excellent interactive blog](https://observablehq.com/@toja/egg-curve). The formula receives an angle, from 0 to 360, calculates an appropriate distance from center and returns the outline as a point. Math is fun!
 
 ![Hügelschäffer egg](09_torben_jansen.gif)
 
+Regarding Gio, the important line is the last in the for-loop, `eggPath.LineTo(p)`. At this point, math has found the next point `p` on the 360-degree roundtrip around the egg, and we use `eggPath.LineTo`) to move the pen to this specific coordinate point.
 
-Regarding Gio, the important line is the last in the for-loop, ```eggPath.LineTo(p)```. At this point, math has found the next point ```p``` on the 360-degree roundtrip around the egg, and we use ```eggPath.LineTo```) to move the pen to this specific coordinate point.
+After completing the for-loop the egg-shape is almost done. We finalize it explicitly by calling `eggPath.Close()` which closes the path.
 
-After completing the for-loop the egg-shape is almost done. We finalize it explicitly by calling ```eggPath.Close()``` which closes the path.
+With the path complete, we want to get the area inside that path. `clip.Outline{ }.Op( )` gives us the clip operation representing this area.
 
-With the path complete, we want to get the area inside that path. ```clip.Outline{ }.Op( )``` gives us the clip operation representing this area.
+Now we fill the egg with color. Coloring can be static, but wouldn't it be cool if the egg changed color from cold to warm? I think so too. Remember how progress is a variable from 0 to 1. This state variable can now be used to slowly alter the color as well. `* (1 - progress)` is just another way of saying _gradually turn off Green and Blue please_. When progress is complete, both are 0, and we're left with Red only. Nifty.
 
-Now we fill the egg with color. Coloring can be static, but wouldn't it be cool if the egg changed color from cold to warm? I think so too. Remember how progress is a variable from 0 to 1. This state variable can now be used to slowly alter the color as well. ``` * (1 - progress) ``` is just another way of saying *gradually turn off Green and Blue please*. When progress is complete, both are 0, and we're left with Red only. Nifty. 
-
-We end by returning ```layout.Dimensions```, the height of this widget.
+We end by returning `layout.Dimensions`, the height of this widget.
 
 ---
 
