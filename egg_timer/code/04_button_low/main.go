@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"gioui.org/app"
 	"gioui.org/font/gofont"
 	"gioui.org/io/system"
@@ -61,6 +63,7 @@ func main() {
 				e.Frame(gtx.Ops)
 			}
 		}
+		os.Exit(0)
 	}()
 	app.Main()
 }
