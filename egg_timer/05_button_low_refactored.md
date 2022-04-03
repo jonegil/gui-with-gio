@@ -52,7 +52,7 @@ By storing the result of `draw()` in `err`, we can examine if the execution went
 
 For that we use [os.Exit()](https://pkg.go.dev/os?utm_source=gopls#Exit) and it's close cousin [log.Fatal(err)](https://pkg.go.dev/log?utm_source=gopls#Fatal). Both come from the standard library and are included as imports.
 
-The convention is that a zero exit code indicates success, which is what we send from `os.Exit(0)`if _err_ is nil. If not, we call `log.Fatal(err)` which prints the error message en exits with `os.Exit(1)`.
+The convention is that a zero exit code indicates success, which is what we send from `os.Exit(0)`if _err_ is nil. If not, we call `log.Fatal(err)` which prints the error message and exits with `os.Exit(1)`.
 
 ### No 2 - Constraints and Dimensions - A handy shortcut
 
