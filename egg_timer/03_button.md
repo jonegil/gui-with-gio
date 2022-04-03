@@ -112,19 +112,14 @@ func main() {
 
 ### Comments
 
-1. From the top, we recognize the main function starting defining and calling the anonymous function.
+- From the top, we recognize the main function starting defining and calling the anonymous function. We continue to define the window `w`
 
-1. We continue to define the window `w`
+- Three new variables are set:
+  - `ops` define the operations from the user interface
+  - `startButton` is our button, a clickable widget.
+  - `th` is the material theme, and sets the fonts to be gofonts
 
-1. Three new variables are set
-
-- `ops` define the operations from the user interface
-
-- `startButton` is our button, a clickable widget.
-
-- `th` is the material theme, and sets the fonts to be gofonts
-
-1. The `for e:= range w.Events() ` loop is more interesting:
+- The `for e:= range w.Events() ` loop is more interesting:
    - `w.Events()` gets us the _channel_ through which events are delivered. We simply listen to this channel forever.
 
 - Then ... what's this `e:= e.(type)` thing. It's actually a neat thing, known as a [type switch](https://tour.golang.org/methods/16) that allows us to take different actions depending on the `type` of event that's being processed.
@@ -141,7 +136,7 @@ func main() {
 
   - We finalize by actually sending the operations `ops` from the context `gtx` to the FrameEvent `e`.
 
-1. Finally we call `app.Main()`. Don't forget.
+- Finally we call `app.Main()`. Don't forget.
 
 Phew, that's a long one. Thanks if you're still along. We can summarize the whole chapter in three lines:
 
