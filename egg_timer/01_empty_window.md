@@ -18,10 +18,9 @@ The intent of this section is to create a blank canvas that we later can draw up
 
 The code does three main things:
 
-- Imports Gio
-- Creates and calls a goroutine that:
-  - Creates a new window, called `w`
-  - Starts a never-ending loop that waits for Events in the window (no Event will ever occur in this example)
+1. Imports Gio
+1. Creates and calls a goroutine that open a new window, called `w`
+1. Starts a never-ending loop that waits for Events in the window (no Event will ever occur in this example)
 
 That's it! Let's look at the code:
 
