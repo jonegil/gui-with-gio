@@ -65,7 +65,7 @@ func draw(w *app.Window) error {
 		// listen for events in the window.
 		case e := <-w.Events():
 
-			// detect what type of event
+			// detect which type of event
 			switch e := e.(type) {
 
 			// this is sent when the application should re-render.
