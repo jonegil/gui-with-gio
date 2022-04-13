@@ -10,19 +10,23 @@ has_children: false
 
 ## Goals
 
-The intent of this section is to create a blank canvas that we later can draw upon.
+The intent of this section is to create an empty window that we later can fill with our application.
 
 ![An empty window](01_empty_window.gif)
 
 ## Outline
 
-The code does three main things:
+The intention of this chapter is to build the simplest possible application that still runs. 
 
-1. Imports Gio
-1. Creates and calls a goroutine that open a new window, called `w`
-1. Inside that go-routine we run a never-ending loop that waits for Events in the window.
+Our code will do three main things:
 
-That's it! Let's look at the code:
+1. Import the packages needed for a bare-bones application
+1. Open a new window
+1. Listen for events, although we don't yet handle them
+
+Although this on purpose is a very limited ambition, we still need to cover some ground. When learning I'm a breadth-first kind of guy, so I'll focus on conveying the overall structure first. Once that's in place, we'll go deeper in later chapters, but not here. Still we need to cover quite some ground, so hang with me, and as long as you can see the forest and not get lost among the trees, we're doing great. 
+
+All good? Let's look at the code:
 
 ## Code
 
@@ -140,7 +144,7 @@ The convention is that a zero exit code indicates success, which is what we send
 
 ## Well done!
 
-Well done! We've covered lots of ground and laid down some solid foundations. From here we will buid on those, and go deeper into the details where needed. And if it feels a but much, don't sweat details, as long as you have a feel for the forest we'll examine individual trees in the chapters to come. 
+Well done! We've covered lots of ground and laid down some solid foundations. From here we will buid on those, and go deeper into the details where needed. And if it feels a bit much, don't sweat details, as long as you have a feel for the the big picture. Telescope, not microscope.
 
 Ready for the next one? Let's roll!
 
