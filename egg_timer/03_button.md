@@ -113,14 +113,9 @@ func main() {
   - `startButton` is our button, a clickable widget.
   - `th` is the material theme, and sets the fonts to be gofonts
 
-- The `for e:= range w.Events() ` loop is more interesting:
-   - `w.Events()` gets us the _channel_ through which events are delivered. We simply listen to this channel forever.
+- Inside the loop we, so far, are only interested if the event is a `system.FrameEvent`. If it is:
 
-- Then ... what's this `e:= e.(type)` thing. It's actually a neat thing, known as a [type switch](https://tour.golang.org/methods/16) that allows us to take different actions depending on the `type` of event that's being processed.
-
-- In our case, we're only interested if the event is a `system.FrameEvent`. If it is:
-
-  - We define a new _graphical context_, or `gtx`. It receives the pointer to `ops` as well as the event
+  - We define a new _graphical context_, or `gtx`. As you remember, it receives the pointer to `ops` as well as the event
 
   - `btn` is declared as the actual button, with theme `th`, and a pointer to the `startButton` widget. We also define the text that is displayed (note how the text is purely a something that is displayed on the button, not part of the stateful widget the button actually is.)
 
