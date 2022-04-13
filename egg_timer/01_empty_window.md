@@ -34,35 +34,35 @@ All good? Let's look at the code:
 package main
 
 import (
-	"os"
+  "os"
 
-	"gioui.org/app"
-	"gioui.org/io/system"
-	"gioui.org/layout"
-	"gioui.org/op"
+  "gioui.org/app"
+  "gioui.org/io/system"
+  "gioui.org/layout"
+  "gioui.org/op"
 )
 
 func main() {
-	go func() {
-		// create new window
-		w := app.NewWindow()
-		var ops op.Ops
+  go func() {
+    // create new window
+    w := app.NewWindow()
+    var ops op.Ops
 
-		// listen for events in the window.
-		for e := range w.Events() {
+    // listen for events in the window.
+    for e := range w.Events() {
 
-			// detect which type of event
-			switch e := e.(type) {
+      // detect which type of event
+      switch e := e.(type) {
 
-			// is it a FrameEvent? Those are sent when the application should re-render.
-			case system.FrameEvent:
-				gtx := layout.NewContext(&ops, e)
-				e.Frame(gtx.Ops)
-			}
-		}
-		os.Exit(0)
-	}()
-	app.Main()
+      // is it a FrameEvent? Those are sent when the application should re-render.
+      case system.FrameEvent:
+        gtx := layout.NewContext(&ops, e)
+        e.Frame(gtx.Ops)
+      }
+    }
+    os.Exit(0)
+  }()
+  app.Main()
 }
 ```
 
