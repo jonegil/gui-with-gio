@@ -74,12 +74,13 @@ That's it. Let's look at the code:
 ```go
 layout.Rigid(
   func(gtx C) D {
-    circle := clip.Circle{
-      // Hard coding the x coordinate. Try resizing the window
-      Center: f32.Point{X: 200, Y: 200},
-      // Soft coding the x coordinate. Try resizing the window
-      // Center: f32.Point{X: float32(gtx.Constraints.Max.X) / 2, Y: 200},
-      Radius: 120,
+    circle := clip.Ellipse{
+       // Hard coding the x coordinate. Try resizing the window
+       Min: f32.Pt(80, 0),
+       Max: f32.Pt(320, 240),
+       // Soft coding the x coordinate. Try resizing the window
+       //Min: f32.Pt(float32(gtx.Constraints.Max.X)/2.0-120, 0),
+       //Max: f32.Pt(float32(gtx.Constraints.Max.X)/2.0+120, 240),
     }.Op(gtx.Ops)
     color := color.NRGBA{R: 200, A: 255}
     paint.FillShape(gtx.Ops, color, circle)
@@ -91,12 +92,9 @@ layout.Rigid(
 
 ## Comments
 
-We first define a circle using `clip.Circle{ }`. It defines the Center point and Radius.
+We first define a circle using `clip.Ellipse{ }`. It defines circle as an `Ellipse` within a box, where the dimensions of the box are specified by the top left and bottom right corners. `Min` and `Max` respectively.
 
-The origin of the circle is hard-coded, with distance from the top left corner of the _widget_. Note that this is _not_ necessarily the top left corner of the app. The size of the widget itself is coded as
-`Dimensions` using `d := image.Point{Y: 500}`. X represents width and Y represents Height
-
-You can play around with these dimensions, familiarizing yourself with when the circle moves up or down, depending in wheiter you resize the box or move the circle center inside the box. Also, try commenting the hard-coded and uncomment the soft coding below that uses the window area as a reference.
+In the code the circle is hard coded, but try to resize the window and you'll see that might not necessarily be what you want. To adjust, simply comment the hard-coded coordinates and uncomment the next two lines which introduce dynamic positioning. You can play around with these dimensions, familiarizing yourself with when the circle moves up or down, depending in wheiter you resize the window or move the limiting box around the Ellipse.
 
 `color.NRGBA` defines the color of the circle. Note that the Alpha-channel defaults to 0, i.e. invisible, so we lift it to 255 so we can actually see it.
 
