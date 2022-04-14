@@ -18,10 +18,10 @@ func main() {
 		// listen for events in the window.
 		for e := range w.Events() {
 
-			// detect which type of event
+			// detect what type of event
 			switch e := e.(type) {
 
-			// Is it a FrameEvent? Those are sent when the application should re-render.
+			// Is ita FrameEvent? Those are sent when the application should re-render.
 			case system.FrameEvent:
 				gtx := layout.NewContext(&ops, e)
 				e.Frame(gtx.Ops)

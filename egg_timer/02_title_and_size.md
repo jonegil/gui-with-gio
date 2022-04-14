@@ -49,10 +49,10 @@ func main() {
 		// listen for events in the window.
 		for e := range w.Events() {
 
-			// detect which type of event
+			// detect what type of event
 			switch e := e.(type) {
 
-			// is it a FrameEvent? Those are sent when the application should re-render.
+			// Is ita FrameEvent? Those are sent when the application should re-render.
 			case system.FrameEvent:
 				gtx := layout.NewContext(&ops, e)
 				e.Frame(gtx.Ops)
@@ -64,6 +64,15 @@ func main() {
 }
 
 ```
+
+
+---
+Out of sync
+{: .label .label-red }
+
+As of today, April 3rd, the text below is not fully in sync with the code. The code runs fine, but I need to rewrite some of the text below. Should still be helpful though. 
+
+---
 
 
 ## Comments

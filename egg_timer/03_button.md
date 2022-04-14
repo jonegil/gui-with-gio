@@ -16,9 +16,9 @@ The intent of this section is to add a button. Not only can we click it, but it 
 
 ## Outline
 
-This section will present many new components. We don't dive deep, but keep our focus on the overall structure of the program. Don't get lost in the details, stay with the big picture, and you'll be fine.
+This section will present many new components. We don't dive deep, get focus on the overall structure of the program. Don't get lost in the details, focus on the big picture, and you'll be fine.
 
-We start by reviewing the new packages that are imported. Next, we look at how `operations` and `widgets` combine to make a button.
+We start by reviewing the new packages that are imported. There are quite many, so let´s spend some time here. Next, we look at how `operations` and `widgets` combine to make a button.
 
 Finally we touch on [Material Design](https://material.io/), the well established framework for user interfaces also available in Gio.
 
@@ -43,9 +43,15 @@ import (
 
 ### Comments
 
-`app`, `io/system`, `layout`, `op` we met in [chapter 1](01_empty_window.md) and `unit` in [Chapter 2](02_title_and_size.md), but the rest are new:
+`app` and `unit` we know before, but the rest are new:
 
 - [font/gofont](https://pkg.go.dev/gioui.org/font/gofont) - Did you know Go has it's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
+
+- [io/system](https://pkg.go.dev/gioui.org/io/system) - Provides high-level events that are sent from the window. Most important is the `system.FrameEvent` which requests a new frame. The new frame is defined through a list of operations. The operations detail *what* to display and *how* to handle input. What and how. That's it.
+
+- [layout](https://pkg.go.dev/gioui.org/layout) - Defines useful parts of a layout, such as _dimensions_, _constraints_ and _directions_. Also, it includes the layout-concept known as [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex). It's widely used web and user interface development. Among the many introductions, I recommend the one from [Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox).
+
+- [op](https://pkg.go.dev/gioui.org/op) - Operations, or ops, are central in Gio. They are used to update the user interface. There are operations used to draw, handle input, change window properties, scale, rotate and more. Interestingly there are also [macros](https://pkg.go.dev/gioui.org/op#MacroOp), making it possible to record opertions to be executed later. Taken together this means a list of opererations is a _mutable stack_, where you can control the flow.
 
 - [widget](https://pkg.go.dev/gioui.org/widget) - Widget provides the underlying functionality of UI components, such as state tracking and event handling. Is the mouse hovering over a button? Has it been clicked, and if so how many times?
 
@@ -87,7 +93,7 @@ func main() {
     // listen for events in the window.
     for e := range w.Events() {
 
-      // detect which type of event
+      // detect what type of event
       switch e := e.(type) {
 
       // this is sent when the application should re-render.
