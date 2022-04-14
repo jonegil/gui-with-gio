@@ -104,7 +104,6 @@ func main() {
         e.Frame(gtx.Ops)
       }
     }
-    os.Exit(0)
   }()
   app.Main()
 }
