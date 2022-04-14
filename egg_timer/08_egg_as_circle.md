@@ -84,7 +84,7 @@ layout.Rigid(
     }.Op(gtx.Ops)
     color := color.NRGBA{R: 200, A: 255}
     paint.FillShape(gtx.Ops, color, circle)
-    d := image.Point{Y: 500}
+    d := image.Point{Y: 400}
     return layout.Dimensions{Size: d}
   },
 ),
