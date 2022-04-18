@@ -18,7 +18,7 @@ The intent of this section is to set a custom title and the size of the window.
 
 This code is very similar to that of [chapter 1](01_empty_window.md). We add:
 
-- one more import
+- two more imports
 - two parameters when calling `app.NewWindow()`
 
 ## Code
@@ -27,27 +27,32 @@ This code is very similar to that of [chapter 1](01_empty_window.md). We add:
 package main
 
 import (
-	"gioui.org/app"
-	"gioui.org/unit"
+  "os"
+
+  "gioui.org/app"
+  "gioui.org/unit"
 )
 
 func main() {
   go func() {
-	// create new window
-	w := app.NewWindow(
-		app.Title("Egg timer"),
-		app.Size(unit.Dp(400), unit.Dp(600)),
-	)
+    // create new window
+    w := app.NewWindow(
+      app.Title("Egg timer"),
+      app.Size(unit.Dp(400), unit.Dp(600)),
+    )
 
-	// listen for events in the window.
-	for range w.Events() {
-	}
+    // listen for events in the window.
+    for range w.Events() {
+    }
+    os.Exit(0)
   }()
-app.Main()
+  app.Main()
 }
 ```
 
 ## Comments
+
+Where chapter 1 was the absolute bare minimum to open a window, we want to make some improvements here. One helps us ensure clean exits, so we import `os` and add a line with [os.Exit()](https://pkg.go.dev/os?utm_source=gopls#Exit) after the event loop. The convention is that zero indicates success, later logic can be added to send other values.
 
 [gioui.org/unit](https://pkg.go.dev/gioui.org/unit) implements device independent units and values. The docs describe a handful of alternatives:
 

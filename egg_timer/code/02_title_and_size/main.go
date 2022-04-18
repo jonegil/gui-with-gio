@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"gioui.org/app"
 	"gioui.org/unit"
 )
@@ -16,6 +18,7 @@ func main() {
 		// listen for events in the window.
 		for range w.Events() {
 		}
+		os.Exit(0)
 	}()
 	app.Main()
 }

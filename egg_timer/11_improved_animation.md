@@ -144,8 +144,8 @@ First replace the state variables `boiling` and `boilDuration` with a struct tha
 ```go
 // animation tracks the progress of a linear animation across multiple frames.
 type animation struct {
-	start    time.Time
-	duration time.Duration
+  start    time.Time
+  duration time.Duration
 }
 
 var anim animation
@@ -159,14 +159,14 @@ Also, note how it uses `gtx.Now` instead of `time.Now`, most importantly ensurin
 ```go
 // animate starts an animation at the current frame which will last for the provided duration.
 func (a *animation) animate(gtx layout.Context, duration time.Duration) {
-	a.start = gtx.Now
-	a.duration = duration
-	op.InvalidateOp{}.Add(gtx.Ops)
+  a.start = gtx.Now
+  a.duration = duration
+  op.InvalidateOp{}.Add(gtx.Ops)
 }
 
 // stop ends the animation immediately.
 func (a *animation) stop() {
-	a.duration = time.Duration(0)
+  a.duration = time.Duration(0)
 }
 ```
 
@@ -178,11 +178,11 @@ Finally a method to report on progress:
 ```go
 // progress returns whether the animation is currently running and (if so) how far through the animation it is.
 func (a animation) progress(gtx layout.Context) (animating bool, progress float32) {
-	if gtx.Now.After(a.start.Add(a.duration)) {
-		return false, 0
-	}
-	op.InvalidateOp{}.Add(gtx.Ops)
-	return true, float32(gtx.Now.Sub(a.start)) / float32(a.duration)
+  if gtx.Now.After(a.start.Add(a.duration)) {
+    return false, 0
+  }
+  op.InvalidateOp{}.Add(gtx.Ops)
+  return true, float32(gtx.Now.Sub(a.start)) / float32(a.duration)
 }
 
 ```
