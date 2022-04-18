@@ -30,6 +30,8 @@ To make things tidy, let's discuss imports first, then the main function later.
 
 ```go
 import (
+  "os"
+
   "gioui.org/app"
   "gioui.org/font/gofont"
   "gioui.org/io/system"
@@ -43,7 +45,7 @@ import (
 
 ### Comments
 
-`app` and `unit` we know before, but the rest are new:
+`os`, `app` and `unit` we know before, but the rest are new:
 
 - [font/gofont](https://pkg.go.dev/gioui.org/font/gofont) - Did you know Go has it's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
 
@@ -104,6 +106,7 @@ func main() {
         e.Frame(gtx.Ops)
       }
     }
+    os.Exit(0)
   }()
   app.Main()
 }
