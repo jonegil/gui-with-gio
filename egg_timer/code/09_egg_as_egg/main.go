@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"gioui.org/app"
+	"gioui.org/f32"
 	"gioui.org/font/gofont"
 	"gioui.org/io/system"
 	"gioui.org/layout"
@@ -112,7 +113,7 @@ func draw(w *app.Window) error {
 								x := a * cosT
 								y := -(math.Sqrt(b*b-d*d*cosT*cosT) + d*sinT) * sinT
 								// Finally the point on the outline
-								p := image.Pt(x, y)
+								p := f32.Pt(float32(x), float32(y))
 								// Draw the line to this point
 								eggPath.LineTo(p)
 							}
