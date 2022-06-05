@@ -27,7 +27,7 @@ layout.Rigid(
   func(gtx C) D {
     // Draw a custom path, shaped like an egg
     var eggPath clip.Path
-    op.Offset(f32.Pt(200, 150)).Add(gtx.Ops)
+    op.Offset(image.Pt(200, 150)).Add(gtx.Ops)
     eggPath.Begin(gtx.Ops)
     // Rotate from 0 to 360 degrees
     for deg := 0.0; deg <= 360; deg++ {
@@ -47,7 +47,7 @@ layout.Rigid(
       x := a * cosT
       y := -(math.Sqrt(b*b-d*d*cosT*cosT) + d*sinT) * sinT
       // Finally the point on the outline
-      p := f32.Pt(float32(x), float32(y))
+      p := image.Pt(x, y)
       // Draw the line to this point
       eggPath.LineTo(p)
     }
