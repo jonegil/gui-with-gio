@@ -30,8 +30,6 @@ There are some new imports, namely
 
   - Nigel Tao [writes well](https://blog.golang.org/image) about these packages on the Go blog.
 
-- [f32](https://pkg.go.dev/gioui.org/f32). Go's image library is based on `int`, while Gio prefers to work with `float32`. Hence f32 reimplements floating point versions of the two main types, `Points` and `Rectangles`
-
 - [op/clip](https://pkg.go.dev/gioui.org/op/clip) is used to define an area to paint within. Drawing outside this area is ignored.
 
 - [op/paint](https://pkg.go.dev/gioui.org/op/paint) contains drawing operations to fill a shape with color.
@@ -54,7 +52,7 @@ A Point is an X, Y coordinate pair. The axes increase right and down (origin = t
 ![Point](08_image_package_point.png)
 
 ```go
-p := f32.Point{2, 1}
+p := image.Point{2, 1}
 ```
 
 A Rectangle contains the points with Min.X <= X < Max.X, Min.Y <= Y < Max.Y. It has no intrinsic color, but the visualization below outlines it with a thin colored line, and call out their Min and Max Points.
@@ -62,7 +60,7 @@ A Rectangle contains the points with Min.X <= X < Max.X, Min.Y <= Y < Max.Y. It 
 ![Rectangle](08_image_package_rectangle.png)
 
 ```go
-r := f32.Rect(2, 1, 5, 5)
+r := image.Rect(2, 1, 5, 5)
 ```
 
 For convenience, image.Rect(x0, y0, x1, y1) is equivalent to `Rectangle{Point{x0, y0}, Point{x1, y1}}`, but is much easier to type. It also swaps Minimum and Maximum to ensure it's well formed.
@@ -76,11 +74,11 @@ layout.Rigid(
   func(gtx C) D {
     circle := clip.Ellipse{
        // Hard coding the x coordinate. Try resizing the window
-       Min: f32.Pt(80, 0),
-       Max: f32.Pt(320, 240),
+       Min: image.Pt(80, 0),
+       Max: image.Pt(320, 240),
        // Soft coding the x coordinate. Try resizing the window
-       //Min: f32.Pt(float32(gtx.Constraints.Max.X)/2.0-120, 0),
-       //Max: f32.Pt(float32(gtx.Constraints.Max.X)/2.0+120, 240),
+       //Min: image.Pt(gtx.Constraints.Max.X/2-120, 0),
+       //Max: image.Pt(gtx.Constraints.Max.X/2+120, 240),
     }.Op(gtx.Ops)
     color := color.NRGBA{R: 200, A: 255}
     paint.FillShape(gtx.Ops, color, circle)
