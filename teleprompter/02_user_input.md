@@ -180,9 +180,9 @@ type Event struct {
 	Buttons Buttons
 	// Position is the position of the event, relative to
 	// the current transformation, as set by op.TransformOp.
-	Position f32.Point
+	Position image.Point
 	// Scroll is the scroll amount, if any.
-	Scroll f32.Point
+	Scroll image.Point
 	// Modifiers is the set of active modifiers when
 	// the mouse button was pressed.
 	Modifiers key.Modifiers

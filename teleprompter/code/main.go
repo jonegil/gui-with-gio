@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"gioui.org/app"
-	"gioui.org/f32"
 	"gioui.org/font/gofont"
 	"gioui.org/io/key"
 	"gioui.org/io/pointer"
@@ -89,10 +88,8 @@ func draw(w *app.Window) error {
 
 	// listen for events in the window.
 	for e := range w.Events() {
-
 		// Detect what type of event
 		switch e := e.(type) {
-
 		// A keypress?
 		case key.Event:
 			if e.State == key.Press {
@@ -221,7 +218,7 @@ func draw(w *app.Window) error {
 						// 3) ... where each paragraph is a separate item
 						func(gtx C, index int) D {
 							// One label per paragraph
-							paragraph := material.Label(th, unit.Dp(float32(fontSize)), paragraphList[index])
+							paragraph := material.Label(th, unit.Sp(float32(fontSize)), paragraphList[index])
 							// The text is centered
 							paragraph.Alignment = 2
 							// Return the laid out paragraph
@@ -232,7 +229,7 @@ func draw(w *app.Window) error {
 			)
 
 			// Draw a transparent red rectangle.
-			op.Offset(f32.Pt(0, float32(focusBarY))).Add(&ops)
+			op.Offset(image.Pt(0, focusBarY)).Add(&ops)
 			stack := clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Push(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
