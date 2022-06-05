@@ -119,7 +119,7 @@ At the end we complete the FrameEvent by `e.Frame()`.
 
 ```go
 // Draw a transparent red rectangle.
-op.Offset(f32.Pt(0, float32(focusBarY))).Add(&ops)
+op.Offset(image.Pt(0, focusBarY)).Add(&ops)
 clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Add(&ops)
 paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 paint.PaintOp{}.Add(&ops)
