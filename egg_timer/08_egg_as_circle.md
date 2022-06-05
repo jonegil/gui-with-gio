@@ -30,6 +30,8 @@ There are some new imports, namely
 
   - Nigel Tao [writes well](https://blog.golang.org/image) about these packages on the Go blog.
 
+- [f32](https://pkg.go.dev/gioui.org/f32). Go's image library is based on `int`, while Gio for some of its functions works with `float32`. Hence f32 reimplements floating point versions of the two main types, `Points` and `Rectangles`. (June 2022 Update: They are falling out of favour though, so don't be surprised if Gio goes all int soon).
+
 - [op/clip](https://pkg.go.dev/gioui.org/op/clip) is used to define an area to paint within. Drawing outside this area is ignored.
 
 - [op/paint](https://pkg.go.dev/gioui.org/op/paint) contains drawing operations to fill a shape with color.
