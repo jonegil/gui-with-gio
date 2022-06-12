@@ -181,6 +181,44 @@ func draw(w *app.Window) error {
 			// Graphical context
 			gtx := layout.NewContext(&ops, e)
 
+			// Gather and print all events captured by our input area since the previous frame.
+			for _, event := range gtx.Events(w) {
+				// Perform event handling here instead of in the outer type switch.
+				switch e := event.(type) {
+				case key.EditEvent:
+					if e.Text == " " {
+						autoscroll = !autoscroll
+						if autospeed == 0 {
+							autoscroll = true
+							autospeed++
+						}
+					}
+				}
+				log.Printf("%#+v", event)
+			}
+
+			// Source:
+			// https://lists.sr.ht/~eliasnaur/gio/%3CCAFcc3FQNTp_UXr7oA97SsVPD7D91jSw30ZtALcT9vmopFDTeZQ%40mail.gmail.com%3E#%3CCAE_4BPB=DS9eXrmSGxkBku-VTfLZXZjp0U_VMgYrU7M3GQ7NaQ@mail.gmail.com%3E
+			// https://go.dev/play/p/SDHy1LZRljf
+
+			// Create a clip area the size of the window.
+			areaStack := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
+			// Register for all pointer inputs on the current clip area.
+			pointer.InputOp{
+				Types: pointer.Enter | pointer.Leave | pointer.Drag | pointer.Press | pointer.Release | pointer.Scroll | pointer.Move,
+				Tag:   w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+			}.Add(gtx.Ops)
+			// Register for keyboard input on the current clip area.
+			key.InputOp{
+				Tag: w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+			}.Add(gtx.Ops)
+			// Request keyboard focus to the current clip area.
+			key.FocusOp{
+				Tag: w, // Focus the input area with our window as the tag.
+			}.Add(gtx.Ops)
+			// Pop the clip area to finalize it.
+			areaStack.Pop()
+
 			// Bacground
 			paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
 
