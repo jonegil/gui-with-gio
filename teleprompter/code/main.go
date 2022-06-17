@@ -110,130 +110,135 @@ func draw(w *app.Window) error {
 			gtx := layout.NewContext(&ops, e)
 
 			// ---------- COLLECT AND HANDLE INPUT ----------
-			{
-				// ---------- Handle input ----------
-				// Since we use the window as the event routing tag, we here call gtx.Events(w) and get these events.
 
-				// To set increment
-				var stepSize int = 1
+			// ---------- Handle input ----------
+			// Since we use the window as the event routing tag, we here call gtx.Events(w) and get these events.
 
-				for _, gtxEvent := range gtx.Events(w) {
-					//fmt.Printf("  gtx: %#+v --\n", gtxEvent)
+			// To set increment
+			var stepSize int = 1
 
-					switch e := gtxEvent.(type) {
+			for _, gtxEvent := range gtx.Events(w) {
+				//fmt.Printf("  gtx: %#+v --\n", gtxEvent)
 
-					case key.EditEvent:
-						fmt.Printf("    key.EditEvent: %#+v --\n", e)
-						e.Text = strings.ToUpper(e.Text)
-						// Spacebar
-						if e.Text == " " {
-							autoscroll = !autoscroll
-							if autospeed == 0 {
-								autoscroll = true
-								autospeed++
-							}
-							// To increase the fontsize
-							if e.Text == "+" {
-								fontSize = fontSize + stepSize
-							}
-							// To decrease the fontsize
-							if e.Text == "-" {
-								fontSize = fontSize - stepSize
-							}
+				switch e := gtxEvent.(type) {
+
+				case key.EditEvent:
+					fmt.Printf("    key.EditEvent: %#+v --\n", e)
+					e.Text = strings.ToUpper(e.Text)
+					// Spacebar
+					if e.Text == " " {
+						autoscroll = !autoscroll
+						if autospeed == 0 {
+							autoscroll = true
+							autospeed++
 						}
+						// To increase the fontsize
+						if e.Text == "+" {
+							fontSize = fontSize + stepSize
+						}
+						// To decrease the fontsize
+						if e.Text == "-" {
+							fontSize = fontSize - stepSize
+						}
+					}
 
-					case key.Event:
-						// For better controll, only care about pressing the key down, not releasing it up
-						if e.State.String() == "Press" {
-							if e.Modifiers.String() == "Shift" {
-								stepSize = stepSize * 3
-							}
-							fmt.Printf("    key.Event: %#+v --\n", e)
-							// Scroll up
-							if e.Name == "K" { //e.Name == key.NameUpArrow ||
-								scrollY = scrollY - stepSize*4
-								if scrollY < 0 {
-									scrollY = 0
-								}
-							}
-							// Scroll down
-							if e.Name == "J" { //e.Name == key.NameDownArrow || e.Name == "J" {
-								scrollY = scrollY + stepSize*4
-							}
-							// Faster scrollspeed
-							if e.Name == "F" {
-								autoscroll = true
-								autospeed++
-							}
-							// Slower scrollspeed
-							if e.Name == "S" {
-								if autospeed > 0 {
-									autospeed--
-								}
-								if autospeed == 0 {
-									autoscroll = false
-								}
-							}
-							// Wider text to be displayed
-							if e.Name == "W" {
-								textWidth = textWidth + stepSize*10
-							}
-							// Narrow text to be displayed
-							if e.Name == "N" {
-								textWidth = textWidth - stepSize*10
-							}
-							// Move the focusBar Up
-							if e.Name == "U" {
-								focusBarY = focusBarY - stepSize
-							}
-							// Move the focusBar Down
-							if e.Name == "D" {
-								focusBarY = focusBarY + stepSize
-							}
-						} // if state == "Press"
-					case pointer.Event:
-						fmt.Printf("  pointer: %#+v --\n", e)
-						if e.Type == pointer.Scroll {
-							var stepSize int = 1
-							if e.Modifiers == key.ModShift {
-								stepSize = 3
-							}
-							// By how much should the user scroll this time?
-							thisScroll := int(e.Scroll.Y)
-							// Increment scrollY with that distance
-							scrollY = scrollY + thisScroll*stepSize
+				case key.Event:
+					// For better controll, only care about pressing the key down, not releasing it up
+					if e.State.String() == "Press" {
+						if e.Modifiers.String() == "Shift" {
+							stepSize = stepSize * 3
+						}
+						fmt.Printf("    key.Event: %#+v --\n", e)
+						// Scroll up
+						if e.Name == "K" { //e.Name == key.NameUpArrow ||
+							scrollY = scrollY - stepSize*4
 							if scrollY < 0 {
 								scrollY = 0
 							}
 						}
-					}
+						// Scroll down
+						if e.Name == "J" { //e.Name == key.NameDownArrow || e.Name == "J" {
+							scrollY = scrollY + stepSize*4
+						}
+						// Faster scrollspeed
+						if e.Name == "F" {
+							autoscroll = true
+							autospeed++
+						}
+						// Slower scrollspeed
+						if e.Name == "S" {
+							if autospeed > 0 {
+								autospeed--
+							}
+							if autospeed == 0 {
+								autoscroll = false
+							}
+						}
+						// Wider text to be displayed
+						if e.Name == "W" {
+							textWidth = textWidth + stepSize*10
+						}
+						// Narrow text to be displayed
+						if e.Name == "N" {
+							textWidth = textWidth - stepSize*10
+						}
+						// Move the focusBar Up
+						if e.Name == "U" {
+							focusBarY = focusBarY - stepSize
+						}
+						// Move the focusBar Down
+						if e.Name == "D" {
+							focusBarY = focusBarY + stepSize
+						}
+					} // if state == "Press"
+				case pointer.Event:
+					if e.Type == pointer.Scroll {
+						fmt.Printf("  pointer: %#+v \n", e.Type.String())
+						fmt.Printf("  pointer: %#+v \n", e.Scroll.Y*100.0)
+						//var stepSize int = 1
+						if e.Modifiers == key.ModShift {
+							stepSize = 3
+						}
+						// By how much should the user scroll this time?
+						thisScroll := 1
+						if e.Scroll.Y < 0 {
+							thisScroll = -1
+						}
 
+						// Increment scrollY with that distance
+						scrollY = scrollY + thisScroll*stepSize
+						fmt.Println(scrollY)
+						if scrollY < 0 {
+							scrollY = 0
+						}
+					}
 				}
 
-				// ---------- Collect input ----------
-				// Create a clip area the size of the window.
-				// Note the Tag: w, as discussed above
-				eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
-
-				// pointer input
-				pointer.InputOp{
-					Types: pointer.Enter | pointer.Leave | pointer.Drag | pointer.Press | pointer.Release | pointer.Scroll | pointer.Move,
-					Tag:   w,
-				}.Add(gtx.Ops)
-
-				// keyboard focus
-				key.FocusOp{
-					Tag: w, /// Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
-				}.Add(gtx.Ops)
-
-				// Specify keys for key.Event
-				key.InputOp{
-					Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N"),
-					Tag:  w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
-				}.Add(gtx.Ops)
-
-				eventArea.Pop()
 			}
+
+			// ---------- Collect input ----------
+			// Create a clip area the size of the window.
+			// Note the Tag: w, as discussed above
+			eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
+
+			// pointer input
+			pointer.InputOp{
+				Types: pointer.Enter | pointer.Leave | pointer.Drag | pointer.Press | pointer.Release | pointer.Scroll | pointer.Move,
+				Tag:   w,
+			}.Add(gtx.Ops)
+
+			// keyboard focus
+			key.FocusOp{
+				Tag: w, /// Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+			}.Add(gtx.Ops)
+
+			// Specify keys for key.Event
+			key.InputOp{
+				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N"),
+				Tag:  w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+			}.Add(gtx.Ops)
+
+			eventArea.Pop()
 
 			// Gather and deal with all events captured by our input area since the previous frame.
 			// Do eventhandling here rather than in the outer w.Events() loop
