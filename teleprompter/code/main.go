@@ -194,7 +194,7 @@ func draw(w *app.Window) error {
 				case pointer.Event:
 					if e.Type == pointer.Scroll {
 						fmt.Printf("  pointer: %#+v \n", e.Type.String())
-						fmt.Printf("  pointer: %#+v \n", e.Scroll.Y*100.0)
+						fmt.Printf("  pointer: %#+v \n", e.Scroll.Y)
 						//var stepSize int = 1
 						if e.Modifiers == key.ModShift {
 							stepSize = 3
