@@ -12,6 +12,7 @@ import (
 
 	"gioui.org/app"
 	"gioui.org/font/gofont"
+	"gioui.org/gesture"
 	"gioui.org/io/key"
 	"gioui.org/io/pointer"
 	"gioui.org/io/system"
@@ -132,14 +133,14 @@ func draw(w *app.Window) error {
 							autoscroll = true
 							autospeed++
 						}
-						// To increase the fontsize
-						if e.Text == "+" {
-							fontSize = fontSize + stepSize
-						}
-						// To decrease the fontsize
-						if e.Text == "-" {
-							fontSize = fontSize - stepSize
-						}
+					}
+					// To increase the fontsize
+					if e.Text == "+" {
+						fontSize = fontSize + stepSize
+					}
+					// To decrease the fontsize
+					if e.Text == "-" {
+						fontSize = fontSize - stepSize
 					}
 
 				case key.Event:
@@ -191,10 +192,13 @@ func draw(w *app.Window) error {
 							focusBarY = focusBarY + stepSize
 						}
 					} // if state == "Press"
+
 				case pointer.Event:
+					fmt.Printf("  pointer: %#+v \n", e)
 					if e.Type == pointer.Scroll {
-						fmt.Printf("  pointer: %#+v \n", e.Type.String())
-						fmt.Printf("  pointer: %#+v \n", e.Scroll.Y)
+						fmt.Printf("    pointer.Scroll: %#+v \n", e.Type.String())
+						fmt.Printf("    pointer.Scroll: %#+v \n", e.Scroll)
+
 						//var stepSize int = 1
 						if e.Modifiers == key.ModShift {
 							stepSize = 3
@@ -207,38 +211,16 @@ func draw(w *app.Window) error {
 
 						// Increment scrollY with that distance
 						scrollY = scrollY + thisScroll*stepSize
-						fmt.Println(scrollY)
 						if scrollY < 0 {
 							scrollY = 0
 						}
 					}
+
+				default:
+					fmt.Printf("gtxEvent: %#+v \n", e)
 				}
 
 			}
-
-			// ---------- Collect input ----------
-			// Create a clip area the size of the window.
-			// Note the Tag: w, as discussed above
-			eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
-
-			// pointer input
-			pointer.InputOp{
-				Types: pointer.Enter | pointer.Leave | pointer.Drag | pointer.Press | pointer.Release | pointer.Scroll | pointer.Move,
-				Tag:   w,
-			}.Add(gtx.Ops)
-
-			// keyboard focus
-			key.FocusOp{
-				Tag: w, /// Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
-			}.Add(gtx.Ops)
-
-			// Specify keys for key.Event
-			key.InputOp{
-				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N"),
-				Tag:  w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
-			}.Add(gtx.Ops)
-
-			eventArea.Pop()
 
 			// Gather and deal with all events captured by our input area since the previous frame.
 			// Do eventhandling here rather than in the outer w.Events() loop
@@ -322,6 +304,36 @@ func draw(w *app.Window) error {
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
 			stack.Pop()
+
+			// ---------- Collect input ----------
+			// Create a clip area the size of the window.
+			// Note the Tag: w, as discussed above
+			var scrollVal = gesture.Scroll{}
+			scrollVal.Add(gtx.Ops, image.Rectangle{Max: gtx.Constraints.Max})
+
+			fmt.Println(scrollVal)
+
+			eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
+
+			// pointer input
+			pointer.InputOp{
+				Types: pointer.Scroll,
+				Tag:   w,
+			}.Add(gtx.Ops)
+
+			// keyboard focus
+			key.FocusOp{
+				Tag: w, /// Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+			}.Add(gtx.Ops)
+
+			// Specify keys for key.Event
+			// Other keys are caught as key.EditEvent
+			key.InputOp{
+				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N"),
+				Tag:  w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+			}.Add(gtx.Ops)
+
+			eventArea.Pop()
 
 			// ---------- FINALIZE ----------
 			// Frame completes the FrameEvent by drawing the graphical operations from ops into the window.
