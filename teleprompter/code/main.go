@@ -12,7 +12,6 @@ import (
 
 	"gioui.org/app"
 	"gioui.org/font/gofont"
-	"gioui.org/gesture"
 	"gioui.org/io/key"
 	"gioui.org/io/pointer"
 	"gioui.org/io/system"
@@ -308,10 +307,9 @@ func draw(w *app.Window) error {
 			// ---------- Collect input ----------
 			// Create a clip area the size of the window.
 			// Note the Tag: w, as discussed above
-			var scrollVal = gesture.Scroll{}
-			scrollVal.Add(gtx.Ops, image.Rectangle{Max: gtx.Constraints.Max})
-
-			fmt.Println(scrollVal)
+			//var scrollVal = gesture.Scroll{}
+			//scrollVal.Add(gtx.Ops, image.Rectangle{Max: gtx.Constraints.Max})
+			//fmt.Println(scrollVal)
 
 			eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
 
