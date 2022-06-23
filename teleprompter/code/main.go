@@ -198,18 +198,15 @@ func draw(w *app.Window) error {
 						fmt.Printf("    pointer.Scroll: %#+v \n", e.Type.String())
 						fmt.Printf("    pointer.Scroll: %#+v \n", e.Scroll)
 
-						//var stepSize int = 1
+						//var stepSize float32 = 0.5
 						if e.Modifiers == key.ModShift {
 							stepSize = 3
 						}
 						// By how much should the user scroll this time?
-						thisScroll := 1
-						if e.Scroll.Y < 0 {
-							thisScroll = -1
-						}
+						thisScroll := int(e.Scroll.Y)
 
 						// Increment scrollY with that distance
-						scrollY = scrollY + thisScroll*stepSize
+						scrollY = scrollY + int(float32(thisScroll*stepSize)*0.5)
 						if scrollY < 0 {
 							scrollY = 0
 						}
@@ -317,6 +314,16 @@ func draw(w *app.Window) error {
 			pointer.InputOp{
 				Types: pointer.Scroll,
 				Tag:   w,
+				ScrollBounds: image.Rectangle{
+					Min: image.Point{
+						X: 0,
+						Y: -500,
+					},
+					Max: image.Point{
+						X: 0,
+						Y: 500,
+					},
+				},
 			}.Add(gtx.Ops)
 
 			// keyboard focus
