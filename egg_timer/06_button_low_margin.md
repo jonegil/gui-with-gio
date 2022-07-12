@@ -34,7 +34,7 @@ layout.Flex{
     layout.Rigid(
         func(gtx C) D {
             // ONE: First define margins around the button using layout.Inset ...
-            margin := layout.Inset{
+            margins := layout.Inset{
                 // ...
             }
 
