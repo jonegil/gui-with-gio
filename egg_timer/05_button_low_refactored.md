@@ -92,7 +92,7 @@ func draw(w *app.Window) error {
 
 As before we range through `w.Events()`, detecting their type.
 
-- `system.FramEvent` is handled as before,
+- `system.FrameEvent` is handled as before,
 - we add a new case for `system.DestroyEvent`, which returns _nil_ for normal window closures, but _Err_ if something else is the cause.
 
 ## Comments
