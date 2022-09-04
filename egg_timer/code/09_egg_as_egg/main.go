@@ -93,7 +93,7 @@ func draw(w *app.Window) error {
 						func(gtx C) D {
 							// Draw a custom path, shaped like an egg
 							var eggPath clip.Path
-							op.Offset(image.Pt(200, 150)).Add(gtx.Ops)
+							op.Offset(image.Pt(gtx.Dp(200), gtx.Dp(150))).Add(gtx.Ops)
 							eggPath.Begin(gtx.Ops)
 							// Rotate from 0 to 360 degrees
 							for deg := 0.0; deg <= 360; deg++ {

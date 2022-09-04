@@ -96,6 +96,8 @@ We first define a circle using `clip.Ellipse{ }`. It defines circle as an `Ellip
 
 In the code the circle is hard coded, but try to resize the window and you'll see that might not necessarily be what you want. To adjust, simply comment the hard-coded coordinates and uncomment the next two lines which introduce dynamic positioning. You can play around with these dimensions, familiarizing yourself with when the circle moves up or down, depending in wheiter you resize the window or move the limiting box around the Ellipse.
 
+**Gotcha:** If you are lucky enough to work with a High DPI display, and happen to run it with a scaling factor of, say 125%, another problem with the hard coded coordinates will surface. Gio works well with `Dp`, **D**isplay independent **p**ixels, which ensures that 1 Dp will have the same apparent size across displays and resolutions. When hard-coding like here, that dynamic is overruled. A 125% resolution scale will translate the **400 Dp** wide window (as defined in `app.NewWindow`) into a **500 pixels** context. You can see this my inspecting `gtx.Constrains` and convert pixels to Dp by `gtx.Dp()`. 
+
 `color.NRGBA` defines the color of the circle. Note that the Alpha-channel defaults to 0, i.e. invisible, so we lift it to 255 so we can actually see it.
 
 `paint.FillShape` fills the shape with the `color`.
