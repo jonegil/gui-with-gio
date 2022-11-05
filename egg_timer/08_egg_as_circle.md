@@ -26,7 +26,7 @@ The code introduces custom graphics. The circle in the app is drawn by Gio, not 
 
 There are some new imports, namely
 
-- [image](https://pkg.go.dev/image) and [image/color](https://blog.golang.org/image/color), Go's standard 2D image library.
+- [image](https://pkg.go.dev/image) and [image/color](https://pkg.go.dev/image/color), Go's standard 2D image library.
 
   - Nigel Tao [writes well](https://blog.golang.org/image) about these packages on the Go blog.
 
