@@ -57,7 +57,7 @@ Notice how the widget itself has no state. State is maintained in the rest of th
 
 ## Feature 2 - State variables
 
-We touched upon progress, which is a variable that contains state. Another useful state to track is whether or not the start button has been clicked. Since we're boiling eggs, that means tracking if the egg is boiling.
+We mentioned `progress`, a variable that contains state. Another useful state to track is whether or not the start button has been clicked. In our app that means tracking if the egg has started to boil. 
 
 ### Code
 
@@ -65,8 +65,7 @@ We touched upon progress, which is a variable that contains state. Another usefu
 // is the egg boiling?
 var boiling bool
 ```
-
-This boolean is flipped whenever the button is clicked, an event we for in `system.FrameEvent`:
+We want to flip that boolean when the start button is clicked. Thus we listen for a `system.FrameEvent` from the GUI and check if `startButton.Clicked()` is true.
 
 ```go
 case system.FrameEvent:
@@ -77,7 +76,7 @@ case system.FrameEvent:
   }
 ```
 
-Again, the only job of the button is shout out if it just was clicked. Beyond that, the rest of the program takes care of any actions that needs to be taken.
+Again, the only job of the button is shout out if it just was clicked. Beyond that, the rest of the program takes care of any actions that needs to be taken. 
 
 One example is what should the text on the button be. We decide that before calling the `material.Button( )` function by first checking what the state of `boiling` is.
 
