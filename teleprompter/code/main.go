@@ -114,6 +114,7 @@ func draw(w *app.Window) error {
 				switch e := gtxEvent.(type) {
 
 				case key.EditEvent:
+					fmt.Println(e)
 					e.Text = strings.ToUpper(e.Text)
 					// Spacebar
 					if e.Text == " " {
@@ -133,6 +134,7 @@ func draw(w *app.Window) error {
 					}
 
 				case key.Event:
+					fmt.Println(e)
 					// For better controll, only care about pressing the key down, not releasing it up
 					if e.State.String() == "Press" {
 						if e.Modifiers.String() == "Shift" {
@@ -182,10 +184,10 @@ func draw(w *app.Window) error {
 					}
 
 				case pointer.Event:
-					fmt.Printf("  pointer: %#+v \n", e)
+					//fmt.Printf("  pointer: %#+v \n", e)
 					if e.Type == pointer.Scroll {
-						fmt.Printf("    pointer.Scroll: %#+v \n", e.Type.String())
-						fmt.Printf("    pointer.Scroll: %#+v \n", e.Scroll)
+						//fmt.Printf("    pointer.Scroll: %#+v \n", e.Type.String())
+						//fmt.Printf("    pointer.Scroll: %#+v \n", e.Scroll)
 
 						//var stepSize float32 = 0.5
 						if e.Modifiers == key.ModShift {
