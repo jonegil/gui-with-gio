@@ -55,7 +55,7 @@ func main() {
 		// create new window
 		w := app.NewWindow(
 			app.Title("Teleprompter"),
-			app.Size(unit.Dp(350), unit.Dp(300)),
+			app.Size(unit.Dp(650), unit.Dp(600)),
 		)
 		// draw on screen
 		if err := draw(w); err != nil {
@@ -69,20 +69,20 @@ func main() {
 
 func draw(w *app.Window) error {
 	// y-position for text
-	var scrollY int = 0
+	var scrollY unit.Dp = 0
 
 	// y-position for red focusBar
-	var focusBarY int = 78
+	var focusBarY unit.Dp = 78
 
 	// width of text area
-	var textWidth int = 300
+	var textWidth unit.Dp = 550
 
 	// fontSize
-	var fontSize int = 35
+	var fontSize unit.Sp = 35
 
 	// Are we auto scrolling?
 	var autoscroll bool = false
-	var autospeed int = 1
+	var autospeed unit.Dp = 1
 
 	// th defines the material design style
 	th := material.NewTheme(gofont.Collection())
@@ -92,7 +92,6 @@ func draw(w *app.Window) error {
 
 	// listen for events in the window.
 	for windowEvent := range w.Events() {
-		//fmt.Printf("+%v --\n", windowEvent)
 		// Shutdown?
 		switch e := windowEvent.(type) {
 
@@ -100,12 +99,6 @@ func draw(w *app.Window) error {
 			return e.Err
 
 		case system.FrameEvent:
-
-			// Source:
-			// https://lists.sr.ht/~eliasnaur/gio/%3CCAFcc3FQNTp_UXr7oA97SsVPD7D91jSw30ZtALcT9vmopFDTeZQ%40mail.gmail.com%3E#%3CCAE_4BPB=DS9eXrmSGxkBku-VTfLZXZjp0U_VMgYrU7M3GQ7NaQ@mail.gmail.com%3E
-			// https://go.dev/play/p/SDHy1LZRljf
-			// https://go.dev/play/p/VDQg6sxRyA4
-
 			// Graphical context
 			gtx := layout.NewContext(&ops, e)
 
@@ -115,15 +108,12 @@ func draw(w *app.Window) error {
 			// Since we use the window as the event routing tag, we here call gtx.Events(w) and get these events.
 
 			// To set increment
-			var stepSize int = 1
+			var stepSize unit.Dp = 1
 
 			for _, gtxEvent := range gtx.Events(w) {
-				//fmt.Printf("  gtx: %#+v --\n", gtxEvent)
-
 				switch e := gtxEvent.(type) {
 
 				case key.EditEvent:
-					fmt.Printf("    key.EditEvent: %#+v --\n", e)
 					e.Text = strings.ToUpper(e.Text)
 					// Spacebar
 					if e.Text == " " {
@@ -135,11 +125,11 @@ func draw(w *app.Window) error {
 					}
 					// To increase the fontsize
 					if e.Text == "+" {
-						fontSize = fontSize + stepSize
+						fontSize = fontSize + unit.Sp(stepSize)
 					}
 					// To decrease the fontsize
 					if e.Text == "-" {
-						fontSize = fontSize - stepSize
+						fontSize = fontSize - unit.Sp(stepSize)
 					}
 
 				case key.Event:
@@ -148,16 +138,15 @@ func draw(w *app.Window) error {
 						if e.Modifiers.String() == "Shift" {
 							stepSize = stepSize * 3
 						}
-						fmt.Printf("    key.Event: %#+v --\n", e)
 						// Scroll up
-						if e.Name == "K" { //e.Name == key.NameUpArrow ||
+						if e.Name == "K" {
 							scrollY = scrollY - stepSize*4
 							if scrollY < 0 {
 								scrollY = 0
 							}
 						}
 						// Scroll down
-						if e.Name == "J" { //e.Name == key.NameDownArrow || e.Name == "J" {
+						if e.Name == "J" {
 							scrollY = scrollY + stepSize*4
 						}
 						// Faster scrollspeed
@@ -190,7 +179,7 @@ func draw(w *app.Window) error {
 						if e.Name == "D" {
 							focusBarY = focusBarY + stepSize
 						}
-					} // if state == "Press"
+					}
 
 				case pointer.Event:
 					fmt.Printf("  pointer: %#+v \n", e)
@@ -203,10 +192,10 @@ func draw(w *app.Window) error {
 							stepSize = 3
 						}
 						// By how much should the user scroll this time?
-						thisScroll := int(e.Scroll.Y)
+						thisScroll := unit.Dp(e.Scroll.Y)
 
 						// Increment scrollY with that distance
-						scrollY = scrollY + int(float32(thisScroll*stepSize)*0.5)
+						scrollY = scrollY + thisScroll*stepSize
 						if scrollY < 0 {
 							scrollY = 0
 						}
@@ -217,29 +206,6 @@ func draw(w *app.Window) error {
 				}
 
 			}
-
-			// Gather and deal with all events captured by our input area since the previous frame.
-			// Do eventhandling here rather than in the outer w.Events() loop
-			/*
-				for _, gtxEvent := range gtx.Events(w) {
-					fmt.Printf("  gtx: %#+v --\n", gtxEvent)
-					// Perform event handling here instead of in the outer type switch.
-					case key.Event:
-						fmt.Printf("    key: %#+v --\n", e)
-						if e.Name == key.NameUpArrow {
-							fmt.Println(e.Name, "UP")
-						}
-						if e.State == key.Press {
-							// To set increment
-							var stepSize int = 1
-							if e.Modifiers == key.ModShift {
-								stepSize = 10
-							}
-							fmt.Println(stepSize)
-						}
-					}
-				}
-			*/
 
 			// ---------- LAYOUT ----------
 			// Layout the interface _BEFORE_ you pop the clip area.
@@ -256,10 +222,11 @@ func draw(w *app.Window) error {
 			}
 
 			// Margins
-			marginWidth := (gtx.Constraints.Max.X - textWidth) / 2
+			var marginWidth unit.Dp
+			marginWidth = (unit.Dp(gtx.Constraints.Max.X) - textWidth) / 2
 			margins := layout.Inset{
-				Left:   unit.Dp(float32(marginWidth)),
-				Right:  unit.Dp(float32(marginWidth)),
+				Left:   marginWidth,
+				Right:  marginWidth,
 				Top:    unit.Dp(0),
 				Bottom: unit.Dp(0),
 			}
@@ -270,7 +237,7 @@ func draw(w *app.Window) error {
 			var visList = layout.List{
 				Axis: layout.Vertical,
 				Position: layout.Position{
-					Offset: scrollY,
+					Offset: int(scrollY),
 				},
 			}
 
@@ -295,7 +262,7 @@ func draw(w *app.Window) error {
 
 			// ---------- THE FOCUS BAR ----------
 			// Draw the transparent red bar.
-			op.Offset(image.Pt(0, focusBarY)).Add(&ops)
+			op.Offset(image.Pt(0, int(focusBarY))).Add(&ops)
 			stack := clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Push(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
@@ -304,9 +271,6 @@ func draw(w *app.Window) error {
 			// ---------- Collect input ----------
 			// Create a clip area the size of the window.
 			// Note the Tag: w, as discussed above
-			//var scrollVal = gesture.Scroll{}
-			//scrollVal.Add(gtx.Ops, image.Rectangle{Max: gtx.Constraints.Max})
-			//fmt.Println(scrollVal)
 
 			eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
 
