@@ -283,11 +283,11 @@ func draw(w *app.Window) error {
 				ScrollBounds: image.Rectangle{
 					Min: image.Point{
 						X: 0,
-						Y: -200,
+						Y: -int(unit.Dp(200)),
 					},
 					Max: image.Point{
 						X: 0,
-						Y: 200,
+						Y: int(unit.Dp(200)),
 					},
 				},
 			}.Add(gtx.Ops)
