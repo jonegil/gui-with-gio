@@ -89,7 +89,7 @@ func main() {
     // startButton is a clickable widget
     var startButton widget.Clickable
 
-    // th defnes the material design style
+    // th defines the material design style
     th := material.NewTheme(gofont.Collection())
 
     // listen for events in the window.

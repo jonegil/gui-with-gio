@@ -1,11 +1,20 @@
+Press SPACE to start and stop
+
+Adjust SPEED with F(ast) and S(low)
+
+RESIZE with + and -  
+
+W(ide) and N(arrow) controls the TEXTAREA
+
+SCROLL with your mouse
+
+U(p) and D(own) moves the red FOCUS bar. 
+
+SHIFT makes any change larger
 
 
-We welcome change and openness; for we believe that freedom and security go together, that the advance of human liberty can only strengthen the cause of world peace. 
+“Good Morning!" said Bilbo, and he meant it. The sun was shining, and the grass was very green. But Gandalf looked at him from under long bushy eyebrows that stuck out further than the brim of his shady hat.
 
-There is one sign the Soviets can make that would be unmistakable, that would advance dramatically the cause of freedom and peace. 
+"What do you mean?" he said. "Do you wish me a good morning, or mean that it is a good morning whether I want it or not; or that you feel good this morning; or that it is a morning to be good on?"
 
-General Secretary Gorbachev, if you seek peace, if you seek prosperity for the Soviet Union and eastern Europe, if you seek liberalization, come here to this gate. 
-
-Mr. Gorbachev, open this gate. 
-
-Mr. Gorbachev, tear down this wall!
+"All of them at once," said Bilbo. "And a very fine morning for a pipe of tobacco out of doors, into the bargain.
