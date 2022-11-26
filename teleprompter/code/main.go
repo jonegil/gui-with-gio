@@ -92,20 +92,20 @@ func draw(w *app.Window) error {
 
 	// listen for events in the window.
 	for windowEvent := range w.Events() {
-		// Shutdown?
 		switch e := windowEvent.(type) {
 
+		// Shutdown?
 		case system.DestroyEvent:
 			return e.Err
 
+		// FrameEvent?
 		case system.FrameEvent:
 			// Graphical context
 			gtx := layout.NewContext(&ops, e)
 
-			// ---------- COLLECT AND HANDLE INPUT ----------
-
 			// ---------- Handle input ----------
-			// Since we use the window as the event routing tag, we here call gtx.Events(w) and get these events.
+			// Since we use the window w as the event routing tag,
+			// we here call gtx.Events(w) to get these events.
 
 			// To set increment
 			var stepSize unit.Dp = 1
@@ -270,7 +270,7 @@ func draw(w *app.Window) error {
 			paint.PaintOp{}.Add(&ops)
 			stack.Pop()
 
-			// ---------- Collect input ----------
+			// ---------- COLLECT INPUT ----------
 			// Create a clip area the size of the window.
 			// Note the Tag: w, as discussed above
 
