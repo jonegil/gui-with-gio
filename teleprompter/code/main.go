@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"image"
 	"image/color"
@@ -26,31 +27,21 @@ import (
 type C = layout.Context
 type D = layout.Dimensions
 
+// Command line input variables
+var filename *string
+
 // A []string to hold the speech as a list of paragraphs
 var paragraphList []string
 
 func main() {
-	// Part 1 - Read from file
-	f, err := ioutil.ReadFile("speech.txt")
-	if err == nil {
-		// Convert whole text into a slice of strings.
-		paragraphList = strings.Split(string(f), "\n")
-		// Add extra empty lines a the end. Simple trick to ensure
-		// the last line of the speech scrolls out of the screen
-		for i := 1; i <= 10; i++ {
-			paragraphList = append(paragraphList, "")
-		}
-	}
+	// Part 1 - Read input from command line
+	filename = flag.String("file", "speech.txt", "Which .txt file shall I present?")
+	flag.Parse()
 
-	// Alternative to reading from file, we can generate paragraphs programatically
-	// Handy for debugging
-	/*
-	   for i := 1; i <= 2500; i++ {
-	     paragraphList = append(paragraphList, fmt.Sprintf("Eloquent speech, interesting phrase %d", i))
-	   }
-	*/
+	// Part 2 - Read from file
+	paragraphList = readText(filename)
 
-	// Part 2 - Start the GUI
+	// Part 3 - Start the GUI
 	go func() {
 		// create new window
 		w := app.NewWindow(
@@ -65,6 +56,30 @@ func main() {
 	}()
 
 	app.Main()
+}
+
+func readText(filename *string) []string {
+	f, err := ioutil.ReadFile(*filename)
+	text := []string{}
+	if err != nil {
+		log.Fatal("Error when reading file:\n  ", err)
+	}
+	if err == nil {
+		// Convert whole text into a slice of strings.
+		text = strings.Split(string(f), "\n")
+		// Add extra empty lines a the end. Simple trick to ensure
+		// the last line of the speech scrolls out of the screen
+		for i := 1; i <= 10; i++ {
+			text = append(text, "")
+		}
+	}
+
+	// Alternative to reading from file, we can generate paragraphs programatically
+	// Handy for debugging
+	//for i := 1; i <= 2500; i++ {
+	//	text = append(text, fmt.Sprintf("Eloquent speech, interesting phrase %d", i))
+	//}
+	return text
 }
 
 func draw(w *app.Window) error {
