@@ -29,7 +29,7 @@ Our app should
 ---
 
 **Please note:**
-We're not doing politics here. But when building this, it was more interesting with famous speeches. No matter your origin or partisanship, [Ronald Reagan's 1987 Berlin Wall Speech](https://www.nytimes.com/video/world/europe/100000006815729/reagan-berlin-wall.html) played it's part in ending the cold war. Both sides, East and West, deserve respect and praise for seeking and finding a mostly peaceful solution. We must learn from our past, repeat the best, and fight the worst. The future needs it.
+We're not doing politics here. When building this, it was simply more interesting with famous speeches. No matter your origin or partisanship, [Ronald Reagan's 1987 Berlin Wall Speech](https://www.nytimes.com/video/world/europe/100000006815729/reagan-berlin-wall.html) played a part in ending the cold war. Both sides, East and West, deserve respect and praise for seeking and finding a mostly peaceful solution. We must learn from our past, repeat the best, and fight the worst. The world needs this. 
 
 
 On that note, let's (sc)roll!
