@@ -150,7 +150,7 @@ func draw(w *app.Window) error {
 
 				case key.Event:
 					fmt.Println(e)
-					// For better controll, only care about pressing the key down, not releasing it up
+					// For better controll, we only care about pressing the key down, not releasing it up
 					if e.State.String() == "Press" {
 						if e.Modifiers.String() == "Shift" {
 							stepSize = stepSize * 3
@@ -201,10 +201,6 @@ func draw(w *app.Window) error {
 				case pointer.Event:
 					//fmt.Printf("  pointer: %#+v \n", e)
 					if e.Type == pointer.Scroll {
-						//fmt.Printf("    pointer.Scroll: %#+v \n", e.Type.String())
-						//fmt.Printf("    pointer.Scroll: %#+v \n", e.Scroll)
-
-						//var stepSize float32 = 0.5
 						if e.Modifiers == key.ModShift {
 							stepSize = 3
 						}
@@ -221,7 +217,6 @@ func draw(w *app.Window) error {
 				default:
 					fmt.Printf("gtxEvent: %#+v \n", e)
 				}
-
 			}
 
 			// ---------- LAYOUT ----------
@@ -307,9 +302,9 @@ func draw(w *app.Window) error {
 				},
 			}.Add(gtx.Ops)
 
-			// keyboard focus
+			// keyboard focus, needed for general keybaord output, except the ones defined in key.InputOp
 			key.FocusOp{
-				Tag: w, /// Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+				Tag: w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
 			}.Add(gtx.Ops)
 
 			// Specify keys for key.Event
