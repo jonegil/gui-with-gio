@@ -129,16 +129,7 @@ func draw(w *app.Window) error {
 				switch e := gtxEvent.(type) {
 
 				case key.EditEvent:
-					fmt.Println(e)
 					e.Text = strings.ToUpper(e.Text)
-					// Spacebar
-					if e.Text == " " {
-						autoscroll = !autoscroll
-						if autospeed == 0 {
-							autoscroll = true
-							autospeed++
-						}
-					}
 					// To increase the fontsize
 					if e.Text == "+" {
 						fontSize = fontSize + unit.Sp(stepSize)
@@ -149,11 +140,18 @@ func draw(w *app.Window) error {
 					}
 
 				case key.Event:
-					fmt.Println(e)
 					// For better controll, we only care about pressing the key down, not releasing it up
 					if e.State.String() == "Press" {
 						if e.Modifiers.String() == "Shift" {
 							stepSize = stepSize * 3
+						}
+						// Start/Stop
+						if e.Name == "Space" {
+							autoscroll = !autoscroll
+							if autospeed == 0 {
+								autoscroll = true
+								autospeed++
+							}
 						}
 						// Scroll up
 						if e.Name == "K" {
@@ -310,7 +308,7 @@ func draw(w *app.Window) error {
 			// Specify keys for key.Event
 			// Other keys are caught as key.EditEvent
 			key.InputOp{
-				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N"),
+				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
 				Tag:  w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
 			}.Add(gtx.Ops)
 
