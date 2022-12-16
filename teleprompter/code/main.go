@@ -109,13 +109,8 @@ func draw(w *app.Window) error {
 	for windowEvent := range w.Events() {
 		switch e := windowEvent.(type) {
 
-		// Shutdown?
-		case system.DestroyEvent:
-			return e.Err
-
 		// FrameEvent?
 		case system.FrameEvent:
-			// Graphical context
 			gtx := layout.NewContext(&ops, e)
 
 			// ---------- Handle input ----------
@@ -281,7 +276,6 @@ func draw(w *app.Window) error {
 			// ---------- COLLECT INPUT ----------
 			// Create a clip area the size of the window.
 			// Note the Tag: w, as discussed above
-
 			eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
 
 			// pointer input
@@ -317,6 +311,11 @@ func draw(w *app.Window) error {
 			// ---------- FINALIZE ----------
 			// Frame completes the FrameEvent by drawing the graphical operations from ops into the window.
 			e.Frame(&ops)
+
+			// Shutdown?
+		case system.DestroyEvent:
+			return e.Err
+
 		}
 	}
 	return nil
