@@ -8,36 +8,67 @@ has_children: false
 
 # Chapter 2 - User input
 
-In this chapter we look at how we can receive and process user input to control our prompter.
+In this chapter we receive and process user input.
 
 ## Listen for events from keyboard and mouse
 
-Now it's time get to listen for events. This is the heart of the application. As mentioned above, there are quite a few inputs here, with the various keys and also the use of the mouse. In this application, these can mutually impact each other. For example, if `textWdith` increases, more words can be shown per line since there is now space. But if `fontSize` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, our job is the keep track of the required state variables used to define the visualisation.
+Now it's time get to listen for events. This is the heart of the application. As mentioned earlier, there are quite manny inputs here, with the various keys and also the mouse or trackpad. In this application, they can affect each other. For example, if `textWdith` increases, more words can be shown per line since there is now space. But if `fontSize` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, but we're in charge of receiving input and updating state.
 
-As before the switch statement uses type assertion, `e.(type)` to deterimine what just happened:
+Let's start by walking through the structure of our draw function:
+  1. First we listen for events in the window
+  1. If a `system.FrameEvent is detected` ...
+  1. ... then define a new context, `gtx`, and listen for events there
+
+
+Simplified in code we see this:
 
 ```go
-// listen for events in the window.
-for e := range w.Events() {
+// The main draw function
+func draw(w *app.Window) error {
 
-  // Detect what type of event
-  switch e := e.(type) {
+  // First, listen for events in the window, w
+	for windowEvent := range w.Events() {
+		switch e := windowEvent.(type) {
 
-  // A keypress?
-  case key.Event:
-    // Update and store state for size, width and positioning
+	  // FrameEvent?
+		case system.FrameEvent:
+			gtx := layout.NewContext(&ops, e)
 
-  // A mouse event?
-  case pointer.Event:
-    // Update and store positioning state
+      // Then, listen for events in the context, gtx
+	    for _, gtxEvent := range gtx.Events(w) {
+				switch e := gtxEvent.(type) {
 
-  // A re-render request?
-  case system.FrameEvent:
-    // Layout the speech as a list
+```
 
-  // Shutdown?
-  case system.DestroyEvent:
-    // Break out and end
+What's up with these event cues. Why do we have both events in the window, `w.Events()`, and also events in the context, `gtx.Events()` ?
+
+
+---
+WORK IN PROGRESS 
+
+THE REST OF THE TUTORIAL IS REMNANTS FROM AN EARLIER VERSION OF GIO. CODE RUNS WELL, BUT THESE DOCS ARE LAGGING. 
+
+MOST OF THE EXPLANATION MAKES SENSE THOUGH
+
+
+DEC 16, 2022
+
+---
+
+
+
+        // A certain letter?
+				case key.EditEvent:
+          // Update and store state for size
+
+        // A certain key?
+        case key.Event:
+          // Update and store state forwidth and positioning
+
+        // A mouse event?
+        case pointer.Event:
+          // Update and store positioning state
+
 
   }
 }
