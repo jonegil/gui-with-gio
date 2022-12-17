@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Chapter 1 - Setup and state
+title: Chapter 1 - Setup
 nav_order: 2
 parent: Teleprompter
 has_children: false
 ---
 
-# Chapter 1 - Setup and state variables
+# Chapter 1 - Setup
 
 ## Outline
 
