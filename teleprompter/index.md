@@ -10,7 +10,7 @@ has_toc: false
 
 ## Goals
 
-This project continues where the [egg timer](../egg_timer/) leaves off. The timer was a good start and gave us the foundation to build an app. But we're not done. Especially we should look closer at how how to deal with user input, both keyboard and mouse.
+This project continues where the [egg timer](../egg_timer/) left off. The timer was a good start and gave us the foundation to build an app. But we're not done. In this project we build a fun little app to explore keyboard and mouse input, scrolling and animation. 
 
 ![Mr_Gorbachev_tear_down_this_wall](teleprompter_Mr_Gorbachev.gif)
 
@@ -28,8 +28,7 @@ Our app should
 
 ---
 
-**Please note:**
-We're not doing politics here. When building this, it was simply more interesting with famous speeches. No matter your origin or partisanship, [Ronald Reagan's 1987 Berlin Wall Speech](https://www.nytimes.com/video/world/europe/100000006815729/reagan-berlin-wall.html) played a part in ending the cold war. Both sides, East and West, deserve respect and praise for seeking peace and avoiding bloodshed. We must learn from our past, repeat the best, and fight the worst. The world needs this.
+
 
 
 On that note, let's (sc)roll!
