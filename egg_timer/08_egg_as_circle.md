@@ -51,6 +51,7 @@ type Rectangle struct {
 ```
 
 A Point is an X, Y coordinate pair. The axes increase right and down (origin = top left corner). It is neither a pixel nor a grid square. A Point has no intrinsic width, height or color, but the visualizations below use a small colored square.
+
 ![Point](08_image_package_point.png)
 
 ```go
