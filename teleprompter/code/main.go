@@ -99,6 +99,9 @@ func draw(w *app.Window) error {
 	var autoscroll bool = false
 	var autospeed unit.Dp = 1
 
+	// To set increment
+	var stepSize unit.Dp = 1
+
 	// th defines the material design style
 	th := material.NewTheme(gofont.Collection())
 
@@ -107,19 +110,18 @@ func draw(w *app.Window) error {
 
 	// listen for events in the window.
 	for windowEvent := range w.Events() {
-		switch e := windowEvent.(type) {
+		switch windowEvent := windowEvent.(type) {
 
 		// FrameEvent?
 		case system.FrameEvent:
-			gtx := layout.NewContext(&ops, e)
 
 			// ---------- Handle input ----------
 			// Since we use the window w as the event routing tag,
 			// we here call gtx.Events(w) to get these events.
 
-			// To set increment
-			var stepSize unit.Dp = 1
+			fmt.Printf("windowEvent: %#+v \n", windowEvent)
 
+			gtx := layout.NewContext(&ops, windowEvent)
 			for _, gtxEvent := range gtx.Events(w) {
 				switch e := gtxEvent.(type) {
 
@@ -294,27 +296,28 @@ func draw(w *app.Window) error {
 				},
 			}.Add(gtx.Ops)
 
-			// keyboard focus, needed for general keybaord output, except the ones defined in key.InputOp
+			// keyboard focus, needed for general keybaord input, except the ones defined in key.InputOp
 			key.FocusOp{
-				Tag: w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+				Tag: w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
 			}.Add(gtx.Ops)
 
 			// Specify keys for key.Event
+			// (Shift) means an optional Shift
 			// Other keys are caught as key.EditEvent
 			key.InputOp{
 				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
-				Tag:  w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+				Tag:  w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
 			}.Add(gtx.Ops)
 
 			eventArea.Pop()
 
 			// ---------- FINALIZE ----------
 			// Frame completes the FrameEvent by drawing the graphical operations from ops into the window.
-			e.Frame(&ops)
+			windowEvent.Frame(&ops)
 
 			// Shutdown?
 		case system.DestroyEvent:
-			return e.Err
+			return windowEvent.Err
 
 		}
 	}
