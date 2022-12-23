@@ -53,6 +53,10 @@ MOST OF THE EXPLANATION MAKES SENSE THOUGH
 
 DEC 16, 2022
 
+https://lists.sr.ht/~eliasnaur/gio/%3CCAFcc3FQNTp_UXr7oA97SsVPD7D91jSw30ZtALcT9vmopFDTeZQ%40mail.gmail.com%3E#%3CCJ5LZODOOR0F.UO9JC0VWAN9I@themachine%3E
+https://go.dev/play/p/VDQg6sxRyA4
+https://go.dev/play/p/SDHy1LZRljf
+
 ---
 
 
