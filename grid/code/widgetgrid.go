@@ -67,7 +67,12 @@ func loop(w *app.Window) error {
 				func(gtx C, row, col int) D {
 					clk := &clickers[row*sideLength+col]
 					btn := material.Button(th, clk, fmt.Sprintf("R%d C%d", row, col))
-					color := color.NRGBA{R: uint8(float32(255) / float32(sideLength) * float32(row)), G: uint8(255 / sideLength * col), B: uint8(row * col), A: 255}
+					color := color.NRGBA{
+						R: uint8(255 / sideLength * row),
+						G: uint8(255 / sideLength * col),
+						B: uint8(row * col),
+						A: 255,
+					}
 					btn.Background = color
 					return btn.Layout(gtx)
 				})
