@@ -116,11 +116,9 @@ func draw(w *app.Window) error {
 		case system.FrameEvent:
 
 			// ---------- Handle input ----------
+			// Gather and deal with all events captured by our input area since the previous frame.
 			// Since we use the window w as the event routing tag,
 			// we here call gtx.Events(w) to get these events.
-
-			fmt.Printf("windowEvent: %#+v \n", windowEvent)
-
 			gtx := layout.NewContext(&ops, windowEvent)
 			for _, gtxEvent := range gtx.Events(w) {
 				switch e := gtxEvent.(type) {
@@ -137,7 +135,7 @@ func draw(w *app.Window) error {
 					}
 
 				case key.Event:
-					// For better controll, we only care about pressing the key down, not releasing it up
+					// For better control, we only care about pressing the key down, not releasing it up
 					if e.State.String() == "Press" {
 						if e.Modifiers.String() == "Shift" {
 							stepSize = stepSize * 3
@@ -194,7 +192,6 @@ func draw(w *app.Window) error {
 					}
 
 				case pointer.Event:
-					//fmt.Printf("  pointer: %#+v \n", e)
 					if e.Type == pointer.Scroll {
 						if e.Modifiers == key.ModShift {
 							stepSize = 3
@@ -280,33 +277,30 @@ func draw(w *app.Window) error {
 			// Note the Tag: w, as discussed above
 			eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
 
-			// pointer input
-			pointer.InputOp{
-				Types: pointer.Scroll,
-				Tag:   w,
-				ScrollBounds: image.Rectangle{
-					Min: image.Point{
-						X: 0,
-						Y: -int(unit.Dp(200)),
-					},
-					Max: image.Point{
-						X: 0,
-						Y: int(unit.Dp(200)),
-					},
-				},
+			// Register for specific keyboard input on the current clip area.
+			// Accessed as key.Event
+			// Other keys are caught as key.EditEvent
+			key.InputOp{
+				// (Shift) means an optional Shift
+				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
+				Tag:  w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
+				// You can use any tag, but for global stuff the window is often convenient.
 			}.Add(gtx.Ops)
 
-			// keyboard focus, needed for general keybaord input, except the ones defined in key.InputOp
+			// Register for keyboard focus, needed for general keybaord input
 			key.FocusOp{
 				Tag: w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
 			}.Add(gtx.Ops)
 
-			// Specify keys for key.Event
-			// (Shift) means an optional Shift
-			// Other keys are caught as key.EditEvent
-			key.InputOp{
-				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
-				Tag:  w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
+			// pointer input
+			pointer.InputOp{
+				Types: pointer.Scroll,
+				Tag:   w,
+				// Set large enough boundaries for the scrolling, so that it actually can scroll somewhere
+				ScrollBounds: image.Rectangle{
+					Min: image.Point{X: 0, Y: -int(unit.Dp(200))},
+					Max: image.Point{X: 0, Y: int(unit.Dp(200))},
+				},
 			}.Add(gtx.Ops)
 
 			eventArea.Pop()
