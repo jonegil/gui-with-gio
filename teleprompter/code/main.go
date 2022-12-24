@@ -119,6 +119,7 @@ func draw(w *app.Window) error {
 			// Gather and deal with all events captured by our input area since the previous frame.
 			// Since we use the window w as the event routing tag,
 			// we here call gtx.Events(w) to get these events.
+
 			gtx := layout.NewContext(&ops, windowEvent)
 			for _, gtxEvent := range gtx.Events(w) {
 				switch e := gtxEvent.(type) {
@@ -264,45 +265,62 @@ func draw(w *app.Window) error {
 				},
 			)
 
+			fmt.Printf("+%v", gtx.Constraints)
 			// ---------- THE FOCUS BAR ----------
 			// Draw the transparent red bar.
 			op.Offset(image.Pt(0, int(focusBarY))).Add(&ops)
-			stack := clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Push(&ops)
+			focusBarArea := clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Push(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
-			stack.Pop()
+			focusBarArea.Pop()
 
 			// ---------- COLLECT INPUT ----------
 			// Create a clip area the size of the window.
 			// Note the Tag: w, as discussed above
-			eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
+			eventArea := clip.Rect(
+				image.Rectangle{
+					// From top left
+					Min: image.Point{0, -int(focusBarY)},
+					// To bottom right
+					Max: image.Point{
+						gtx.Constraints.Max.X / 2,
+						gtx.Constraints.Max.Y,
+					},
+				},
+			).Push(gtx.Ops)
 
-			// Register for specific keyboard input on the current clip area.
-			// Accessed as key.Event
-			// Other keys are caught as key.EditEvent
-			key.InputOp{
-				// (Shift) means an optional Shift
-				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
-				Tag:  w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
-				// You can use any tag, but for global stuff the window is often convenient.
+			// 1) We first add a pointer.InputOp to catch scrolling:
+			pointer.InputOp{
+				Types: pointer.Scroll,
+				Tag:   w,
+				ScrollBounds: image.Rectangle{
+					Min: image.Point{
+						X: 0,
+						Y: -int(unit.Dp(200)),
+					},
+					Max: image.Point{
+						X: 0,
+						Y: int(unit.Dp(200)),
+					},
+				},
 			}.Add(gtx.Ops)
 
-			// Register for keyboard focus, needed for general keybaord input
+			// 2) Next we add key.FocusOp,
+			// needed for general keybaord input, except the ones defined explicitly in key.InputOp
+
 			key.FocusOp{
 				Tag: w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
 			}.Add(gtx.Ops)
 
-			// pointer input
-			pointer.InputOp{
-				Types: pointer.Scroll,
-				Tag:   w,
-				// Set large enough boundaries for the scrolling, so that it actually can scroll somewhere
-				ScrollBounds: image.Rectangle{
-					Min: image.Point{X: 0, Y: -int(unit.Dp(200))},
-					Max: image.Point{X: 0, Y: int(unit.Dp(200))},
-				},
+			// 3) Finally we add key.InputOp to catch specific keys
+			// (Shift) means an optional Shift
+			// Other keys are caught as key.EditEvent
+			key.InputOp{
+				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
+				Tag:  w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
 			}.Add(gtx.Ops)
 
+			// And then we Pop the eventArea from the stack
 			eventArea.Pop()
 
 			// ---------- FINALIZE ----------
