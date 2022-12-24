@@ -14,7 +14,7 @@ This project continues where the [egg timer](../egg_timer/) left off. The timer 
 
 ![Scroll baby Scroll](teleprompter_scroll.gif)
 
-To do that we'll build a [teleprompter](https://en.wikipedia.org/wiki/Teleprompter), used to scroll text for news anchors and speakers. Professional versions cost thousands, but not for us. Oh no, we´re armed with Go and Gio, and scoff at such largesse. Why buy when you can build, huh? 
+To do that we'll build a [teleprompter](https://en.wikipedia.org/wiki/Teleprompter), a simple app used to scroll text. Professional machines cost thousands, but not for us. Oh no, we´re armed with Go and Gio, and scoff at such largesse. Why buy when you can build, huh? 
 
 In particular, our app should
 
