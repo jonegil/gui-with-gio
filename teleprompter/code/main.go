@@ -100,7 +100,7 @@ func draw(w *app.Window) error {
 	var autospeed unit.Dp = 1
 
 	// To set increment
-	var stepSize unit.Dp = 1
+	var stepSize unit.Dp
 
 	// th defines the material design style
 	th := material.NewTheme(gofont.Collection())
@@ -122,6 +122,8 @@ func draw(w *app.Window) error {
 
 			gtx := layout.NewContext(&ops, windowEvent)
 			for _, gtxEvent := range gtx.Events(w) {
+				stepSize = 1
+
 				switch e := gtxEvent.(type) {
 
 				case key.EditEvent:
@@ -138,8 +140,9 @@ func draw(w *app.Window) error {
 				case key.Event:
 					// For better control, we only care about pressing the key down, not releasing it up
 					if e.State.String() == "Press" {
+						// Set the stepSize, i.e. how large each change is
 						if e.Modifiers.String() == "Shift" {
-							stepSize = stepSize * 3
+							stepSize = 5
 						}
 						// Start/Stop
 						if e.Name == "Space" {
@@ -213,7 +216,7 @@ func draw(w *app.Window) error {
 			}
 
 			// ---------- LAYOUT ----------
-			// Layout the interface _BEFORE_ you pop the clip area.
+			// Layout the interface before you pop the event area.
 			// This ensures that the clip is logically the ancestor of the layout,
 			// so key events unhandled by the interface will propagate upwards to it.
 
@@ -265,11 +268,9 @@ func draw(w *app.Window) error {
 				},
 			)
 
-			fmt.Printf("+%v", gtx.Constraints)
 			// ---------- THE FOCUS BAR ----------
 			// Draw the transparent red bar.
-			op.Offset(image.Pt(0, int(focusBarY))).Add(&ops)
-			focusBarArea := clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Push(&ops)
+			focusBarArea := clip.Rect{Min: image.Pt(0, int(focusBarY)), Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+50)}.Push(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
 			focusBarArea.Pop()
