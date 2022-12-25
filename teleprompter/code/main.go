@@ -116,12 +116,12 @@ func draw(w *app.Window) error {
 		case system.FrameEvent:
 
 			// ---------- Handle input ----------
-			// Gather and deal with all events captured by our input area since the previous frame.
-			// Since we use the window w as the event routing tag,
-			// we here call gtx.Events(w) to get these events.
+			// Time to deal with inputs since last frame.
+			// Since we use one global eventArea, with Tag: 0
+			// we here call gtx.Events(0) to get these events.
 
 			gtx := layout.NewContext(&ops, windowEvent)
-			for _, gtxEvent := range gtx.Events(w) {
+			for _, gtxEvent := range gtx.Events(0) {
 				stepSize = 1
 
 				switch e := gtxEvent.(type) {
@@ -216,10 +216,7 @@ func draw(w *app.Window) error {
 			}
 
 			// ---------- LAYOUT ----------
-			// Layout the interface before you pop the event area.
-			// This ensures that the clip is logically the ancestor of the layout,
-			// so key events unhandled by the interface will propagate upwards to it.
-
+			// Layout the interface first and create the event area afterwards
 			// Bacground
 			paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
 
@@ -239,9 +236,10 @@ func draw(w *app.Window) error {
 				Bottom: unit.Dp(0),
 			}
 
-			// Visualisation of the text, using a list where each paragraph is a separate item.
+			// ---------- THE SCROLLING TEXT ----------
+			// Visualize the text using a list where each paragraph is a separate item.
 			// Offset is the distance from the top of the screen to the first element.
-			// I.e. it controls how far we have scrolled.
+			// i.e. it controls how far we have scrolled.
 			var visList = layout.List{
 				Axis: layout.Vertical,
 				Position: layout.Position{
@@ -270,30 +268,32 @@ func draw(w *app.Window) error {
 
 			// ---------- THE FOCUS BAR ----------
 			// Draw the transparent red bar.
-			focusBarArea := clip.Rect{Min: image.Pt(0, int(focusBarY)), Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+50)}.Push(&ops)
+			focusBar := clip.Rect{
+				Min: image.Pt(0, int(focusBarY)),
+				Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+50)}.Push(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
-			focusBarArea.Pop()
+			focusBar.Pop()
 
 			// ---------- COLLECT INPUT ----------
-			// Create a clip area the size of the window.
-			// Note the Tag: w, as discussed above
+			// Create an eventArea for the whole window, to catch all events and Push() it on the stack
+			// It will contain catch 3 events, pointer, general keys and specific keys
 			eventArea := clip.Rect(
 				image.Rectangle{
 					// From top left
-					Min: image.Point{0, -int(focusBarY)},
+					Min: image.Point{0, 0},
 					// To bottom right
-					Max: image.Point{
-						gtx.Constraints.Max.X / 2,
-						gtx.Constraints.Max.Y,
-					},
+					Max: image.Point{gtx.Constraints.Max.X, gtx.Constraints.Max.Y},
 				},
 			).Push(gtx.Ops)
 
 			// 1) We first add a pointer.InputOp to catch scrolling:
+			// It neeeds a tag, and since we only have one global area, we simply tag it Tag: 0
 			pointer.InputOp{
 				Types: pointer.Scroll,
-				Tag:   w,
+				Tag:   0,
+				// ScrollBounds sets bounds on scrolling, and we want it to be non-zero.
+				// In practice it seldom reached 100, so 200 should be enough
 				ScrollBounds: image.Rectangle{
 					Min: image.Point{
 						X: 0,
@@ -307,10 +307,9 @@ func draw(w *app.Window) error {
 			}.Add(gtx.Ops)
 
 			// 2) Next we add key.FocusOp,
-			// needed for general keybaord input, except the ones defined explicitly in key.InputOp
-
+			// Needed for general keybaord input, except the ones defined explicitly in key.InputOp
 			key.FocusOp{
-				Tag: w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
+				Tag: 0, // Use Tag: 0 as the event routing tag. This means we call gtx.Events(0) to get these events.
 			}.Add(gtx.Ops)
 
 			// 3) Finally we add key.InputOp to catch specific keys
@@ -318,10 +317,10 @@ func draw(w *app.Window) error {
 			// Other keys are caught as key.EditEvent
 			key.InputOp{
 				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
-				Tag:  w, // Use the window w as the event routing tag. This means we call gtx.Events(w) to get these events.
+				Tag:  0, // Use Tag: 0 as the event routing tag. This means we call gtx.Events(0) to get these events.
 			}.Add(gtx.Ops)
 
-			// And then we Pop the eventArea from the stack
+			// Finally Pop() the eventArea from the stack
 			eventArea.Pop()
 
 			// ---------- FINALIZE ----------
