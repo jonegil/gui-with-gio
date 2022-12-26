@@ -12,13 +12,12 @@ In this chapter we receive and process user input.
 
 ## Listen for events from keyboard and mouse
 
-Now it's time get to listen for events. This is the heart of the application. As mentioned earlier, there are quite manny inputs here, with the various keys and also the mouse or trackpad. In this application, they can affect each other. For example, if `textWdith` increases, more words can be shown per line since there is now space. But if `fontSize` increases, each word requires more space and fewer words can be shown. Luckily for us Gio takes care of all of the underlying mechanics, but we're in charge of receiving input and updating state.
+Listening for events is the heart of this application. As mentioned earlier, there are quite many inputs here, with various keys as well as scrolling with a mouse or trackpad. In this application, the various changes can affect each other. For example, if `textWdith` increases, more words can be shown per line since there is now space. But if `fontSize` increases, each word requires more space and therefore fewer words can fit. Luckily for us Gio takes care of the underlying mechanics, but we're in charge of receiving input and telling Gio what to do.
 
-Let's start by walking through the structure of our draw function:
-  1. First we listen for events in the window
-  1. If a `system.FrameEvent is detected` ...
-  1. ... then define a new context, `gtx`, and listen for events there
-
+Let's start by walking through the structure of our `draw()` function:
+  1. Listen for events in the window using `w.Events()`
+  1. We're especially interested in events that require us to redraw a new frame. Those are called `system.FrameEvent`
+  1. When those arrive, we open it's event queue on range through all events since last frame.
 
 Simplified in code we see this:
 
@@ -26,22 +25,36 @@ Simplified in code we see this:
 // The main draw function
 func draw(w *app.Window) error {
 
-  // First, listen for events in the window, w
-	for windowEvent := range w.Events() {
-		switch e := windowEvent.(type) {
+  // Listen for events in the window
+  for windowEvent := range w.Events() {
+		switch winE := windowEvent.(type) {
 
-	  // FrameEvent?
+		// Should we draw a new frame?
 		case system.FrameEvent:
-			gtx := layout.NewContext(&ops, e)
+      // Open an new context
+			gtx := layout.NewContext(&ops, winE)
 
-      // Then, listen for events in the context, gtx
-	    for _, gtxEvent := range gtx.Events(w) {
-				switch e := gtxEvent.(type) {
+      // Procress all events from eventArea 0 (to be exlpained)
+	    for _, gtxEvent := range gtx.Events(0) {
+				switch gtxE := gtxEvent.(type) {
+
+          // ... process the events depending on their type, such as pointer or key for example
 
 ```
+**Point no 1**
+- OK, we recognice `draw()`, and also how we go through events from the window using `range w.Events()`. 
+- The `system.FrameEvent` is one such event from the window - the one Gio sends when a new frame needs to be drawn. Fair enough. 
+- But before we actually draw the frame, we investigate if something interesting has happened since last frame. That could be for example a pointer scroll or a keystroke. To do that we 
+  - Creating a `gtx := NewContext()` and 
+  - Open it's queue of events since last frame with `gtx.Events(0)`.
 
-What's up with these event cues. Why do we have both events in the window, `w.Events()`, and also events in the context, `gtx.Events()` ?
+**Point no 2**
+But wait. What´s this zero? 
 
+An application can have many different visual areas. When Gio sends an event that a pointer-click has happened, it's kind of useful to know *where* it happened. Therefore we will later define specifc *areas* on screen, and give each it's unique name, to make sure a click is clearly defined. For our app we will only have one area, so `Tag: 0` works just fine. It could have been any number, or a bool, or even a pointer address, but numbers are easy to work with - hence `0`. We'll revisit this one later. 
+
+**Point no 3**
+The code example is, by intention, verbose. To make sure it's very clear when we work with events from the window, `windowEvent`, vs when we're working with a FrameEvent and it's context `gtxEvent`, long verbose names are used. Also, since we use [type switches](https://go.dev/tour/methods/16), which are very handy but also a but compact, it was helpful to be very explicit with `winE` and `gtxE`. When reading mature applications you will often see this simplified to `e := range` followed by `e := e.(type)`. That´s all fine, and we did that when boiling eggs too. Here it simply was useful to separate them into more explicit variables, and hopefully that helps understanding the a little easier.
 
 ---
 WORK IN PROGRESS 
