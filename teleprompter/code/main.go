@@ -82,6 +82,7 @@ func readText(filename *string) []string {
 	return text
 }
 
+// The main draw function
 func draw(w *app.Window) error {
 	// y-position for text
 	var scrollY unit.Dp = 0
@@ -105,11 +106,11 @@ func draw(w *app.Window) error {
 	// ops are the operations from the UI
 	var ops op.Ops
 
-	// listen for events in the window.
+	// Listen for events in the window.
 	for windowEvent := range w.Events() {
-		switch windowEvent := windowEvent.(type) {
+		switch winE := windowEvent.(type) {
 
-		// FrameEvent?
+		// Should we draw a new frame?
 		case system.FrameEvent:
 
 			// ---------- Handle input ----------
@@ -117,34 +118,34 @@ func draw(w *app.Window) error {
 			// Since we use one global eventArea, with Tag: 0
 			// we here call gtx.Events(0) to get these events.
 
-			gtx := layout.NewContext(&ops, windowEvent)
+			gtx := layout.NewContext(&ops, winE)
 			for _, gtxEvent := range gtx.Events(0) {
 
 				// To set how large each change is
 				var stepSize unit.Dp = 1
 
-				switch e := gtxEvent.(type) {
+				switch gtxE := gtxEvent.(type) {
 
 				case key.EditEvent:
-					e.Text = strings.ToUpper(e.Text)
+					gtxE.Text = strings.ToUpper(gtxE.Text)
 					// To increase the fontsize
-					if e.Text == "+" {
+					if gtxE.Text == "+" {
 						fontSize = fontSize + unit.Sp(stepSize)
 					}
 					// To decrease the fontsize
-					if e.Text == "-" {
+					if gtxE.Text == "-" {
 						fontSize = fontSize - unit.Sp(stepSize)
 					}
 
 				case key.Event:
 					// For better control, we only care about pressing the key down, not releasing it up
-					if e.State.String() == "Press" {
+					if gtxE.State.String() == "Press" {
 						// Set the stepSize, i.e. how large each change is
-						if e.Modifiers.String() == "Shift" {
+						if gtxE.Modifiers.String() == "Shift" {
 							stepSize = 5
 						}
 						// Start/Stop
-						if e.Name == "Space" {
+						if gtxE.Name == "Space" {
 							autoscroll = !autoscroll
 							if autospeed == 0 {
 								autoscroll = true
@@ -152,23 +153,23 @@ func draw(w *app.Window) error {
 							}
 						}
 						// Scroll up
-						if e.Name == "K" {
+						if gtxE.Name == "K" {
 							scrollY = scrollY - stepSize*4
 							if scrollY < 0 {
 								scrollY = 0
 							}
 						}
 						// Scroll down
-						if e.Name == "J" {
+						if gtxE.Name == "J" {
 							scrollY = scrollY + stepSize*4
 						}
 						// Faster scrollspeed
-						if e.Name == "F" {
+						if gtxE.Name == "F" {
 							autoscroll = true
 							autospeed++
 						}
 						// Slower scrollspeed
-						if e.Name == "S" {
+						if gtxE.Name == "S" {
 							if autospeed > 0 {
 								autospeed--
 							}
@@ -177,30 +178,30 @@ func draw(w *app.Window) error {
 							}
 						}
 						// Wider text to be displayed
-						if e.Name == "W" {
+						if gtxE.Name == "W" {
 							textWidth = textWidth + stepSize*10
 						}
 						// Narrow text to be displayed
-						if e.Name == "N" {
+						if gtxE.Name == "N" {
 							textWidth = textWidth - stepSize*10
 						}
 						// Move the focusBar Up
-						if e.Name == "U" {
+						if gtxE.Name == "U" {
 							focusBarY = focusBarY - stepSize
 						}
 						// Move the focusBar Down
-						if e.Name == "D" {
+						if gtxE.Name == "D" {
 							focusBarY = focusBarY + stepSize
 						}
 					}
 
 				case pointer.Event:
-					if e.Type == pointer.Scroll {
-						if e.Modifiers == key.ModShift {
+					if gtxE.Type == pointer.Scroll {
+						if gtxE.Modifiers == key.ModShift {
 							stepSize = 3
 						}
 						// By how much should the user scroll this time?
-						thisScroll := unit.Dp(e.Scroll.Y)
+						thisScroll := unit.Dp(gtxE.Scroll.Y)
 
 						// Increment scrollY with that distance
 						scrollY = scrollY + thisScroll*stepSize
@@ -326,11 +327,11 @@ func draw(w *app.Window) error {
 
 			// ---------- FINALIZE ----------
 			// Frame completes the FrameEvent by drawing the graphical operations from ops into the window.
-			windowEvent.Frame(&ops)
+			winE.Frame(&ops)
 
-			// Shutdown?
+		// Should we shut down?
 		case system.DestroyEvent:
-			return windowEvent.Err
+			return winE.Err
 
 		}
 	}
