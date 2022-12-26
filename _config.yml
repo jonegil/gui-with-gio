@@ -5,6 +5,6 @@ remote_theme: pmarsceill/just-the-docs
 
 # Google Analytics Tracking (optional)
 #ga_tracking: G-RJPGF9MMNF # Measurement ID. Added on June 25th
-ga_tracking: UA-199918132-1 # Universal access ID. Added on June 25th
+ga_tracking: "UA-199918132-1,G-6RG9PZRY5P" # Universal access ID. Updated Dec 26th
 ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings (true/nil by default)
 
