@@ -125,9 +125,9 @@ The last part of `main` starts the GUI in a normal manner:
 
 ## Section 4 - Variables to control behaviour
 
-Now we're getting into the meat of things. In order to control the behaviour and looks of the program we need multiple state variables that contain information of how things should be displayed and what the program should do.
+Now we're getting into the meat of things. In order to control the behaviour and looks of the program we need multiple variables that control things should be displayed and what the program should do.
 
-After working with the program a while, I found that the following variables would be helpful:
+There's no one-right-answer on how to do this. Instead, while working with the code over time, the following set emerged and proved helpful:
 
 | Variable     | Description                                   | Changed with                                  |
 | ------------ | --------------------------------------------- | --------------------------------------------- |
@@ -137,37 +137,34 @@ After working with the program a while, I found that the following variables wou
 | `fontSize`   | How large is the text                         | **+** (larger) and **-** (smaller)            |
 | `autoscroll` | Start/stop automatic scrolling                | **Space**                                     |
 | `autospeed`  | How fast / slow the text should scroll        | **F** (faster) or **S** (slower)              |
-
-For keypresses, `Shift` increases the rate of change when making adjustments.
+| `stepSize`   | How large should each change be?              | **Shift** makes any change larger             |
 
 
 The user should be able to adjust these while using the program. In other words, we can't have them hard coded as constants, but instead want them as variables so they can, well vary. Although we could spread them across the code, I instead opted to collect them in one place to keep the program tidy. Thus, here's the start of the `draw()`:
 
 ```go
 func draw(w *app.Window) error {
-  // y-position for text
-  var scrollY int = 0
+	// y-position for text
+	var scrollY unit.Dp = 0
 
-  // y-position for red focusBar
-  var focusBarY int = 78
+	// y-position for red focusBar
+	var focusBarY unit.Dp = 78
 
-  // width of text area
-  var textWidth int = 300
+	// width of text area
+	var textWidth unit.Dp = 550
 
-  // fontSize
-  var fontSize int = 35
+	// fontSize
+	var fontSize unit.Sp = 35
 
-  // Are we auto scrolling?
-  var autoscroll bool = false
-  var autospeed int = 1
+	// Are we auto scrolling?
+	var autoscroll bool = false
+	var autospeed unit.Dp = 1
 
 ```
 
-The numerical values here made sense on my machines. Change them if you find other values are better. 
-Also, it would make sense to save these so the settings to disk so configuration is not forgotten. 
-That's however a little outside the scope of this tutorial though. But it shouldn't be too hard, in case you're keen.
+The numerical values are set using `unit.Dp` and `unit.Sp`, the [device independent units](https://pkg.go.dev/gioui.org/unit) that ensure similar size across systems. Note how we also use it for `autospeed`, even though it controls animation speed and not visualization directly. 
 
-With that, let's dive into how to actually listen for and react to user input.
+With that, let's look at hot to collect and handle inputs.
 
 ---
 

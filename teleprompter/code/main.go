@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"image"
 	"image/color"
 	"io/ioutil"
 	"log"
+	"math"
 	"os"
 	"strings"
 	"time"
@@ -99,9 +99,6 @@ func draw(w *app.Window) error {
 	var autoscroll bool = false
 	var autospeed unit.Dp = 1
 
-	// To set increment
-	var stepSize unit.Dp
-
 	// th defines the material design style
 	th := material.NewTheme(gofont.Collection())
 
@@ -122,7 +119,9 @@ func draw(w *app.Window) error {
 
 			gtx := layout.NewContext(&ops, windowEvent)
 			for _, gtxEvent := range gtx.Events(0) {
-				stepSize = 1
+
+				// To set how large each change is
+				var stepSize unit.Dp = 1
 
 				switch e := gtxEvent.(type) {
 
@@ -209,14 +208,11 @@ func draw(w *app.Window) error {
 							scrollY = 0
 						}
 					}
-
-				default:
-					fmt.Printf("gtxEvent: %#+v \n", e)
 				}
 			}
 
 			// ---------- LAYOUT ----------
-			// Layout the interface first and create the event area afterwards
+			// First layout the interface. Afterwards add an eventArea.
 			// Bacground
 			paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
 
@@ -267,7 +263,7 @@ func draw(w *app.Window) error {
 			)
 
 			// ---------- THE FOCUS BAR ----------
-			// Draw the transparent red bar.
+			// Draw the transparent red focus bar.
 			focusBar := clip.Rect{
 				Min: image.Pt(0, int(focusBarY)),
 				Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+50)}.Push(&ops)
@@ -276,8 +272,9 @@ func draw(w *app.Window) error {
 			focusBar.Pop()
 
 			// ---------- COLLECT INPUT ----------
-			// Create an eventArea for the whole window, to catch all events and Push() it on the stack
-			// It will contain catch 3 events, pointer, general keys and specific keys
+			// Create an eventArea to collect events. It has the same size as the full windodw.
+			// First we Push() it on the stack, then add code to catch keys and pointers
+			// Finally we Pop() it
 			eventArea := clip.Rect(
 				image.Rectangle{
 					// From top left
@@ -287,37 +284,41 @@ func draw(w *app.Window) error {
 				},
 			).Push(gtx.Ops)
 
+			// Events are caught when sent from this area. Since GIO is stateless, we must explicitly
+			// tag the area so we can get the correct events later. The tag can effectively be anything,
+			// but to keep it simple with one large eventarea, we use Tag: 0 here, and later gtx.Events(0)
+			// to retrieve them.
+
 			// 1) We first add a pointer.InputOp to catch scrolling:
-			// It neeeds a tag, and since we only have one global area, we simply tag it Tag: 0
 			pointer.InputOp{
 				Types: pointer.Scroll,
-				Tag:   0,
+				Tag:   0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
 				// ScrollBounds sets bounds on scrolling, and we want it to be non-zero.
-				// In practice it seldom reached 100, so 200 should be enough
+				// In practice it seldom reached 100, so [MinInt8,MaxInt8] or [-128,127] should be enough
 				ScrollBounds: image.Rectangle{
 					Min: image.Point{
 						X: 0,
-						Y: -int(unit.Dp(200)),
+						Y: math.MinInt8, //-128
 					},
 					Max: image.Point{
 						X: 0,
-						Y: int(unit.Dp(200)),
+						Y: math.MaxInt8, //+127
 					},
 				},
 			}.Add(gtx.Ops)
 
 			// 2) Next we add key.FocusOp,
 			// Needed for general keybaord input, except the ones defined explicitly in key.InputOp
+			// These inputs are retrieved as key.EditEvent
 			key.FocusOp{
-				Tag: 0, // Use Tag: 0 as the event routing tag. This means we call gtx.Events(0) to get these events.
+				Tag: 0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
 			}.Add(gtx.Ops)
 
 			// 3) Finally we add key.InputOp to catch specific keys
 			// (Shift) means an optional Shift
-			// Other keys are caught as key.EditEvent
 			key.InputOp{
 				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
-				Tag:  0, // Use Tag: 0 as the event routing tag. This means we call gtx.Events(0) to get these events.
+				Tag:  0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
 			}.Add(gtx.Ops)
 
 			// Finally Pop() the eventArea from the stack
