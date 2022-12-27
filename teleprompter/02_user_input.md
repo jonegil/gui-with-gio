@@ -42,6 +42,7 @@ func draw(w *app.Window) error {
 
 ```
 **Point no 1**
+
 - OK, we recognice `draw()`, and also how we go through events from the window using `range w.Events()`. 
 - The `system.FrameEvent` is one such event from the window - the one Gio sends when a new frame needs to be drawn. Fair enough. 
 - But before we actually draw the frame, we investigate if something interesting has happened since last frame. That could be for example a pointer scroll or a keystroke. To do that we 
@@ -49,47 +50,49 @@ func draw(w *app.Window) error {
   - Open it's queue of events since last frame with `gtx.Events(0)`.
 
 **Point no 2**
+
 But wait. What´s this zero? 
 
-An application can have many different visual areas. When Gio sends an event that a pointer-click has happened, it's kind of useful to know *where* it happened. Therefore we will later define specifc *areas* on screen, and give each it's unique name, to make sure a click is clearly defined. For our app we will only have one area, so `Tag: 0` works just fine. It could have been any number, or a bool, or even a pointer address, but numbers are easy to work with - hence `0`. We'll revisit this one later. 
+An application can have many different visual areas. When Gio sends a pointer-event telling us a click has happened, it's useful to know *where* it happened. Therefore we will later define specifc *eventAreas* on screen, and give each one it's unique name, to make sure a click is clearly defined. For our app we will only have one area, so `Tag: 0` works just fine. It could have been any number, or a bool, or even a pointer address, but numbers are easy to work with - hence `0`. We'll revisit this one later. 
 
 **Point no 3**
-The code example is, by intention, verbose. To make sure it's very clear when we work with events from the window, `windowEvent`, vs when we're working with a FrameEvent and it's context `gtxEvent`, long verbose names are used. Also, since we use [type switches](https://go.dev/tour/methods/16), which are very handy but also a but compact, it was helpful to be very explicit with `winE` and `gtxE`. When reading mature applications you will often see this simplified to `e := range` followed by `e := e.(type)`. That´s all fine, and we did that when boiling eggs too. Here it simply was useful to separate them into more explicit variables, and hopefully that helps understanding the a little easier.
 
----
-WORK IN PROGRESS 
+The code example is, by intention, verbose. To make sure it's very clear when we work with events from the window, `windowEvent`, vs when we're working with a `FrameEvent` and its context `gtxEvent`, longer variable names are used. Also, since we use [type switches](https://go.dev/tour/methods/16), which are very handy but also a bit compact, it was helpful to be very explicit with `winE` and `gtxE` to make it as clear as possible. 
 
-THE REST OF THE TUTORIAL IS REMNANTS FROM AN EARLIER VERSION OF GIO. CODE RUNS WELL, BUT THESE DOCS ARE LAGGING. 
+However, this is a bit out of the ordinary. If you read sourcecode from mature applications you will often all event names as `e`, such as `e := range` followed by `e := e.(type)`. That is fine, and we did that when boiling eggs too. However, for this tutorial, it was useful to separate into more explicit variables, which hopefully helps understanding the code the a little easier.
 
-MOST OF THE EXPLANATION MAKES SENSE THOUGH
-
-
-DEC 16, 2022
-
-https://lists.sr.ht/~eliasnaur/gio/%3CCAFcc3FQNTp_UXr7oA97SsVPD7D91jSw30ZtALcT9vmopFDTeZQ%40mail.gmail.com%3E#%3CCJ5LZODOOR0F.UO9JC0VWAN9I@themachine%3E
-https://go.dev/play/p/VDQg6sxRyA4
-https://go.dev/play/p/SDHy1LZRljf
 
 ---
 
+Thanks for sticking with it! It's time to open the core of the event handling, where we process the queue of events inside `FrameEvent`. Here's the structure:
 
 
-        // A certain letter?
+
+```go
+		case system.FrameEvent:
+
+			gtx := layout.NewContext(&ops, winE)
+			for _, gtxEvent := range gtx.Events(0) {
+
+				switch gtxE := gtxEvent.(type) {
+
 				case key.EditEvent:
-          // Update and store state for size
+	
+				case key.Event:
+					
+				case pointer.Event:
+				}
+			}
 
-        // A certain key?
-        case key.Event:
-          // Update and store state forwidth and positioning
-
-        // A mouse event?
-        case pointer.Event:
-          // Update and store positioning state
-
-
-  }
-}
 ```
+
+---
+NOT COMPLETED. What's below must be rewritten
+
+Dec 27th
+
+---
+
 
 The two new events here are:
 
