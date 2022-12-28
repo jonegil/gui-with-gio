@@ -64,7 +64,7 @@ However, this is a bit out of the ordinary. If you read sourcecode from mature a
 
 ---
 
-Thanks for sticking with it! It's time to open the core of the event handling, where we process the queue of events inside `FrameEvent`. Here's the structure:
+Thanks for sticking with it - I know it can be a lot to take in. Finally though, it's time investigate the core of the event handling. In other words, it's time to process the queue of events inside `FrameEvent`. Here's the structure:
 
 
 
@@ -86,24 +86,36 @@ Thanks for sticking with it! It's time to open the core of the event handling, w
 
 ```
 
----
-NOT COMPLETED. What's below must be rewritten
+What's happening here?
+- We range through `gtx.Events()` with `Tag: 0`
+- We check their type with `gtxEvent.(type)` and pick up three variants:
+  - `key.EditEvent`: These are free edit events, when the user writes freely. All letters are caught.
+  - `key.Event`: These are specifically defined events. Only explicitly declared keys are caught.
+  - `pointer.Event`: Mouse/trackpad events such as clicks and scrolling.
 
-Dec 27th
 
----
+## key.EditEvent
+Let's look at each in turn. First the `key.EditEvent`
 
+```go
+  case key.EditEvent:
+    // To increase the fontsize
+    if gtxE.Text == "+" {
+      fontSize = fontSize + unit.Sp(stepSize)
+    }
+    // To decrease the fontsize
+    if gtxE.Text == "-" {
+      fontSize = fontSize - unit.Sp(stepSize)
+    }
+```
+The `key.EditEvent` is sent whenever the user types a key, and you get the content of the event with `gtxE.Text`.
 
-The two new events here are:
-
-- `key.Event` - Was a key just pressed?
-- `pointer.Event` - Was a mouse or trackpad just used?
-
-So let's go through those in more detail:
+While a normal letter (a,b,c...) is the same on all keyboards, the `+` or `-` is not. They are placed differently on US vs non-US keyboards, and also differently on laptop keybaords vs full size keyboards with numerical keys on the right. To ensure all pluses are treated the same, no matter which key was used to produce it, it was useful to catch then through this generic text event. And the same for minuses ofcourse. Fair treatment after all.
 
 ## key.Event
+Now my favourite, `key.Event`:
 
-If a key is pressed, Gio receives it as a [key.Event](https://pkg.go.dev/gioui.org/io/key#Event). As we see from the docs, the Event is a struct with three variables, `Name`, `Modifiers` and `State`:
+When one of the specified keys are pressed, Gio receives it as a [key.Event](https://pkg.go.dev/gioui.org/io/key#Event). As we see from the docs, the Event is a struct with three variables, `Name`, `Modifiers` and `State`:
 
 ```go
 type Event struct {
@@ -120,92 +132,101 @@ type Event struct {
 ```
 
 - `Name` is simply the letter pressed, or [special keys](https://pkg.go.dev/gioui.org/io/key#pkg-constants) such as `key.NameUpArrow` and `key.NameSpace`
-- `Modifiers` are keys like `key.ModShift` or `key.ModCommand`, listede [here](https://pkg.go.dev/gioui.org/io/key#Modifiers). Note the comment on how Shift is taken into account, but not others, which can be worth knowing about.
-- `State` can be either Press or Release, if the distinction is needed
+- `Modifiers` are keys like `key.ModShift` or `key.ModCommand`, listed [here](https://pkg.go.dev/gioui.org/io/key#Modifiers). Note the comment on how Shift is taken into account, but not others, which can be worth knowing about.
+- `State` can be either Press or Release
 
-Ok, that gives us something to work with. Once a key is pressed, this will help us detect which key it was, and weither a modifier like Shift is pressed. Here's the code for this section:
-
+Here are the ones we use:
 ```go
-// A keypress?
-case key.Event:
-  if e.State == key.Press {
-    // To set increment
-    var stepSize int = 1
-    if e.Modifiers == key.ModShift {
-      stepSize = 10
-    }
-    // To scroll text down
-    if e.Name == key.NameDownArrow || e.Name == "J" {
-      scrollY = scrollY + stepSize*4
-    }
-    // To scroll text up
-    if e.Name == key.NameUpArrow || e.Name == "K" {
-      scrollY = scrollY - stepSize*4
-      if scrollY < 0 {
-        scrollY = 0
+  case key.Event:
+    // For better control, we only care about pressing the key down, not releasing it up
+    if gtxE.State == key.Press {
+      // Inrease the stepSize when pressing Shift
+      if gtxE.Modifiers== ModShift {
+        stepSize = 5
       }
-    }
-    // To turn on/off autoscroll, and set the scrollspeed
-    if e.Name == key.NameSpace {
-      autoscroll = !autoscroll
-      if autospeed == 0 {
+      // Start/Stop
+      if gtxE.Name == "Space" {
+        autoscroll = !autoscroll
+        if autospeed == 0 {
+          autoscroll = true
+          autospeed++
+        }
+      }
+      // Scroll up
+      if gtxE.Name == "K" {
+        scrollY = scrollY - stepSize*4
+        if scrollY < 0 {
+          scrollY = 0
+        }
+      }
+      // Scroll down
+      if gtxE.Name == "J" {
+        scrollY = scrollY + stepSize*4
+      }
+      // Faster scrollspeed
+      if gtxE.Name == "F" {
         autoscroll = true
         autospeed++
       }
-    }
-    // Faster scrollspeed
-    if e.Name == "F" {
-      autoscroll = true
-      autospeed++
-    }
-    // Slower scrollspeed
-    if e.Name == "S" {
-      if autospeed > 0 {
-        autospeed--
+      // Slower scrollspeed
+      if gtxE.Name == "S" {
+        if autospeed > 0 {
+          autospeed--
+        }
+        if autospeed == 0 {
+          autoscroll = false
+        }
+      }
+      // Wider text to be displayed
+      if gtxE.Name == "W" {
+        textWidth = textWidth + stepSize*10
+      }
+      // Narrow text to be displayed
+      if gtxE.Name == "N" {
+        textWidth = textWidth - stepSize*10
+      }
+      // Move the focusBar Up
+      if gtxE.Name == "U" {
+        focusBarY = focusBarY - stepSize
+      }
+      // Move the focusBar Down
+      if gtxE.Name == "D" {
+        focusBarY = focusBarY + stepSize
       }
     }
-    // Set Wider space for text to be displayed
-    if e.Name == "W" {
-      textWidth = textWidth + stepSize*10
-    }
-    // Set Narrower space for text to be displayed
-    if e.Name == "N" {
-      textWidth = textWidth - stepSize*10
-    }
-    // To increase the fontsize
-    if e.Name == "+" {
-      fontSize = fontSize + stepSize
-    }
-    // To decrease the fontsize
-    if e.Name == "-" {
-      fontSize = fontSize - stepSize
-    }
-    // Move the focusBar Up
-    if e.Name == "U" {
-      focusBarY = focusBarY - stepSize
-    }
-    // Move the focusBar Down
-    if e.Name == "D" {
-      focusBarY = focusBarY + stepSize
-    }
-    // Force re-rendering to use the new states set above
-    w.Invalidate()
-  }
+
 ```
 
-With the expception of `stepSize` all these variables are explained earlier. The role of `stepSize` is to control how large the change to the other parameters will be. Should a scroll be long or short? Should the focus bar move by lot or a little? Should text size adjustments be considerable or minor? Should ... you get it.
+The role of `stepSize` is to control how large the change to the other parameters will be. Should a scroll be long or short? Should the focus bar move by lot or a little? Should width-adjustments be considerable or minor? Should ... you get it.
 
-The point is that for a user it can sometimes be important to quickly navigate or adjust quite quickly, and thereafter finetune to perfection. Therefor it's useful to define a variable that controls the rate of change. This defaults to 1, but when `Shift` is pressed it increases to 10. Why those value? Well, it worked well in my experimentation. Try it out.
+The point is that for a user it can sometimes be important to quickly navigate or adjust quite quickly, and thereafter finetune to perfection. Therefore it's useful to define a variable that controls the rate of change. For simplification this was skipped earlier, but the `stepSize unit.Dp = 1` is actually defined when handling `gtx.Events(0)`. That ensures a change in **D**evice indepentend **p**ixels, making it homogenous across displays. 
+```go
+  for _, gtxEvent := range gtx.Events(0) {
+		// To set how large each change is
+		var stepSize unit.Dp = 1
+```
+When holding `Shift` this increases to 5. Why 5? Well, it worked well in my experimentation. Try it out.
 
-For all the other keypresses, the code adjusts one or two state variables. These are all used later when rendering the actual frame. I went a bit back and forth on the logic around adjusting speed, but conlcuded that if you ask for `F`aster scrolling, that should start up the autoscroll if it wasn't running already. Conversely, if speed is 0 and the user presses `Space` to start the scroll, speed must increase. Negative speed is avoided, although it was fun times before I nerfed it.
+For all the other keypresses, the code adjusts one or two state variables. These are all used later when rendering the actual frame. I went a bit back and forth on the logic, and pondered how it all should interact, but landed on a fairly safe set of behaviours. For exampe, negative speed is avoided, although it was fun times before it was nerfed.
 
-The point is that for interacting behaviour, it makes sense to experiemnt and think through how the various state variables should be tuned in relation to each other. Keeping it all togehter in this input section makes the code easier to grasp than if these states were handled in various other parts of the program.
+The point is that when defining behaviour, it makes sense to experiment and think through how the various state variables should be tuned in relation to each other. Keeping it all togehter in this input section made the code easier to grasp than if states were handled in various other parts of the program.
 
-At the end we call `w.Invalidate()`, forcing the program to re-render so that any new state information is take into account at once. Try commenting this out and re-run. What happens now, and why?
+There are two reasons why I like the `key.Event`. Firstly, it's because the event is explicit. Only specificly defined keys trigger this event. We'll get to that code later. But the point is that by being strict on which key-strokes are allowed to trigger an event, it is very clear how the event was generated, and also which modifiers (Shift / Ctrl / Command) is allowed with it. 
 
-With this in place, here's an example of how it looks to change fontsize:
+Secondly, it allowes for fine-tuned control of both press and release. Gio is all about control, and `key.Event` gives you exactly that.
 
-![Size adjustments](teleprompter_fontsize.gif)
+Your preferences may differ, and that's fair, but for me the extra code needed to define which keys generate a `key.Event` is a small investment for the control and precision it yields. 
+
+[Size adjustments](teleprompter_fontsize.gif)
+
+
+---
+NOT COMPLETED. What's below must be rewritten
+
+Dec 29th
+
+---
+
 
 ## pointer.Event
 

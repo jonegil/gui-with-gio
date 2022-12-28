@@ -127,7 +127,6 @@ func draw(w *app.Window) error {
 				switch gtxE := gtxEvent.(type) {
 
 				case key.EditEvent:
-					gtxE.Text = strings.ToUpper(gtxE.Text)
 					// To increase the fontsize
 					if gtxE.Text == "+" {
 						fontSize = fontSize + unit.Sp(stepSize)
@@ -139,9 +138,9 @@ func draw(w *app.Window) error {
 
 				case key.Event:
 					// For better control, we only care about pressing the key down, not releasing it up
-					if gtxE.State.String() == "Press" {
-						// Set the stepSize, i.e. how large each change is
-						if gtxE.Modifiers.String() == "Shift" {
+					if gtxE.State == key.Press {
+						// Inrease the stepSize when pressing Shift
+						if gtxE.Modifiers == key.ModShift {
 							stepSize = 5
 						}
 						// Start/Stop
@@ -317,6 +316,7 @@ func draw(w *app.Window) error {
 
 			// 3) Finally we add key.InputOp to catch specific keys
 			// (Shift) means an optional Shift
+			// These inputs are retrieved as key.Event
 			key.InputOp{
 				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
 				Tag:  0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
