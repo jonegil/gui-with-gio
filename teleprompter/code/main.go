@@ -126,6 +126,7 @@ func draw(w *app.Window) error {
 
 				switch gtxE := gtxEvent.(type) {
 
+				// Any key
 				case key.EditEvent:
 					// To increase the fontsize
 					if gtxE.Text == "+" {
@@ -136,6 +137,7 @@ func draw(w *app.Window) error {
 						fontSize = fontSize - unit.Sp(stepSize)
 					}
 
+				// Only specified keys, defined in key.InputOp below
 				case key.Event:
 					// For better control, we only care about pressing the key down, not releasing it up
 					if gtxE.State == key.Press {
@@ -194,16 +196,15 @@ func draw(w *app.Window) error {
 						}
 					}
 
+				// A mouse event?
 				case pointer.Event:
+					// Are we scrolling?
 					if gtxE.Type == pointer.Scroll {
 						if gtxE.Modifiers == key.ModShift {
 							stepSize = 3
 						}
-						// By how much should the user scroll this time?
-						thisScroll := unit.Dp(gtxE.Scroll.Y)
-
-						// Increment scrollY with that distance
-						scrollY = scrollY + thisScroll*stepSize
+						// Increment scrollY with gtxE.Scroll.Y
+						scrollY = scrollY + unit.Dp(gtxE.Scroll.Y)*stepSize
 						if scrollY < 0 {
 							scrollY = 0
 						}

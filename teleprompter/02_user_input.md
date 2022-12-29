@@ -19,7 +19,7 @@ Let's start by walking through the structure of our `draw()` function:
   1. We're especially interested in events that require us to redraw a new frame. Those are called `system.FrameEvent`
   1. When those arrive, we open it's event queue on range through all events since last frame.
 
-Simplified in code we see this:
+Simplified, the code looks like this:
 
 ```go
 // The main draw function
@@ -27,16 +27,16 @@ func draw(w *app.Window) error {
 
   // Listen for events in the window
   for windowEvent := range w.Events() {
-		switch winE := windowEvent.(type) {
+    switch winE := windowEvent.(type) {
 
-		// Should we draw a new frame?
-		case system.FrameEvent:
+    // Should we draw a new frame?
+    case system.FrameEvent:
       // Open an new context
-			gtx := layout.NewContext(&ops, winE)
+      gtx := layout.NewContext(&ops, winE)
 
       // Procress all events from eventArea 0 (to be exlpained)
-	    for _, gtxEvent := range gtx.Events(0) {
-				switch gtxE := gtxEvent.(type) {
+      for _, gtxEvent := range gtx.Events(0) {
+        switch gtxE := gtxEvent.(type) {
 
           // ... process the events depending on their type, such as pointer or key for example
 
@@ -66,23 +66,21 @@ However, this is a bit out of the ordinary. If you read sourcecode from mature a
 
 Thanks for sticking with it - I know it can be a lot to take in. Finally though, it's time investigate the core of the event handling. In other words, it's time to process the queue of events inside `FrameEvent`. Here's the structure:
 
-
-
 ```go
-		case system.FrameEvent:
+    case system.FrameEvent:
 
-			gtx := layout.NewContext(&ops, winE)
-			for _, gtxEvent := range gtx.Events(0) {
+      gtx := layout.NewContext(&ops, winE)
+      for _, gtxEvent := range gtx.Events(0) {
 
-				switch gtxE := gtxEvent.(type) {
+        switch gtxE := gtxEvent.(type) {
 
-				case key.EditEvent:
-	
-				case key.Event:
-					
-				case pointer.Event:
-				}
-			}
+        case key.EditEvent:
+  
+        case key.Event:
+          
+        case pointer.Event:
+        }
+      }
 
 ```
 
@@ -202,8 +200,8 @@ The role of `stepSize` is to control how large the change to the other parameter
 The point is that for a user it can sometimes be important to quickly navigate or adjust quite quickly, and thereafter finetune to perfection. Therefore it's useful to define a variable that controls the rate of change. For simplification this was skipped earlier, but the `stepSize unit.Dp = 1` is actually defined when handling `gtx.Events(0)`. That ensures a change in **D**evice indepentend **p**ixels, making it homogenous across displays. 
 ```go
   for _, gtxEvent := range gtx.Events(0) {
-		// To set how large each change is
-		var stepSize unit.Dp = 1
+    // To set how large each change is
+    var stepSize unit.Dp = 1
 ```
 When holding `Shift` this increases to 5. Why 5? Well, it worked well in my experimentation. Try it out.
 
@@ -217,47 +215,39 @@ Secondly, it allowes for fine-tuned control of both press and release. Gio is al
 
 Your preferences may differ, and that's fair, but for me the extra code needed to define which keys generate a `key.Event` is a small investment for the control and precision it yields. 
 
-[Size adjustments](teleprompter_fontsize.gif)
-
-
----
-NOT COMPLETED. What's below must be rewritten
-
-Dec 29th
-
----
+![Size adjustments](teleprompter_fontsize.gif)
 
 
 ## pointer.Event
 
-If the mouse is used, Gio receives it as a pointer.Event. That can be any type, such as movement, scrolling or clicking. Once we detect with `case pointer.Event:` it is up to us to define what to do with it.
+If the mouse is used, Gio receives it as a pointer.Event. There are many variants, such as movement, scrolling or clicking. Once we detect with `case pointer.Event:` it is up to us to decide what to do with it.
 
 From [pointer.Event](https://pkg.go.dev/gioui.org/io/pointer#Event) we learn that the pointer event is quite a rich struct:
 
 ```go
 type Event struct {
-	Type   Type
-	Source Source
-	// PointerID is the id for the pointer and can be used
-	// to track a particular pointer from Press to
-	// Release or Cancel.
-	PointerID ID
-	// Priority is the priority of the receiving handler
-	// for this event.
-	Priority Priority
-	// Time is when the event was received. The
-	// timestamp is relative to an undefined base.
-	Time time.Duration
-	// Buttons are the set of pressed mouse buttons for this event.
-	Buttons Buttons
-	// Position is the position of the event, relative to
-	// the current transformation, as set by op.TransformOp.
-	Position image.Point
-	// Scroll is the scroll amount, if any.
-	Scroll image.Point
-	// Modifiers is the set of active modifiers when
-	// the mouse button was pressed.
-	Modifiers key.Modifiers
+  Type   Type
+  Source Source
+  // PointerID is the id for the pointer and can be used
+  // to track a particular pointer from Press to
+  // Release or Cancel.
+  PointerID ID
+  // Priority is the priority of the receiving handler
+  // for this event.
+  Priority Priority
+  // Time is when the event was received. The
+  // timestamp is relative to an undefined base.
+  Time time.Duration
+  // Buttons are the set of pressed mouse buttons for this event.
+  Buttons Buttons
+  // Position is the position of the event, relative to
+  // the current transformation, as set by op.TransformOp.
+  Position image.Point
+  // Scroll is the scroll amount, if any.
+  Scroll image.Point
+  // Modifiers is the set of active modifiers when
+  // the mouse button was pressed.
+  Modifiers key.Modifiers
 }
 ```
 
@@ -265,7 +255,7 @@ What we need here are the two bottom entries, `Scroll` and `Modifiers`. The form
 
 ```go
 type Point struct {
-	X, Y float32
+  X, Y float32
 }
 ```
 
@@ -276,27 +266,28 @@ With a scroll-wheel on a mouse it's always Y only and often in fixed clicking am
 ```go
 // A mouse event?
 case pointer.Event:
-  if e.Type == pointer.Scroll {
-    var stepSize int = 1
-    if e.Modifiers == key.ModShift {
+  // Are we scrolling?
+  if gtxE.Type == pointer.Scroll {
+    if gtxE.Modifiers == key.ModShift {
       stepSize = 3
     }
-    // By how much should the user scroll this time?
-    thisScroll := int(e.Scroll.Y)
-    // Increment scrollY with that distance
-    scrollY = scrollY + thisScroll*stepSize
+    // Increment scrollY with gtxE.Scroll.Y
+    scrollY = scrollY + unit.Dp(gtxE.Scroll.Y)*stepSize
     if scrollY < 0 {
       scrollY = 0
     }
-    w.Invalidate()
   }
 ```
 
-As with keys we listen for certain events, in this case only the `pointer.Scroll`. We want to scroll faster if `Shift` is pressed, but the stepSize of 10 from `key.Event` proved excessive. So we're content by increasing it by x3 this time.
+As with keys we listen for certain events, in this case only the `pointer.Scroll`. We want to scroll faster if `Shift` is pressed, and it worked well by increasing it by x3 here.
 
-After some manipulations, the Y value of a scroll is added to the state variable `scrollY` which indicates how far down into the speech we have reached. To reduce confusion we disallow scrolling to before the start by limiting `scrollY` to minimum 0
+Since scrollY is a `unit.Dp`, we cast `gtxE.Scroll.Y` and increment the state variable `scrollY` with it. This will control how far down into the text we should present to the user. To reduce confusion we disallow scrolling to before the start by limiting `scrollY` to minimum 0.
 
-And just as for `key.Event` we end by invalidating the frame. Show it to me!
+## Closing remarks
+
+Phew, that was a long one. We covered a lot of event handling, but althoug it's fairly long I hope it's still clear. Most important now is to understand the overall structure and how the pieces join together. 
+
+With event *handling* under our belt, we still need to cover how events are *created*. That will come on [Chapter 4 - The Event Area](04_event_area.md). However, before we get there, let's have some fun and actually use all the state variables we made to create a visual experience for our users. That's all done in [Chapter 3 - Layout](03_layout.md).
 
 ---
 
