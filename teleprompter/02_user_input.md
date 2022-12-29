@@ -74,20 +74,20 @@ func draw(w *app.Window) error {
 Thanks for sticking with it. Finally though, it's time investigate the core of the event handling. In other words, it's time to process the queue of events inside `FrameEvent`. Here's the structure:
 
 ```go
-    case system.FrameEvent:
+case system.FrameEvent:
 
-      gtx := layout.NewContext(&ops, winE)
-      for _, gtxEvent := range gtx.Events(0) {
+  gtx := layout.NewContext(&ops, winE)
+  for _, gtxEvent := range gtx.Events(0) {
 
-        switch gtxE := gtxEvent.(type) {
+    switch gtxE := gtxEvent.(type) {
 
-        case key.EditEvent:
-  
-        case key.Event:
-          
-        case pointer.Event:
-        }
-      }
+    case key.EditEvent:
+
+    case key.Event:
+      
+    case pointer.Event:
+    }
+  }
 ```
 
 What's happening here?
@@ -103,15 +103,15 @@ What's happening here?
     Let's look at each in turn. First the `key.EditEvent`
 
     ```go
-      case key.EditEvent:
-        // To increase the fontsize
-        if gtxE.Text == "+" {
-          fontSize = fontSize + unit.Sp(stepSize)
-        }
-        // To decrease the fontsize
-        if gtxE.Text == "-" {
-          fontSize = fontSize - unit.Sp(stepSize)
-        }
+    case key.EditEvent:
+      // To increase the fontsize
+      if gtxE.Text == "+" {
+        fontSize = fontSize + unit.Sp(stepSize)
+      }
+      // To decrease the fontsize
+      if gtxE.Text == "-" {
+        fontSize = fontSize - unit.Sp(stepSize)
+      }
     ```
     The `key.EditEvent` is sent whenever the user types a key, and you get the content of the event with `gtxE.Text`.
 
@@ -143,72 +143,72 @@ What's happening here?
 
     Here are the ones we use:
     ```go
-      case key.Event:
-        // For better control, we only care about pressing the key down, not releasing it up
-        if gtxE.State == key.Press {
-          // Inrease the stepSize when pressing Shift
-          if gtxE.Modifiers== ModShift {
-            stepSize = 5
-          }
-          // Start/Stop
-          if gtxE.Name == "Space" {
-            autoscroll = !autoscroll
-            if autospeed == 0 {
-              autoscroll = true
-              autospeed++
-            }
-          }
-          // Scroll up
-          if gtxE.Name == "K" {
-            scrollY = scrollY - stepSize*4
-            if scrollY < 0 {
-              scrollY = 0
-            }
-          }
-          // Scroll down
-          if gtxE.Name == "J" {
-            scrollY = scrollY + stepSize*4
-          }
-          // Faster scrollspeed
-          if gtxE.Name == "F" {
+    case key.Event:
+      // For better control, we only care about pressing the key down, not releasing it up
+      if gtxE.State == key.Press {
+        // Inrease the stepSize when pressing Shift
+        if gtxE.Modifiers== ModShift {
+          stepSize = 5
+        }
+        // Start/Stop
+        if gtxE.Name == "Space" {
+          autoscroll = !autoscroll
+          if autospeed == 0 {
             autoscroll = true
             autospeed++
           }
-          // Slower scrollspeed
-          if gtxE.Name == "S" {
-            if autospeed > 0 {
-              autospeed--
-            }
-            if autospeed == 0 {
-              autoscroll = false
-            }
-          }
-          // Wider text to be displayed
-          if gtxE.Name == "W" {
-            textWidth = textWidth + stepSize*10
-          }
-          // Narrow text to be displayed
-          if gtxE.Name == "N" {
-            textWidth = textWidth - stepSize*10
-          }
-          // Move the focusBar Up
-          if gtxE.Name == "U" {
-            focusBarY = focusBarY - stepSize
-          }
-          // Move the focusBar Down
-          if gtxE.Name == "D" {
-            focusBarY = focusBarY + stepSize
+        }
+        // Scroll up
+        if gtxE.Name == "K" {
+          scrollY = scrollY - stepSize*4
+          if scrollY < 0 {
+            scrollY = 0
           }
         }
+        // Scroll down
+        if gtxE.Name == "J" {
+          scrollY = scrollY + stepSize*4
+        }
+        // Faster scrollspeed
+        if gtxE.Name == "F" {
+          autoscroll = true
+          autospeed++
+        }
+        // Slower scrollspeed
+        if gtxE.Name == "S" {
+          if autospeed > 0 {
+            autospeed--
+          }
+          if autospeed == 0 {
+            autoscroll = false
+          }
+        }
+        // Wider text to be displayed
+        if gtxE.Name == "W" {
+          textWidth = textWidth + stepSize*10
+        }
+        // Narrow text to be displayed
+        if gtxE.Name == "N" {
+          textWidth = textWidth - stepSize*10
+        }
+        // Move the focusBar Up
+        if gtxE.Name == "U" {
+          focusBarY = focusBarY - stepSize
+        }
+        // Move the focusBar Down
+        if gtxE.Name == "D" {
+          focusBarY = focusBarY + stepSize
+        }
+      }
     ```
 
     The role of `stepSize` is to control how large the change to the other parameters will be. Should a scroll be long or short? Should the focus bar move by lot or a little? Should width-adjustments be considerable or minor? Should ... you get it.
 
     The point is that for a user it can sometimes be important to quickly navigate or adjust quite quickly, and thereafter finetune to perfection. Therefore it's useful to define a variable that controls the rate of change. For simplification this was skipped earlier, but the `stepSize unit.Dp = 1` is actually defined when handling `gtx.Events(0)`. That ensures a change in **D**evice indepentend **p**ixels, making it homogenous across displays. 
     ```go
-      for _, gtxEvent := range gtx.Events(0) {
-        // To set how large each change is
-        var stepSize unit.Dp = 1
+    for _, gtxEvent := range gtx.Events(0) {
+      // To set how large each change is
+      var stepSize unit.Dp = 1
     ```
     When holding `Shift` this increases to 5. Why 5? Well, it worked well in my experimentation. Try it out.
 
