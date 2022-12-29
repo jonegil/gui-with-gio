@@ -57,11 +57,13 @@ func draw(w *app.Window) error {
       - Open it's queue of events since last frame with `gtx.Events(0)`.
 
 2.  **Point no 2**
+
     But wait. What´s this zero? 
 
     An application can have many different visual areas. When Gio sends a pointer-event telling us a click has happened, it's useful to know *where* it happened. Therefore we will later define specifc *eventAreas* on screen, and give each one it's unique name, to make sure a click is clearly defined. For our app we will only have one area, so `Tag: 0` works just fine. It could have been any number, or a bool, or even a pointer address, but numbers are easy to work with - hence `0`. We'll revisit this one later. 
 
 3.  **Point no 3**
+
     The code example is, by intention, verbose. To make sure it's very clear when we work with events from the window, `windowEvent`, vs when we're working with a `FrameEvent` and its context `gtxEvent`, longer variable names are used. Also, since we use [type switches](https://go.dev/tour/methods/16), which are very handy but also a bit compact, it was helpful to be very explicit with `winE` and `gtxE` to make it as clear as possible. 
 
     However, this is a bit out of the ordinary. If you read sourcecode from mature applications you will often all event names as `e`, such as `e := range` followed by `e := e.(type)`. That is fine, and we did that when boiling eggs too. However, for this tutorial, it was useful to separate into more explicit variables, which hopefully helps understanding the code the a little easier.
@@ -97,6 +99,7 @@ What's happening here?
 
 
 1.  **key.EditEvent**
+
     Let's look at each in turn. First the `key.EditEvent`
 
     ```go
@@ -115,6 +118,7 @@ What's happening here?
     While a normal letter (a,b,c...) is the same on all keyboards, the `+` or `-` is not. They are placed differently on US vs non-US keyboards, and also differently on laptop keybaords vs full size keyboards with numerical keys on the right. To ensure all pluses are treated the same, no matter which key was used to produce it, it was useful to catch then through this generic text event. And the same for minuses ofcourse. Fair treatment after all.
 
 2.  **key.Event**
+
     Now my favourite, `key.Event`:
 
     When one of the specified keys are pressed, Gio receives it as a [key.Event](https://pkg.go.dev/gioui.org/io/key#Event). As we see from the docs, the Event is a struct with three variables, `Name`, `Modifiers` and `State`:
