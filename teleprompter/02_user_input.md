@@ -81,7 +81,6 @@ Thanks for sticking with it - I know it can be a lot to take in. Finally though,
         case pointer.Event:
         }
       }
-
 ```
 
 What's happening here?
@@ -92,7 +91,7 @@ What's happening here?
   - `pointer.Event`: Mouse/trackpad events such as clicks and scrolling.
 
 
-## key.EditEvent
+**key.EditEvent**
 Let's look at each in turn. First the `key.EditEvent`
 
 ```go
@@ -110,7 +109,7 @@ The `key.EditEvent` is sent whenever the user types a key, and you get the conte
 
 While a normal letter (a,b,c...) is the same on all keyboards, the `+` or `-` is not. They are placed differently on US vs non-US keyboards, and also differently on laptop keybaords vs full size keyboards with numerical keys on the right. To ensure all pluses are treated the same, no matter which key was used to produce it, it was useful to catch then through this generic text event. And the same for minuses ofcourse. Fair treatment after all.
 
-## key.Event
+**key.Event**
 Now my favourite, `key.Event`:
 
 When one of the specified keys are pressed, Gio receives it as a [key.Event](https://pkg.go.dev/gioui.org/io/key#Event). As we see from the docs, the Event is a struct with three variables, `Name`, `Modifiers` and `State`:
@@ -192,7 +191,6 @@ Here are the ones we use:
         focusBarY = focusBarY + stepSize
       }
     }
-
 ```
 
 The role of `stepSize` is to control how large the change to the other parameters will be. Should a scroll be long or short? Should the focus bar move by lot or a little? Should width-adjustments be considerable or minor? Should ... you get it.
@@ -218,7 +216,7 @@ Your preferences may differ, and that's fair, but for me the extra code needed t
 ![Size adjustments](teleprompter_fontsize.gif)
 
 
-## pointer.Event
+**pointer.Event**
 
 If the mouse is used, Gio receives it as a pointer.Event. There are many variants, such as movement, scrolling or clicking. Once we detect with `case pointer.Event:` it is up to us to decide what to do with it.
 
