@@ -8,13 +8,17 @@ has_children: false
 
 # Chapter 3 - Layout
 
+THIS CHAPTER IS NOT UPDATED
+JAN 2nd 2023
+
+## Goals
 In this chapter we'll make use of the updated state variables and lay out our program.
 
-Now that we have processed all incoming input, both `key.Event` and `pointer.Scroll`, it's time to wait for a request to redraw. Those are sent by call `w.Invalidate` at the end of the key and pointer event sections. Also, we'll add an `op.InvlidateOp{}` operation will also when autoscroll is turned on as we'll see below.
+## Outline
+After processing events, `system.FrameEvent` is also where we lay out and redraw on screen. As we'll get into, it's a nested structure with three main components.
 
-## system.FrameEvent
 
-When we receive a `system.FrameEvent` it is time to lay out and redraw. As we'll get into, it's a nested structure with three main components.
+## Code
 
 ### Setup
 
@@ -128,7 +132,7 @@ paint.PaintOp{}.Add(&ops)
 e.Frame(&ops)
 ```
 
-## system.DestroyEvent
+### system.DestroyEvent
 
 Finally, just to complete the picture, it's worth mentioning the final event we listen for, namely the `system.DestroyEvent`. It helps us end the program gracefull, returns an `Err` and breaks the `range w.Events()` loop were in to listen for events.
 
@@ -139,7 +143,7 @@ case system.DestroyEvent:
 }
 ```
 
-## Wrapping it all up
+## Comments
 
 That´s it. We've got yet another Gio project in our belt, great work!. This one was all about processing input, which we did by listening to events, `key.Event` and `pointer.Event` respectively, and using custom logic to update a set of state variables. Later, in `system.FrameEvent` we used those state variables to control our layout.
 
