@@ -8,11 +8,10 @@ has_children: false
 
 # Chapter 1 - Setup
 
+## Goals
+The goal of this chapter is to start up our application and get the basic structure in place.
+
 ## Outline
-
-Thanks from diving deeper! In this part we'll set up the app and get the structure in place. In [Chapter 2](02_user_input.md) we´ll deal with user input, while [Chapter 3](03_layout.md) lays the application out on screen.
-
-## Code
 
 In this chapter we'll walk through the following pieces.
 
@@ -23,7 +22,9 @@ In this chapter we'll walk through the following pieces.
 
 These are relatively straight forward. If you completed the [egg timer](../egg_timer/) you will feel right at home. Let's get started.
 
-## Section 1 - New imports
+## Code
+
+### Section 1 - New imports
 
 Many imports are well known, but these two are new:
 
@@ -43,7 +44,7 @@ What can be going on here? Something with key´s and pointer´s maybe? From the 
 
 Notice how pointer supports both mouse gestures on a desktop, trackpad on a laptop and fingers on a screen. Nice, again an example of how learning a cross-platform framework gives skills on multiple devices.
 
-## Section 2 - Read text into a slice
+### Section 2 - Read text into a slice
 
 We default to reading the text to be read from `speech.txt`. But, as we know, users are crazy and might want other filenames. So we oblige and prepare a command line flag.
 
@@ -100,7 +101,7 @@ We also do a little trick at the end. It felt clunky that a speech didn't full s
 
 *Note:* In the sourcecode there's an alternative implementation that generates a very long speech programatically. That was useful when debugging, so I left it in. Please feel free to play around with it. 
 
-## Section 3 - Start the application
+### Section 3 - Start the application
 
 The last part of `main` starts the GUI in a normal manner:
 
@@ -122,7 +123,7 @@ The last part of `main` starts the GUI in a normal manner:
 }
 ```
 
-## Section 4 - Variables to control behaviour
+### Section 4 - State variables to control behaviour
 
 Now we're getting into the meat of things. In order to control the behaviour and looks of the program we need multiple variables that control things should be displayed and what the program should do.
 

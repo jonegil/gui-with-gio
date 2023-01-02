@@ -34,14 +34,14 @@ var filename *string
 var paragraphList []string
 
 func main() {
-	// Part 1 - Read input from command line
+	// Step 1 - Read input from command line
 	filename = flag.String("file", "speech.txt", "Which .txt file shall I present?")
 	flag.Parse()
 
-	// Part 2 - Read from file
+	// Step 2 - Read from file
 	paragraphList = readText(filename)
 
-	// Part 3 - Start the GUI
+	// Step 3 - Start the GUI
 	go func() {
 		// create new window
 		w := app.NewWindow(
@@ -106,7 +106,7 @@ func draw(w *app.Window) error {
 	// ops are the operations from the UI
 	var ops op.Ops
 
-	// Listen for events in the window.
+	// Listen for events from the window.
 	for windowEvent := range w.Events() {
 		switch winE := windowEvent.(type) {
 
