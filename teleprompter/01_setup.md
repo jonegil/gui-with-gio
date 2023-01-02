@@ -12,9 +12,9 @@ has_children: false
 
 Thanks from diving deeper! In this part we'll set up the app and get the structure in place. In [Chapter 2](02_user_input.md) we´ll deal with user input, while [Chapter 3](03_layout.md) lays the application out on screen.
 
-## Source code
+## Code
 
-In this setup chapter we'll walk through the following pieces.
+In this chapter we'll walk through the following pieces.
 
 1. Introduce new imports to handle user input
 1. Read the `.txt` file into a `[]string` slice
@@ -43,9 +43,9 @@ What can be going on here? Something with key´s and pointer´s maybe? From the 
 
 Notice how pointer supports both mouse gestures on a desktop, trackpad on a laptop and fingers on a screen. Nice, again an example of how learning a cross-platform framework gives skills on multiple devices.
 
-## Section 2 - Read a speech into a slice
+## Section 2 - Read text into a slice
 
-We default to reading a speech from `speech.txt`. But, as we know, users are crazy and might want other filenames. Or even multiple different speches spread across multiple different files. So we oblige and prepare a command line flag.
+We default to reading the text to be read from `speech.txt`. But, as we know, users are crazy and might want other filenames. So we oblige and prepare a command line flag.
 
 ```go
 // Command line input variables
@@ -62,12 +62,12 @@ var paragraphList []string
 With these to in place we know where to look for a speech and where to place it. Now let´s fire up `main()` and get cracking:
 ```go
 func main() {
-	// Part 1 - Read input from command line
-	filename = flag.String("file", "speech.txt", "Which .txt file shall I present?")
-	flag.Parse()
+  // Step 1 - Read input from command line
+  filename = flag.String("file", "speech.txt", "Which .txt file shall I present?")
+  flag.Parse()
 
-	// Part 2 - Read from file
-	paragraphList = readText(filename)
+  // Step 2 - Read from file
+  paragraphList = readText(filename)
 ```
 
 
@@ -75,22 +75,22 @@ The `readText()` func does what the name suggests, but let's have a look to be s
 
 ```go
 func readText(filename string) []string {
-	f, err := ioutil.ReadFile(filename)
-	text := []string{}
-	if err != nil {
-		log.Fatal("Error when reading file:\n  ", err)
-	}
-	if err == nil {
-		// Convert text to a slice of strings.
-		text = strings.Split(string(f), "\n")
-		// Add extra empty lines a the end. Simple trick to ensure
-		// the last line of the speech scrolls out of the screen
-		for i := 1; i <= 10; i++ {
-			text = append(text, "")
-		}
-	}
+  f, err := ioutil.ReadFile(filename)
+  text := []string{}
+  if err != nil {
+    log.Fatal("Error when reading file:\n  ", err)
+  }
+  if err == nil {
+    // Convert text to a slice of strings.
+    text = strings.Split(string(f), "\n")
+    // Add extra empty lines a the end. Simple trick to ensure
+    // the last line of the speech scrolls out of the screen
+    for i := 1; i <= 10; i++ {
+      text = append(text, "")
+    }
+  }
 
-	return text
+  return text
 }
 ```
 
@@ -105,8 +105,7 @@ We also do a little trick at the end. It felt clunky that a speech didn't full s
 The last part of `main` starts the GUI in a normal manner:
 
 ```go
-  // ... continuing inside main()
-  // Part 3 - Start the GUI
+  // Step 3 - Start the GUI
   go func() {
     // create new window
     w := app.NewWindow(
@@ -143,28 +142,28 @@ There's no one-right-answer on how to do this. Instead, while working with the c
 The user should be able to adjust these while using the program. In other words, we can't have them hard coded as constants, but instead want them as variables so they can, well vary. Although we could spread them across the code, I instead opted to collect them in one place to keep the program tidy. Thus, here's the start of the `draw()`:
 
 ```go
+// The main draw function
 func draw(w *app.Window) error {
-	// y-position for text
-	var scrollY unit.Dp = 0
+  // y-position for text
+  var scrollY unit.Dp = 0
 
-	// y-position for red focusBar
-	var focusBarY unit.Dp = 78
+  // y-position for red focusBar
+  var focusBarY unit.Dp = 78
 
-	// width of text area
-	var textWidth unit.Dp = 550
+  // width of text area
+  var textWidth unit.Dp = 550
 
-	// fontSize
-	var fontSize unit.Sp = 35
+  // fontSize
+  var fontSize unit.Sp = 35
 
-	// Are we auto scrolling?
-	var autoscroll bool = false
-	var autospeed unit.Dp = 1
-
+  // Are we auto scrolling?
+  var autoscroll bool = false
+  var autospeed unit.Dp = 1
 ```
 
-The numerical values are set using `unit.Dp` and `unit.Sp`, the [device independent units](https://pkg.go.dev/gioui.org/unit) that ensure similar size across systems. Note how we also use it for `autospeed`, even though it controls animation speed and not visualization directly. 
+The numerical values are set using `unit.Dp` and `unit.Sp`, the [device independent units](https://pkg.go.dev/gioui.org/unit) that ensure similar size across devices and screen resolutions. Note how we also use it for `autospeed`, even though it controls animation speed and not visualization directly. 
 
-With that, let's look at hot to collect and handle inputs.
+With that, let's look at how to collect and handle inputs.
 
 ---
 
