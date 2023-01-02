@@ -12,12 +12,16 @@ has_children: false
 The goal of this chapter is to listen for and deal with user input.
 
 ## Outline
-Events are the heart of this application. In this chapter we listen for them and take action. In a later chapter we will look at how they are created. Agreed, that's a strange order. However, it is the natural order for the code. And since I prefer reading books from start to finish, I think it makes the most senste to explain code that way as well. 
+Events are the heart of this application. In this chapter we listen for them and take action. In a later chapter we will look at how they are created. Agreed, that's a strange order. However, it is the natural order for the code, and therefore I think it makes the most sense to explain it that way as well. 
 
-We start by listening from general events from the window, then process a queue of events that stem from and control the context of our application. 
+We will listen for two types of events, those from the main application per se, and those from an area of interest we define as a so-called Event Area. 
 
-## Listen for events
-As mentioned earlier, there are quite many inputs here, with various keys as well as scrolling with a mouse or trackpad. In this application, the various changes can affect each other. For example, if `textWdith` increases, more words can be shown per line since there is now space. But if `fontSize` increases too, each word requires more space and therefore fewer words can fit. Luckily for us Gio takes care of the underlying mechanics, but we're in charge of receiving input and telling Gio what to do with them.
+## Code
+
+
+
+### Listen for events
+We start by listening for general events from the window. In our application there are two of these, `system.FrameEvent` which draws a new frame, and `system.DestroyEvent` which ends the program. Afterwards we write code that processes a queue of events that arrive between each time we draw a frame. 
 
 Let's start by walking through the structure of our `draw()` function:
   1. Listen for events in the window using `w.Events()`
@@ -30,7 +34,7 @@ Simplified, the code looks like this:
 // The main draw function
 func draw(w *app.Window) error {
 
-  // Listen for events in the window
+  // Listen for events from the window
   for windowEvent := range w.Events() {
     switch winE := windowEvent.(type) {
 
@@ -46,9 +50,6 @@ func draw(w *app.Window) error {
           // ... process the events depending on their type, such as pointer or key for example
 
 ```
-
-### Comments
-
 1.  **Point no 1**
     - OK, we recognice `draw()`, and also how we go through events from the window using `range w.Events()`. 
     - The `system.FrameEvent` is one such event from the window - the one Gio sends when a new frame needs to be drawn. Fair enough. 
@@ -66,12 +67,16 @@ func draw(w *app.Window) error {
 
     The code example is, by intention, verbose. To make sure it's very clear when we work with events from the window, `windowEvent`, vs when we're working with a `FrameEvent` and its context `gtxEvent`, longer variable names are used. Also, since we use [type switches](https://go.dev/tour/methods/16), which are very handy but also a bit compact, it was helpful to be very explicit with `winE` and `gtxE` to make it as clear as possible. 
 
-    However, this is a bit out of the ordinary. If you read sourcecode from mature applications you will often all event names as `e`, such as `e := range` followed by `e := e.(type)`. That is fine, and we did that when boiling eggs too. However, for this tutorial, it was useful to separate into more explicit variables, which hopefully helps understanding the code the a little easier.
+    However, this is a bit out of the ordinary. If you read sourcecode of mature applications you will often all event names as `e`, such as `e := range` followed by `e := e.(type)`. That's fine, and we did that when boiling eggs too. However, for this tutorial, it was useful to separate into more explicit variables, which hopefully helps understanding the code the a little easier.
 
 
-## Process the event queue
+### Process the event queue
 
-Thanks for sticking with it. Finally though, it's time investigate the core of the event handling. In other words, it's time to process the queue of events inside `FrameEvent`. Here's the structure:
+Finally though, it's time investigate the core of the event handling. In other words, it's time to process the queue of events inside `FrameEvent`. 
+
+As we go through it, you will see that various changes can affect each other. For example, if `textWdith` increases, more words can be shown per line since there is now space. But if `fontSize` increases too, each word requires more space and therefore fewer words can fit. Luckily for us Gio takes care of the underlying mechanics, but we're in charge of receiving input and telling Gio what to do with them.
+
+Here's the structure:
 
 ```go
 case system.FrameEvent:
