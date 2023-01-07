@@ -295,7 +295,7 @@ What's happening here?
 
     Since scrollY is a `unit.Dp`, we cast `gtxE.Scroll.Y` and increment the state variable `scrollY` with it. This will control how far down into the text we should present to the user. To reduce confusion we disallow scrolling to before the start by limiting `scrollY` to minimum 0.
 
-## Closing remarks
+## Comments
 
 Phew, that was a long one. We covered a lot of event handling, but althoug it's fairly long I hope it's still clear. Most important now is to understand the overall structure and how the pieces join together. 
 
@@ -304,3 +304,4 @@ With event *handling* under our belt, we still need to cover how events are *cre
 ---
 
 [Next chapter](03_layout.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/teleprompter){: .btn .fs-5 .mb-4 .mb-md-0 }

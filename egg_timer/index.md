@@ -44,4 +44,4 @@ All the source-code is [available on GitHub](https://github.com/jonegil/gui-with
 ---
 
 [Let's start](01_empty_window.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
-[View it on GitHub](https://github.com/jonegil/gui-with-gio/){: .btn .fs-5 .mb-4 .mb-md-0 }
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }

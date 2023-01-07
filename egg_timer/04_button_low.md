@@ -129,3 +129,4 @@ We've come a long way and have covered a lot of ground. Good work, and thank you
 ---
 
 [Next chapter](05_button_low_refactored.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }

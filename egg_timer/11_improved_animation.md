@@ -232,3 +232,6 @@ We're not going into more detail about the pattern here, but know it exists and 
 Summing it all up, I hope this has shed some more light on the in's and out's of animation in Gio. As so often, it depends what's the best solution. Showcasing a demo to impress? Go for smoothness. Minimizing work? Go for animation in steps. High end vs low end user hardware? Splurge or conserve as you see fit.
 
 Just be conscious about the trade-offs and know some of the techniques that can assist.
+
+---
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }

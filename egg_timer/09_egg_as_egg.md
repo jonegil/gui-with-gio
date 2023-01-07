@@ -96,3 +96,4 @@ We end by returning `layout.Dimensions`, the height of this widget.
 ---
 
 [Next chapter](10_input_boiltime.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }

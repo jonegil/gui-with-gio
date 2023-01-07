@@ -25,6 +25,11 @@ In particular, our app should
 1. A **focus bar** would be nice, helping the user easily read the text. It should be easy to position. 
 1. Gesticulation friendly, i.e. all controls can be done with one hand. We love our Italian friends. 
 
+
+## Outline
+The setup of the app is done in [Chapter 1](01_setup.md). [Chapter 2](02_user_input.md) is where we react to input from the use. [Chapter 3(03_layout.md) lays the application out on screen. Finally in [Chapter 4](04_event_area.md) we go through a useful pattern called an Event Area
+
+
 ---
 
 Ready to get started? Let's (sc)roll!
