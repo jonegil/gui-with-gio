@@ -150,5 +150,5 @@ That´s it. We've got yet another Gio project in our belt, great work!. This one
 Thank you again so much for following the writeup. If you found this useful, share it with a friend, star it on Github or drop me a line. It's really motivating to hear back from you. Good luck with all your projects!
 
 ---
-
+[Next chapter](04_event_area.md){: .btn .fs-5 .mb-4 .mb-md-0 }
 [View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/teleprompter){: .btn .fs-5 .mb-4 .mb-md-0 }

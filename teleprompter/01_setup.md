@@ -169,3 +169,4 @@ With that, let's look at how to collect and handle inputs.
 ---
 
 [Next chapter](02_user_input.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/teleprompter){: .btn .fs-5 .mb-4 .mb-md-0 }
