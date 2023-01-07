@@ -303,5 +303,5 @@ With event *handling* under our belt, we still need to cover how events are *cre
 
 ---
 
-[Next chapter](03_layout.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Next chapter](03_layout.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/teleprompter){: .btn .fs-5 .mb-4 .mb-md-0 }

@@ -101,5 +101,5 @@ Refactoring is a matter of taste, and this is my take on it. If you have differe
 
 ---
 
-[Next chapter](06_button_low_margin.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Next chapter](06_button_low_margin.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }

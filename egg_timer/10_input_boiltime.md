@@ -265,5 +265,5 @@ Now, it's finally time for breakfast. Guess what I'm having.
 
 But wait - there's more. After completing the ten chapters, I got wind of some extra features you might be interested in. Ready?
 
-[Yeah, I've earned the bonus!](11_improved_animation.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Yeah, I've earned the bonus!](11_improved_animation.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }
