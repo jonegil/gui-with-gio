@@ -76,5 +76,5 @@ The [options](https://pkg.go.dev/gioui.org/app#Option) of `app.NewWindow()` are 
 
 ---
 
-[Next chapter](03_button.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Next chapter](03_button.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }

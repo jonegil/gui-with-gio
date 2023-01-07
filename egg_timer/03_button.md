@@ -157,5 +157,5 @@ If you're comfortable with those, you're good.
 
 ---
 
-[Next chapter](04_button_low.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Next chapter](04_button_low.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }
