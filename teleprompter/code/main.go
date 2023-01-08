@@ -213,16 +213,28 @@ func draw(w *app.Window) error {
 			}
 
 			// ---------- LAYOUT ----------
-			// First layout the interface. Afterwards add an eventArea.
-			// Bacground
+			// First we layout the user interface.
+			// Afterwards we add an eventArea.
+			// Let's start with a background color
 			paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
 
-			// Textscroll
+			// ---------- THE SCROLLING TEXT ----------
+			// First, check if we should autoscroll
+			// That's done by increasing the value of scrollY
 			if autoscroll {
 				scrollY = scrollY + autospeed
-				op.InvalidateOp{At: gtx.Now.Add(time.Second / 50)}.Add(&ops)
+				op.InvalidateOp{At: gtx.Now.Add(time.Second * 2 / 100)}.Add(&ops)
+			}
+			// Then we use scrollY to control the distance from the top of the screen to the first element.
+			// We visualize the text using a list where each paragraph is a separate item.
+			var visList = layout.List{
+				Axis: layout.Vertical,
+				Position: layout.Position{
+					Offset: int(scrollY),
+				},
 			}
 
+			// ---------- MARGINS ----------
 			// Margins
 			var marginWidth unit.Dp
 			marginWidth = (unit.Dp(gtx.Constraints.Max.X) - textWidth) / 2
@@ -233,18 +245,7 @@ func draw(w *app.Window) error {
 				Bottom: unit.Dp(0),
 			}
 
-			// ---------- THE SCROLLING TEXT ----------
-			// Visualize the text using a list where each paragraph is a separate item.
-			// Offset is the distance from the top of the screen to the first element.
-			// i.e. it controls how far we have scrolled.
-			var visList = layout.List{
-				Axis: layout.Vertical,
-				Position: layout.Position{
-					Offset: int(scrollY),
-				},
-			}
-
-			// Layout the list inside margins
+			// ---------- LIST WITHIN MARGINS ----------
 			// 1) First the margins ...
 			margins.Layout(gtx,
 				func(gtx C) D {
