@@ -8,40 +8,48 @@ has_children: false
 
 # Chapter 3 - Layout
 
-THIS CHAPTER IS NOT UPDATED
-JAN 2nd 2023
-
 ## Goals
-In this chapter we'll make use of the updated state variables and lay out our program.
+In this chapter we'll make use of the updated state variables and draw our program on screen.
 
 ## Outline
-After processing events, `system.FrameEvent` is also where we lay out and redraw on screen. As we'll get into, it's a nested structure with three main components.
-
+After processing events, `system.FrameEvent` continues with laying out and drawing on screen. It has multiple pieces, but we'll calmly walk through them one by one.
 
 ## Code
 
-### Setup
+### Background 
 
-The setup for rendering provides us the with the building blocks we will need:
-
+We start with coloring the bacground:
 ```go
-// A re-render request?
-case system.FrameEvent:
-  // ops are the operations from the UI
-  var ops op.Ops
-
-  // Graphical context
-  gtx := layout.NewContext(&ops, e)
-
-  // Bacground
+  // ---------- LAYOUT ---------- 
+  // Let's start with a background color
   paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
+```
 
-  // Textscroll
+### Scrolling text
+
+Then we check if we should autoscroll. If so, that's done by incrementing on the Y-axis offset variable `scrollY` which is used to control the [Position](https://pkg.go.dev/gioui.org/layout#Position) of [List](https://pkg.go.dev/gioui.org/layout#List). Using [op.InvalidateOp](https://pkg.go.dev/gioui.org/op#InvalidateOp) to request a redraw in 2/100th of a second creates a smooth animation.
+```go
+  // ---------- THE SCROLLING TEXT ----------
+  // First, check if we should autoscroll
+  // That's done by increasing the value of scrollY
   if autoscroll {
     scrollY = scrollY + autospeed
-    op.InvalidateOp{At: gtx.Now.Add(time.Second / 50)}.Add(&ops)
+    op.InvalidateOp{At: gtx.Now.Add(time.Second * 2 / 100)}.Add(&ops)
+  }
+  // Then we use scrollY to control the distance from the top of the screen to the first element.
+  // We visualize the text using a list where each paragraph is a separate item.
+  var visList = layout.List{
+    Axis: layout.Vertical,
+    Position: layout.Position{
+      Offset: int(scrollY),
+    },
   }
 ```
+
+---
+THE TEXT BELOW NEEDS TO BE REWRITTEN
+JAN 8th
+---
 
 We have identified a `FrameEvent`. First we define `ops`, the list of operations, as well as the graphical context we will work within. The background then is filled with a soothing papyrus-like color. Finally we check if `autoscroll` is activated. If so, we move the starting point for text by a small amount, `autospeed`, and request a redraw in 0.02 seconds. This last part is interesting, effectively setting the framerate of our change. The higher the smoother, but also effectively alter the speed. As you remember, [there are some nuances](../egg_timer/11_improved_animation.md), between `w.Invalidate` and `op.InvalidateOp{}.Add`. Maybe most interesting here is the timing functionality though. Feel free to experiment.
 
