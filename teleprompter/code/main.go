@@ -20,6 +20,7 @@ import (
 	"gioui.org/op"
 	"gioui.org/op/clip"
 	"gioui.org/op/paint"
+	"gioui.org/text"
 	"gioui.org/unit"
 	"gioui.org/widget/material"
 )
@@ -256,7 +257,7 @@ func draw(w *app.Window) error {
 							// One label per paragraph
 							paragraph := material.Label(th, unit.Sp(float32(fontSize)), paragraphList[index])
 							// The text is centered
-							paragraph.Alignment = 2
+							paragraph.Alignment = text.Middle
 							// Return the laid out paragraph
 							return paragraph.Layout(gtx)
 						},
