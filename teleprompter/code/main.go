@@ -269,7 +269,8 @@ func draw(w *app.Window) error {
 			// Draw the transparent red focus bar.
 			focusBar := clip.Rect{
 				Min: image.Pt(0, int(focusBarY)),
-				Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+50)}.Push(&ops)
+				Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+int(unit.Dp(50))),
+			}.Push(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
 			focusBar.Pop()

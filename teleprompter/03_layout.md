@@ -20,30 +20,33 @@ After processing events, `system.FrameEvent` continues with laying out and drawi
 
 We start with coloring the bacground:
 ```go
-  // ---------- LAYOUT ---------- 
-  // Let's start with a background color
-  paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
+// ---------- LAYOUT ---------- 
+// Let's start with a background color
+paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
 ```
 
 ### Scrolling text
 
-Then we check if we should autoscroll. If so, that's done by incrementing on the Y-axis offset variable `scrollY` which is used to control the [Position](https://pkg.go.dev/gioui.org/layout#Position) of [List](https://pkg.go.dev/gioui.org/layout#List). Using [op.InvalidateOp](https://pkg.go.dev/gioui.org/op#InvalidateOp) to request a redraw in 2/100th of a second creates a smooth animation.
+Then we check if we should autoscroll. If yes, we continously increase `scrollY`, used to set the [Position](https://pkg.go.dev/gioui.org/layout#Position) of the [List](https://pkg.go.dev/gioui.org/layout#List). 
+
+We request a redraw in 2/100th of a second by calling [op.InvalidateOp](https://pkg.go.dev/gioui.org/op#InvalidateOp) at a future point in time.
+
 ```go
-  // ---------- THE SCROLLING TEXT ----------
-  // First, check if we should autoscroll
-  // That's done by increasing the value of scrollY
-  if autoscroll {
-    scrollY = scrollY + autospeed
-    op.InvalidateOp{At: gtx.Now.Add(time.Second * 2 / 100)}.Add(&ops)
-  }
-  // Then we use scrollY to control the distance from the top of the screen to the first element.
-  // We visualize the text using a list where each paragraph is a separate item.
-  var visList = layout.List{
-    Axis: layout.Vertical,
-    Position: layout.Position{
-      Offset: int(scrollY),
-    },
-  }
+// ---------- THE SCROLLING TEXT ----------
+// First, check if we should autoscroll
+// That's done by increasing the value of scrollY
+if autoscroll {
+  scrollY = scrollY + autospeed
+  op.InvalidateOp{At: gtx.Now.Add(time.Second * 2 / 100)}.Add(&ops)
+}
+// Then we use scrollY to control the distance from the top of the screen to the first element.
+// We visualize the text using a list where each paragraph is a separate item.
+var visList = layout.List{
+  Axis: layout.Vertical,
+  Position: layout.Position{
+    Offset: int(scrollY),
+  },
+}
 ```
 
 ### Margins
@@ -51,15 +54,15 @@ These are the margins for the text, effectively controlling the empty space on t
 
 ```go
 // ---------- MARGINS ----------
-  // Margins
-  var marginWidth unit.Dp
-  marginWidth = (unit.Dp(gtx.Constraints.Max.X) - textWidth) / 2
-  margins := layout.Inset{
-    Left:   marginWidth,
-    Right:  marginWidth,
-    Top:    unit.Dp(0),
-    Bottom: unit.Dp(0),
-  }
+// Margins
+var marginWidth unit.Dp
+marginWidth = (unit.Dp(gtx.Constraints.Max.X) - textWidth) / 2
+margins := layout.Inset{
+  Left:   marginWidth,
+  Right:  marginWidth,
+  Top:    unit.Dp(0),
+  Bottom: unit.Dp(0),
+}
 ```
 
 
@@ -91,51 +94,37 @@ Now it's time to lay out the list withing a set of margins. That's a nested stru
   )
 ```
 
-By using a list, Gio takes care of only showing the elements currently on screen. Off screen elements are not processed until they are needed, reducing the load on the system and allowing for really long lists. In developing this app I played around with for example [The Complete Works of William Shakespeare](https://www.gutenberg.org/ebooks/100). No problem.
-
----
-THE TEXT BELOW IS NOT UPDATED
----
-
+By using the list widget, Gio takes care of only showing the elements currently on screen. Off screen elements are not processed until they are needed, reducing the load on the system and allowing for really long lists. In developing this app I played around with for example [The Complete Works of William Shakespeare](https://www.gutenberg.org/ebooks/100). No problem.
 
 ### Focusbar
 
-Finally we add a focusbar. This is done in the following steps:
+Finally we add a focusbar. This is the red ribbon that helps the reader keep focus on what needs to be said right now, while at the same time allow more of the speech to be seen around it. 
 
-- Use `op.Offset()` to move to a new Y position, the one defined by our state variable `focusBarY`.
-- From there, create a new rectangle, width = fullscreen and height = 50
-- Color it with transparent red. `A: 0x66` controls the transparency, where 0 means zero visibility (full transparency) and 0xff means full visibility (no transparency).
-- Add the Paint
-
-At the end we complete the FrameEvent by `e.Frame()`.
-
-```go
-// Draw a transparent red rectangle.
-op.Offset(image.Pt(0, focusBarY)).Add(&ops)
-clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Add(&ops)
+```go 
+// ---------- THE FOCUS BAR ----------
+// Draw the transparent red focus bar.
+focusBar := clip.Rect{
+  Min: image.Pt(0, int(focusBarY)),
+  Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+int(unit.Dp(50)),
+}.Push(&ops)
 paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 paint.PaintOp{}.Add(&ops)
-
-// Frame completes the FrameEvent by drawing the graphical operations from ops into the window.
-e.Frame(&ops)
+focusBar.Pop()
 ```
 
-### system.DestroyEvent
+The `focusBar` is simply a rectangle drawn from left (x=0) to right (x=`Max.X`) and from top at `focusBarY` and height of 50 Dp. As with all variables we run them as `unit.Dp`, for device compatability, but cast them to `int` here for the Point.
 
-Finally, just to complete the picture, it's worth mentioning the final event we listen for, namely the `system.DestroyEvent`. It helps us end the program gracefull, returns an `Err` and breaks the `range w.Events()` loop were in to listen for events.
+Once the `focusBar` is pushed to the stack of operations, we add color to it, full Red but transparent.
+`A: 0x66` controls the transparency, where 0 means zero visibility (full transparency) and 0xff means full visibility (no transparency)
+`PaintOp` actually paints it and the focusBar can be popped from the stack.
 
-```go
-// Shutdown?
-case system.DestroyEvent:
-  return e.Err
-}
-```
 
 ## Comments
 
-That´s it. We've got yet another Gio project in our belt, great work!. This one was all about processing input, which we did by listening to events, `key.Event` and `pointer.Event` respectively, and using custom logic to update a set of state variables. Later, in `system.FrameEvent` we used those state variables to control our layout.
+We've completed laying out our application on screen. By using state variables, we control the looks and behaviour of the app, and allow the users commands to actually create changes in the app. 
 
-Thank you again so much for following the writeup. If you found this useful, share it with a friend, star it on Github or drop me a line. It's really motivating to hear back from you. Good luck with all your projects!
+What's missing now is how to actually capture those inputs. So that's exactly what we'll complete in [Chapter 4](04_event_area.md). See you there!
+
 
 ---
 [Next chapter](04_event_area.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }

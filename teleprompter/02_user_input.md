@@ -18,8 +18,6 @@ We will listen for two types of events, those from the main application per se, 
 
 ## Code
 
-
-
 ### Listen for events
 We start by listening for general events from the window. In our application there are two of these, `system.FrameEvent` which draws a new frame, and `system.DestroyEvent` which ends the program. Afterwards we write code that processes a queue of events that arrive between each time we draw a frame. 
 
