@@ -10,7 +10,8 @@ Did you know that Go has a great GUI library called [Gio](https://gioui.org/)? I
 
 [Get started - Time the egg](https://jonegil.github.io/gui-with-gio/egg_timer/)
 
-Once you locked that one in, continue with [a more advanced app](https://jonegil.github.io/gui-with-gio/telepromtper/), a teleprompter, that adds animation and reacts to user input, both keyboard and mouse.
+## And there's more
+The first tutorial will get you started. But if your needs are more advanced, continue with [a more advanced app](https://jonegil.github.io/gui-with-gio/teleprompter/) where we build a Teleprompter that adds animation and reacts to user input, both keyboard shortcut keys and mouse gestures.
 
 ## Background
 
