@@ -9,7 +9,7 @@ has_children: false
 # Chapter 4 - Event Area
 
 ## Goals
-In this chapter we capture user input using a trick we name an `eventArea`.
+In this chapter we capture user input using a technique we'll call an `eventArea`.
 
 ## Outline
 So far we've [set up](01_setup.md) our program, [reacted to user input](02_user_input.md) and [laid out](03_layout.md) our application on screed. The final piece to the puzzle is to actually capture keyboard and mouse input. 
@@ -34,9 +34,9 @@ eventArea := clip.Rect(
 
 We start by creating a **clip area** wihtin where we will listen to events. As we discussed in the [Egg Timer](egg_timer/08_egg_as_circle.md), the role of the Clip ares is to define an area we care about, and we ignore what happens outside. 
 
-In this example we care about the full size of the screen, so naturally the `eventArea` extends from top left to bottom right. This is very useful if you want very precise control over areas that can generate input. 
+In this example we care about the full size of the screen, so naturally the `eventArea` extends from top left to bottom right. This is very useful if you want very precise control over areas that can generate input. If you want to experiment, try changig the constraints of image.Rectangle to, for example `Max: image.Point{300, 300}`. Take a guess what happens then. 
 
-We first create, then `Push()` the clip to the stack. 
+Finally, after first creating `clip.Rect()`, we `Push()` the clip to the stack.
 
 
 ### pointer.InputOp

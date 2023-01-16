@@ -19,6 +19,11 @@ Did you know that Go has a great GUI library called [Gio](https://gioui.org/)? I
 [Get started now](egg_timer/index.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [View it on GitHub](https://github.com/jonegil/gui-with-gio/){: .btn .fs-5 .mb-4 .mb-md-0 }
 
+
+## And there's more
+
+The first tutorial will get you started. But if your needs are more advanced, continue with [a more advanced app](https://jonegil.github.io/gui-with-gio/teleprompter/) where we build a Teleprompter that adds animation and reacts to user input, both keyboard shortcut keys and mouse gestures.
+
 ## Background
 
 Command lines are great and all, but let's face it, 95% of users aren't power users. They want buttons to push, toggles to switch, and then to simply get on with their lives. Enter [Gio](https://gioui.org/), a great toolkit to build stunningly beautiful, lightning fast and flexible interfaces that meet _your_ needs.
