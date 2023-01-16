@@ -116,7 +116,7 @@ winE.Frame(&ops)
 
 ## Comments
 
-Hey, well done! High fives, fist bumps, back slaps and cheers all around. Thanks a lot for staying together on this tour of Gio's event handling. We've covered a lot of ground, but also built a really nifty little app that scales, scrolls, zooms and moves, all at the will of our fingertips. That's pretty neat.
+Thank you so much, and well done my friend! High fives, fist bumps, back slaps and cheers all around. Thanks a lot for staying together on this tour of Gio's event handling. We've covered a lot of ground, but also built a really nifty little app that scales, scrolls, zooms and moves, all at the will of our fingertips. That's pretty neat.
 
 Was this useful, please **star** the repo on Github, or even better, drop me a line. I really love hearing what people build with Gio. 
 
