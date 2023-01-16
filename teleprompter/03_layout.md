@@ -94,7 +94,10 @@ Now it's time to lay out the list withing a set of margins. That's a nested stru
 By using a list, Gio takes care of only showing the elements currently on screen. Off screen elements are not processed until they are needed, reducing the load on the system and allowing for really long lists. In developing this app I played around with for example [The Complete Works of William Shakespeare](https://www.gutenberg.org/ebooks/100). No problem.
 
 ---
+
 THE TEXT BELOW IS NOT UPDATED
+Jan 8th
+
 ---
 
 
