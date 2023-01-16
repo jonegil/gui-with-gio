@@ -18,7 +18,7 @@ We first create a **clip area** where events are to be collected from, and then 
 
 ## Code
 	
-### eventArea
+### eventArea := clip.Rect
 
 ```go	
 // ---------- COLLECT INPUT ----------
@@ -101,6 +101,7 @@ Shift can be included. These inputs are retrieved as `key.Event`. Here too a `Ta
 
 We finally `Pop()` the eventArea from the stack. 
 ```go
+// Finally Pop() the eventArea from the stack
 eventArea.Pop()
 ```
 
@@ -109,6 +110,7 @@ eventArea.Pop()
 We have now completed the full frame and it's time to draw all operations from `&ops` on screen:
 
 ```go
+// Frame completes the FrameEvent 
 winE.Frame(&ops)
 ```
 
