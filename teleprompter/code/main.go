@@ -287,10 +287,9 @@ func draw(w *app.Window) error {
 				},
 			).Push(gtx.Ops)
 
-			// Events are caught when sent from this area. Since GIO is stateless, we must explicitly
-			// tag the area so we can get the correct events later. The tag can effectively be anything,
-			// but to keep it simple with one large eventarea, we use Tag: 0 here, and later gtx.Events(0)
-			// to retrieve them.
+			// Since Gio is stateless we must Tag events, to make sure we know where they came from.
+			// Such a tag can anything really, so we simply use Tag: 0.
+			// Later we retireve these events with gtx.Events(0)
 
 			// 1) We first add a pointer.InputOp to catch scrolling:
 			pointer.InputOp{
