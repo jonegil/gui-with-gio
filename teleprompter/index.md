@@ -27,7 +27,7 @@ In particular, our app should
 
 
 ## Outline
-The setup of the app is done in [Chapter 1](01_setup.md). [Chapter 2](02_user_input.md) is where we react to input from the use. [Chapter 3(03_layout.md) lays the application out on screen. Finally in [Chapter 4](04_event_area.md) we go through a useful pattern called an Event Area
+The setup of the app is done in [Chapter 1](01_setup.md). [Chapter 2](02_user_input.md) is where we react to input from the use. [Chapter 3](03_layout.md) lays the application out on screen. Finally in [Chapter 4](04_event_area.md) we go through a useful pattern called an Event Area
 
 
 ---
