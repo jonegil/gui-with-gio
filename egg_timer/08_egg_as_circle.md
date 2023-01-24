@@ -51,6 +51,7 @@ type Rectangle struct {
 ```
 
 A Point is an X, Y coordinate pair. The axes increase right and down (origin = top left corner). It is neither a pixel nor a grid square. A Point has no intrinsic width, height or color, but the visualizations below use a small colored square.
+
 ![Point](08_image_package_point.png)
 
 ```go
@@ -106,4 +107,5 @@ And finally we return the widget in the form of its `Dimensions`, height: 400.
 
 ---
 
-[Next chapter](09_egg_as_egg.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Next chapter](09_egg_as_egg.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }

@@ -176,4 +176,5 @@ By combining all these building blocks we now have a stateful program we can con
 
 ---
 
-[Next chapter](08_egg_as_circle.md){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Next chapter](08_egg_as_circle.md){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[View it on GitHub](https://github.com/jonegil/gui-with-gio/tree/main/egg_timer){: .btn .fs-5 .mb-4 .mb-md-0 }

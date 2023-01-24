@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"image"
 	"image/color"
 	"io/ioutil"
 	"log"
+	"math"
 	"os"
 	"strings"
 	"time"
@@ -20,6 +20,7 @@ import (
 	"gioui.org/op"
 	"gioui.org/op/clip"
 	"gioui.org/op/paint"
+	"gioui.org/text"
 	"gioui.org/unit"
 	"gioui.org/widget/material"
 )
@@ -34,14 +35,14 @@ var filename *string
 var paragraphList []string
 
 func main() {
-	// Part 1 - Read input from command line
+	// Step 1 - Read input from command line
 	filename = flag.String("file", "speech.txt", "Which .txt file shall I present?")
 	flag.Parse()
 
-	// Part 2 - Read from file
+	// Step 2 - Read from file
 	paragraphList = readText(filename)
 
-	// Part 3 - Start the GUI
+	// Step 3 - Start the GUI
 	go func() {
 		// create new window
 		w := app.NewWindow(
@@ -82,6 +83,7 @@ func readText(filename *string) []string {
 	return text
 }
 
+// The main draw function
 func draw(w *app.Window) error {
 	// y-position for text
 	var scrollY unit.Dp = 0
@@ -105,48 +107,47 @@ func draw(w *app.Window) error {
 	// ops are the operations from the UI
 	var ops op.Ops
 
-	// listen for events in the window.
+	// Listen for events from the window.
 	for windowEvent := range w.Events() {
-		switch e := windowEvent.(type) {
+		switch winE := windowEvent.(type) {
 
-		// Shutdown?
-		case system.DestroyEvent:
-			return e.Err
-
-		// FrameEvent?
+		// Should we draw a new frame?
 		case system.FrameEvent:
-			// Graphical context
-			gtx := layout.NewContext(&ops, e)
 
 			// ---------- Handle input ----------
-			// Since we use the window w as the event routing tag,
-			// we here call gtx.Events(w) to get these events.
+			// Time to deal with inputs since last frame.
+			// Since we use one global eventArea, with Tag: 0
+			// we here call gtx.Events(0) to get these events.
 
-			// To set increment
-			var stepSize unit.Dp = 1
+			gtx := layout.NewContext(&ops, winE)
+			for _, gtxEvent := range gtx.Events(0) {
 
-			for _, gtxEvent := range gtx.Events(w) {
-				switch e := gtxEvent.(type) {
+				// To set how large each change is
+				var stepSize unit.Dp = 1
 
+				switch gtxE := gtxEvent.(type) {
+
+				// Any key
 				case key.EditEvent:
-					e.Text = strings.ToUpper(e.Text)
 					// To increase the fontsize
-					if e.Text == "+" {
+					if gtxE.Text == "+" {
 						fontSize = fontSize + unit.Sp(stepSize)
 					}
 					// To decrease the fontsize
-					if e.Text == "-" {
+					if gtxE.Text == "-" {
 						fontSize = fontSize - unit.Sp(stepSize)
 					}
 
+				// Only specified keys, defined in key.InputOp below
 				case key.Event:
-					// For better controll, we only care about pressing the key down, not releasing it up
-					if e.State.String() == "Press" {
-						if e.Modifiers.String() == "Shift" {
-							stepSize = stepSize * 3
+					// For better control, we only care about pressing the key down, not releasing it up
+					if gtxE.State == key.Press {
+						// Inrease the stepSize when pressing Shift
+						if gtxE.Modifiers == key.ModShift {
+							stepSize = 5
 						}
 						// Start/Stop
-						if e.Name == "Space" {
+						if gtxE.Name == "Space" {
 							autoscroll = !autoscroll
 							if autospeed == 0 {
 								autoscroll = true
@@ -154,23 +155,23 @@ func draw(w *app.Window) error {
 							}
 						}
 						// Scroll up
-						if e.Name == "K" {
+						if gtxE.Name == "K" {
 							scrollY = scrollY - stepSize*4
 							if scrollY < 0 {
 								scrollY = 0
 							}
 						}
 						// Scroll down
-						if e.Name == "J" {
+						if gtxE.Name == "J" {
 							scrollY = scrollY + stepSize*4
 						}
 						// Faster scrollspeed
-						if e.Name == "F" {
+						if gtxE.Name == "F" {
 							autoscroll = true
 							autospeed++
 						}
 						// Slower scrollspeed
-						if e.Name == "S" {
+						if gtxE.Name == "S" {
 							if autospeed > 0 {
 								autospeed--
 							}
@@ -179,58 +180,62 @@ func draw(w *app.Window) error {
 							}
 						}
 						// Wider text to be displayed
-						if e.Name == "W" {
+						if gtxE.Name == "W" {
 							textWidth = textWidth + stepSize*10
 						}
 						// Narrow text to be displayed
-						if e.Name == "N" {
+						if gtxE.Name == "N" {
 							textWidth = textWidth - stepSize*10
 						}
 						// Move the focusBar Up
-						if e.Name == "U" {
+						if gtxE.Name == "U" {
 							focusBarY = focusBarY - stepSize
 						}
 						// Move the focusBar Down
-						if e.Name == "D" {
+						if gtxE.Name == "D" {
 							focusBarY = focusBarY + stepSize
 						}
 					}
 
+				// A mouse event?
 				case pointer.Event:
-					//fmt.Printf("  pointer: %#+v \n", e)
-					if e.Type == pointer.Scroll {
-						if e.Modifiers == key.ModShift {
+					// Are we scrolling?
+					if gtxE.Type == pointer.Scroll {
+						if gtxE.Modifiers == key.ModShift {
 							stepSize = 3
 						}
-						// By how much should the user scroll this time?
-						thisScroll := unit.Dp(e.Scroll.Y)
-
-						// Increment scrollY with that distance
-						scrollY = scrollY + thisScroll*stepSize
+						// Increment scrollY with gtxE.Scroll.Y
+						scrollY = scrollY + unit.Dp(gtxE.Scroll.Y)*stepSize
 						if scrollY < 0 {
 							scrollY = 0
 						}
 					}
-
-				default:
-					fmt.Printf("gtxEvent: %#+v \n", e)
 				}
 			}
 
 			// ---------- LAYOUT ----------
-			// Layout the interface _BEFORE_ you pop the clip area.
-			// This ensures that the clip is logically the ancestor of the layout,
-			// so key events unhandled by the interface will propagate upwards to it.
-
-			// Bacground
+			// First we layout the user interface.
+			// Afterwards we add an eventArea.
+			// Let's start with a background color
 			paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
 
-			// Textscroll
+			// ---------- THE SCROLLING TEXT ----------
+			// First, check if we should autoscroll
+			// That's done by increasing the value of scrollY
 			if autoscroll {
 				scrollY = scrollY + autospeed
-				op.InvalidateOp{At: gtx.Now.Add(time.Second / 50)}.Add(&ops)
+				op.InvalidateOp{At: gtx.Now.Add(time.Second * 2 / 100)}.Add(&ops)
+			}
+			// Then we use scrollY to control the distance from the top of the screen to the first element.
+			// We visualize the text using a list where each paragraph is a separate item.
+			var visList = layout.List{
+				Axis: layout.Vertical,
+				Position: layout.Position{
+					Offset: int(scrollY),
+				},
 			}
 
+			// ---------- MARGINS ----------
 			// Margins
 			var marginWidth unit.Dp
 			marginWidth = (unit.Dp(gtx.Constraints.Max.X) - textWidth) / 2
@@ -241,17 +246,7 @@ func draw(w *app.Window) error {
 				Bottom: unit.Dp(0),
 			}
 
-			// Visualisation of the text, using a list where each paragraph is a separate item.
-			// Offset is the distance from the top of the screen to the first element.
-			// I.e. it controls how far we have scrolled.
-			var visList = layout.List{
-				Axis: layout.Vertical,
-				Position: layout.Position{
-					Offset: int(scrollY),
-				},
-			}
-
-			// Layout the list inside margins
+			// ---------- LIST WITHIN MARGINS ----------
 			// 1) First the margins ...
 			margins.Layout(gtx,
 				func(gtx C) D {
@@ -262,7 +257,7 @@ func draw(w *app.Window) error {
 							// One label per paragraph
 							paragraph := material.Label(th, unit.Sp(float32(fontSize)), paragraphList[index])
 							// The text is centered
-							paragraph.Alignment = 2
+							paragraph.Alignment = text.Middle
 							// Return the laid out paragraph
 							return paragraph.Layout(gtx)
 						},
@@ -271,52 +266,76 @@ func draw(w *app.Window) error {
 			)
 
 			// ---------- THE FOCUS BAR ----------
-			// Draw the transparent red bar.
-			op.Offset(image.Pt(0, int(focusBarY))).Add(&ops)
-			stack := clip.Rect{Max: image.Pt(gtx.Constraints.Max.X, 50)}.Push(&ops)
+			// Draw the transparent red focus bar.
+			focusBar := clip.Rect{
+				Min: image.Pt(0, int(focusBarY)),
+				Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+int(unit.Dp(50))),
+			}.Push(&ops)
 			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
-			stack.Pop()
+			focusBar.Pop()
 
 			// ---------- COLLECT INPUT ----------
-			// Create a clip area the size of the window.
-			// Note the Tag: w, as discussed above
+			// Create an eventArea to collect events. It has the same size as the full windodw.
+			// First we Push() it on the stack, then add code to catch keys and pointers
+			// Finally we Pop() it
+			eventArea := clip.Rect(
+				image.Rectangle{
+					// From top left
+					Min: image.Point{0, 0},
+					// To bottom right
+					Max: image.Point{gtx.Constraints.Max.X, gtx.Constraints.Max.Y},
+				},
+			).Push(gtx.Ops)
 
-			eventArea := clip.Rect(image.Rectangle{Max: gtx.Constraints.Max}).Push(gtx.Ops)
+			// Since Gio is stateless we must Tag events, to make sure we know where they came from.
+			// Such a tag can anything really, so we simply use Tag: 0.
+			// Later we retireve these events with gtx.Events(0)
 
-			// pointer input
+			// 1) We first add a pointer.InputOp to catch scrolling:
 			pointer.InputOp{
 				Types: pointer.Scroll,
-				Tag:   w,
+				Tag:   0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
+				// ScrollBounds sets bounds on scrolling, and we want it to be non-zero.
+				// In practice it seldom reached 100, so [MinInt8,MaxInt8] or [-128,127] should be enough
 				ScrollBounds: image.Rectangle{
 					Min: image.Point{
 						X: 0,
-						Y: -int(unit.Dp(200)),
+						Y: math.MinInt8, //-128
 					},
 					Max: image.Point{
 						X: 0,
-						Y: int(unit.Dp(200)),
+						Y: math.MaxInt8, //+127
 					},
 				},
 			}.Add(gtx.Ops)
 
-			// keyboard focus, needed for general keybaord output, except the ones defined in key.InputOp
+			// 2) Next we add key.FocusOp,
+			// Needed for general keybaord input, except the ones defined explicitly in key.InputOp
+			// These inputs are retrieved as key.EditEvent
 			key.FocusOp{
-				Tag: w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+				Tag: 0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
 			}.Add(gtx.Ops)
 
-			// Specify keys for key.Event
-			// Other keys are caught as key.EditEvent
+			// 3) Finally we add key.InputOp to catch specific keys
+			// (Shift) means an optional Shift
+			// These inputs are retrieved as key.Event
 			key.InputOp{
 				Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
-				Tag:  w, // Use the window as the event routing tag. This means we can call gtx.Events(w) and get these events.
+				Tag:  0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
 			}.Add(gtx.Ops)
 
+			// Finally Pop() the eventArea from the stack
 			eventArea.Pop()
 
 			// ---------- FINALIZE ----------
 			// Frame completes the FrameEvent by drawing the graphical operations from ops into the window.
-			e.Frame(&ops)
+			winE.Frame(&ops)
+
+		// Should we shut down?
+		case system.DestroyEvent:
+			return winE.Err
+
 		}
 	}
 	return nil

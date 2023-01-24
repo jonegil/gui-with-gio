@@ -67,7 +67,12 @@ func loop(w *app.Window) error {
 				func(gtx C, row, col int) D {
 					clk := &clickers[row*sideLength+col]
 					btn := material.Button(th, clk, fmt.Sprintf("R%d C%d", row, col))
-					color := color.NRGBA{R: uint8(float32(255) / float32(sideLength) * float32(row)), G: uint8(255 / sideLength * col), B: uint8(row * col), A: 255}
+					color := color.NRGBA{
+						R: uint8(255 / sideLength * row),
+						G: uint8(255 / sideLength * col),
+						B: uint8(row * col),
+						A: 255,
+					}
 					btn.Background = color
 					return btn.Layout(gtx)
 				})
@@ -76,57 +81,3 @@ func loop(w *app.Window) error {
 		}
 	}
 }
-
-/*
-type Square struct {
-	pressed bool
-	hovered bool
-	color   color.NRGBA
-}
-
-func (s *Square) Layout(gtx C) D {
-	// here we loop through all the events associated with this button.
-	for _, e := range gtx.Events(s) {
-		if e, ok := e.(pointer.Event); ok {
-			switch e.Type {
-			case pointer.Press:
-				s.pressed = true
-			case pointer.Release:
-				s.pressed = false
-			case pointer.Enter:
-				s.hovered = true
-			case pointer.Leave:
-				s.hovered = false
-			}
-		}
-	}
-	// Draw the button.
-	//s.color = color.NRGBA{R: 0x80, A: 0xFF}
-	if s.pressed {
-		s.color.G = 0x80
-	}
-	if s.hovered {
-		s.color.B = 0x80
-	}
-
-	return s.draw(gtx.Ops)
-}
-
-func (s *Square) draw(ops *op.Ops) D {
-	/*defer clip.Rect{Max: image.Pt(cellSize, cellSize)}.Push(ops).Pop()
-	paint.ColorOp{Color: s.color}.Add(ops)
-	paint.PaintOp{}.Add(ops)
-
-	// Define the area for pointer events.
-	area := clip.Rect(image.Rect(0, 0, cellSize, cellSize)).Push(ops)
-	fmt.Println(s)
-	pointer.InputOp{
-		Tag:   s,
-		Types: pointer.Press | pointer.Release | pointer.Enter | pointer.Leave,
-	}.Add(ops)
-	area.Pop()
-
-
-	return D{Size: image.Pt(cellSize, cellSize)}
-}
-*/
