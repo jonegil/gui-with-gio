@@ -145,7 +145,7 @@ Later we pick up from the channel, with this code inside `draw(w *app.window)`:
 
 ```
 
-In previous chapters, we ranged over events using `for e := range w.Events()`. Here we insted use a for-loop with a [select](https://tour.golang.org/concurrency/5) inside. This is a concurrency feature of go, where `select` waits patiently for an event that one of its `case` statement can run.
+In previous chapters, we ranged over events using `for e := range w.Events()`. Here we instead use a for-loop with a [select](https://tour.golang.org/concurrency/5) inside. This is a concurrency feature of go, where `select` waits patiently for an event that one of its `case` statement can run.
 
 - The event can either stem from the window, and if so we extract it using `e := <- w.Events()`.
 - Or, the event comes from the progress-pulse, and we get it from `p := <- progressIncrementer `
