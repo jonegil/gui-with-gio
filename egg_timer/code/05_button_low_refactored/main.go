@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"gioui.org/app"
-	"gioui.org/font/gofont"
 	"gioui.org/io/system"
 	"gioui.org/layout"
 	"gioui.org/op"
@@ -41,7 +40,7 @@ func draw(w *app.Window) error {
 	var startButton widget.Clickable
 
 	// th defines the material design style
-	th := material.NewTheme(gofont.Collection())
+	th := material.NewTheme()
 
 	// listen for events in the window.
 	for e := range w.Events() {

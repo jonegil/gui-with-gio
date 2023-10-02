@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"gioui.org/app"
-	"gioui.org/font/gofont"
 	"gioui.org/io/key"
 	"gioui.org/io/pointer"
 	"gioui.org/io/system"
@@ -102,7 +101,7 @@ func draw(w *app.Window) error {
 	var autospeed unit.Dp = 1
 
 	// th defines the material design style
-	th := material.NewTheme(gofont.Collection())
+	th := material.NewTheme()
 
 	// ops are the operations from the UI
 	var ops op.Ops

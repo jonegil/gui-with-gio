@@ -13,7 +13,6 @@ import (
 
 	"gioui.org/app"
 	"gioui.org/f32"
-	"gioui.org/font/gofont"
 	"gioui.org/io/system"
 	"gioui.org/layout"
 	"gioui.org/op"
@@ -72,7 +71,7 @@ func draw(w *app.Window) error {
 	var boilDuration float32
 
 	// th defines the material design style
-	th := material.NewTheme(gofont.Collection())
+	th := material.NewTheme()
 
 	for {
 		select {

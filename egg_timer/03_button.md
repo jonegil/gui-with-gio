@@ -33,7 +33,6 @@ import (
   "os"
 
   "gioui.org/app"
-  "gioui.org/font/gofont"
   "gioui.org/io/system"
   "gioui.org/layout"
   "gioui.org/op"
@@ -46,8 +45,6 @@ import (
 ### Comments
 
 `os`, `app` and `unit` we know before, but the rest are new:
-
-- [font/gofont](https://pkg.go.dev/gioui.org/font/gofont) - Did you know Go has it's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
 
 - [io/system](https://pkg.go.dev/gioui.org/io/system) - Provides high-level events that are sent from the window. Most important is the `system.FrameEvent` which requests a new frame. The new frame is defined through a list of operations. The operations detail *what* to display and *how* to handle input. What and how. That's it.
 
@@ -90,7 +87,7 @@ func main() {
     var startButton widget.Clickable
 
     // th defines the material design style
-    th := material.NewTheme(gofont.Collection())
+    th := material.NewTheme()
 
     // listen for events in the window.
     for e := range w.Events() {
@@ -124,7 +121,10 @@ func main() {
 
 - `startButton` is our button, a clickable widget.
 
-- `th` is the material theme, and sets the fonts to be gofonts
+- `th` is the material theme.
+    -  Update in Gio 0.2 July 2023:
+        - Gio now defaults to system fonts. This is great, one less thing to remember. However, should you want to flex your font skills, read the [July 2023 newsletter](https://gioui.org/news/2023-07).
+        - Also you may want to learn about Go's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
 
 1. The `for e:= range w.Events() ` loop is more interesting:
    - `w.Events()` gets us the _channel_ through which events are delivered. We simply listen to this channel forever.
