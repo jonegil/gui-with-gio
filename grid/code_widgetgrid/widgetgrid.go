@@ -51,16 +51,18 @@ func draw(w *app.Window) error {
 	}
 
 	for {
-		e := <-w.Events()
-		switch e := e.(type) {
+
+		windowevent := <-w.Events()
+		switch e := windowevent.(type) {
 		case system.DestroyEvent:
 			return e.Err
+
 		case system.FrameEvent:
 			gtx := layout.NewContext(&ops, e)
 
-			for i, clk := range clickers {
-				if clk.Clicked() {
-					fmt.Println("You clicked button %d", i)
+			for i := range clickers {
+				if clickers[i].Clicked() {
+					fmt.Println("You clicked button", i)
 				}
 			}
 
@@ -74,10 +76,11 @@ func draw(w *app.Window) error {
 					color := color.NRGBA{
 						R: uint8(255 / sideLength * row),
 						G: uint8(255 / sideLength * col),
-						B: uint8(row * col),
+						B: uint8(255 * row * col / (sideLength * sideLength)),
 						A: 255,
 					}
 					btn.Background = color
+					btn.CornerRadius = 0
 					return btn.Layout(gtx)
 				})
 
