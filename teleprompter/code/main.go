@@ -4,7 +4,6 @@ import (
 	"flag"
 	"image"
 	"image/color"
-	"io/ioutil"
 	"log"
 	"math"
 	"os"
@@ -59,7 +58,7 @@ func main() {
 }
 
 func readText(filename *string) []string {
-	f, err := ioutil.ReadFile(*filename)
+	f, err := os.ReadFile(*filename)
 	text := []string{}
 	if err != nil {
 		log.Fatal("Error when reading file:\n  ", err)
@@ -237,7 +236,7 @@ func draw(w *app.Window) error {
 			// ---------- MARGINS ----------
 			// Margins
 			var marginWidth unit.Dp
-			marginWidth = (unit.Dp(gtx.Constraints.Max.X) - textWidth) / 2
+			marginWidth = (unit.Dp(gtx.Constraints.Max.X) - textWidth) / 3
 			margins := layout.Inset{
 				Left:   marginWidth,
 				Right:  marginWidth,

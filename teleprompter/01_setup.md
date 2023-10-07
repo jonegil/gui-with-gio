@@ -76,7 +76,7 @@ The `readText()` func does what the name suggests, but let's have a look to be s
 
 ```go
 func readText(filename string) []string {
-  f, err := ioutil.ReadFile(filename)
+  f, err := os.ReadFile(filename)
   text := []string{}
   if err != nil {
     log.Fatal("Error when reading file:\n  ", err)
