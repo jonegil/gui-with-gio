@@ -87,7 +87,7 @@ func draw(w *app.Window) error {
 	var scrollY unit.Dp = 0
 
 	// y-position for red focusBar
-	var focusBarY unit.Dp = 78
+	var focusBarY unit.Dp = 170
 
 	// width of text area
 	var textWidth unit.Dp = 550
