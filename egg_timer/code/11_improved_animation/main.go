@@ -242,7 +242,7 @@ func draw(w *app.Window) error {
 				return e.Err
 			}
 
-			// listen for events in the incrementor channel
+		// listen for events in the incrementor channel
 		case <-progressIncrementer:
 			// increase progress if still boiling
 			if boiling && progress < 1 {
@@ -251,7 +251,7 @@ func draw(w *app.Window) error {
 				if progress >= 1 {
 					progress = 1
 				}
-				// Try uncommenting this (and commenting op.InvalidateOp{}.Add() on line 202) to compare performance.
+				// Try uncommenting this (and commenting op.InvalidateOp{}.Add() on line 201) to compare performance.
 				//w.Invalidate()
 			}
 		}
