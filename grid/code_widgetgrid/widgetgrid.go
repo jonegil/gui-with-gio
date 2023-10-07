@@ -1,8 +1,4 @@
-// SPDX-License-Identifier: Unlicense OR MIT
-
 package main
-
-// A simple Gio program. See https://gioui.org for more information.
 
 import (
 	"fmt"
@@ -22,8 +18,11 @@ import (
 
 func main() {
 	go func() {
-		w := app.NewWindow()
-		if err := loop(w); err != nil {
+		w := app.NewWindow(
+			app.Title("Grid example - a grid of wdigets"),
+			app.Size(unit.Dp(810), unit.Dp(810)),
+		)
+		if err := draw(w); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
@@ -39,7 +38,7 @@ type (
 	D = layout.Dimensions
 )
 
-func loop(w *app.Window) error {
+func draw(w *app.Window) error {
 	th := material.NewTheme()
 	var (
 		ops  op.Ops
@@ -58,6 +57,12 @@ func loop(w *app.Window) error {
 			return e.Err
 		case system.FrameEvent:
 			gtx := layout.NewContext(&ops, e)
+
+			for i, clk := range clickers {
+				if clk.Clicked() {
+					fmt.Println("You clicked button %d", i)
+				}
+			}
 
 			component.Grid(th, &grid).Layout(gtx, sideLength, sideLength,
 				func(axis layout.Axis, index, constraint int) int {
