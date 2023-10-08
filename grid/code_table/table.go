@@ -11,6 +11,7 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"time"
 
 	"gioui.org/app"
 	"gioui.org/font"
@@ -34,13 +35,19 @@ var simulate *bool
 func main() {
 	// Step 1 - Read input from command line
 	filename = flag.String("file", "example.csv", "Which .csv file shall I present? ")
-	simulate = flag.Bool("simulate", false, "or should I simulate 1 million random rows")
+	simulate = flag.Bool("simulate", false, "or should I simulate 1 million rows of random data every second")
 	flag.Parse()
 
 	// Step 2 - Read from file
 	dataset := []data{}
 	if *simulate {
 		dataset = simulateData(1e6)
+		go func() {
+			for {
+				dataset = simulateData(1e6)
+				time.Sleep(time.Second)
+			}
+		}()
 	} else {
 		dataset = readCSV(filename)
 	}
@@ -49,9 +56,9 @@ func main() {
 	go func() {
 		w := app.NewWindow(
 			app.Title("Gio example - Table"),
-			app.Size(unit.Dp(800), unit.Dp(600)),
+			app.Size(unit.Dp(1200), unit.Dp(350)),
 		)
-		if err := draw(w, dataset); err != nil {
+		if err := draw(w, &dataset); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
@@ -163,7 +170,7 @@ var colNeg = color.NRGBA{0xff, 0x68, 0x59, 255} //rally orange
 var colWhite = color.NRGBA{255, 255, 255, 255}
 var colBlack = color.NRGBA{18, 18, 18, 255}
 
-func draw(w *app.Window, dataset []data) error {
+func draw(w *app.Window, dataset *[]data) error {
 	th := material.NewTheme()
 	var (
 		ops  op.Ops
@@ -172,63 +179,62 @@ func draw(w *app.Window, dataset []data) error {
 
 	// -- PART 1 -- Convert the dataset to maps for the grid
 
-	// Convert dataset to a grid of cells, and also add sums
-	cells := map[string]map[string]float64{}
-	rowNames := []string{}
-	colNames := []string{}
-	rowSums := map[string]float64{}
-	colSums := map[string]float64{}
-	totSum := 0.0
-
-	// Iterate through the whole dataset
-	for _, d := range dataset {
-		// Collect names
-		if !slices.Contains(rowNames, d.rowName) {
-			rowNames = append(rowNames, d.rowName)
-		}
-		if !slices.Contains(colNames, d.colName) {
-			colNames = append(colNames, d.colName)
-		}
-		// build and populate the 2d grid
-		var ok bool
-		if _, ok = cells[d.rowName]; !ok {
-			// Create the first map
-			cells[d.rowName] = map[string]float64{}
-		}
-		if _, ok = cells[d.rowName][d.colName]; !ok {
-			// Create the second map
-			cells[d.rowName][d.colName] = 0
-		}
-		// Calcualte the cell value
-		cells[d.rowName][d.colName] += d.value
-		// Callculate rowSums and colSums
-		rowSums[d.rowName] += d.value
-		colSums[d.colName] += d.value
-		totSum += d.value
-	}
-
-	// Add rowSums and colSums to the datasets
-	for _, v := range rowNames {
-		cells[v]["Total"] = rowSums[v]
-	}
-	for _, v := range colNames {
-		if _, ok := cells["Total"]; !ok {
-			cells["Total"] = map[string]float64{}
-		}
-		cells["Total"][v] = colSums[v]
-	}
-	cells["Total"]["Total"] = totSum
-
-	// Append Total to rowNames and colNames
-	rowNames = append(rowNames, "Total")
-	colNames = append(colNames, "Total")
-
-	// -- PART 2 -- Visualize the grid
-
-	// Used for thousand separator
-	printer := message.NewPrinter(language.English)
-
 	for {
+		// Convert dataset to a grid of cells, and also add sums
+		cells := map[string]map[string]float64{}
+		rowNames := []string{}
+		colNames := []string{}
+		rowSums := map[string]float64{}
+		colSums := map[string]float64{}
+		totSum := 0.0
+
+		// Iterate through the whole dataset
+		for _, d := range *dataset {
+			// Collect names
+			if !slices.Contains(rowNames, d.rowName) {
+				rowNames = append(rowNames, d.rowName)
+			}
+			if !slices.Contains(colNames, d.colName) {
+				colNames = append(colNames, d.colName)
+			}
+			// build and populate the 2d grid
+			var ok bool
+			if _, ok = cells[d.rowName]; !ok {
+				// Create the first map
+				cells[d.rowName] = map[string]float64{}
+			}
+			if _, ok = cells[d.rowName][d.colName]; !ok {
+				// Create the second map
+				cells[d.rowName][d.colName] = 0
+			}
+			// Calcualte the cell value
+			cells[d.rowName][d.colName] += d.value
+			// Callculate rowSums and colSums
+			rowSums[d.rowName] += d.value
+			colSums[d.colName] += d.value
+			totSum += d.value
+		}
+
+		// Add rowSums and colSums to the datasets
+		for _, v := range rowNames {
+			cells[v]["Total"] = rowSums[v]
+		}
+		for _, v := range colNames {
+			if _, ok := cells["Total"]; !ok {
+				cells["Total"] = map[string]float64{}
+			}
+			cells["Total"][v] = colSums[v]
+		}
+		cells["Total"]["Total"] = totSum
+
+		// Append Total to rowNames and colNames
+		rowNames = append(rowNames, "Total")
+		colNames = append(colNames, "Total")
+
+		// -- PART 2 -- Visualize the grid
+
+		// Used for thousand separator
+		printer := message.NewPrinter(language.English)
 
 		windowevent := <-w.Events()
 		switch e := windowevent.(type) {
@@ -335,7 +341,9 @@ func draw(w *app.Window, dataset []data) error {
 				},
 			)
 
+			op.InvalidateOp{At: gtx.Now.Add(time.Second / 10)}.Add(&ops)
 			e.Frame(gtx.Ops)
 		}
+
 	}
 }
