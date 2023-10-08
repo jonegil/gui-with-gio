@@ -19,7 +19,7 @@ import (
 func main() {
 	go func() {
 		w := app.NewWindow(
-			app.Title("Grid example - A grid of wdigets"),
+			app.Title("Grid example - A grid of widgets"),
 			app.Size(unit.Dp(810), unit.Dp(810)),
 		)
 		if err := draw(w); err != nil {
