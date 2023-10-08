@@ -31,7 +31,7 @@ func main() {
 }
 
 const sideLength int = 8
-const cellSize int = 100
+const cellSize int = 90
 
 type (
 	C = layout.Context
