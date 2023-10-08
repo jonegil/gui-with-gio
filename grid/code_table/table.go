@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cmp"
 	"encoding/csv"
 	"flag"
 	"image"
@@ -137,6 +138,16 @@ func simulateData(n int) []data {
 		}
 		dataset = append(dataset, d)
 	}
+
+	// Sort the data by rowName and colName
+	slices.SortFunc(dataset, func(a, b data) int {
+		// sort by rowName
+		if n := cmp.Compare(a.rowName, b.rowName); n != 0 {
+			return n
+		}
+		// if rowname is equal, sort by colName
+		return cmp.Compare(a.colName, b.colName)
+	})
 
 	return (dataset)
 
