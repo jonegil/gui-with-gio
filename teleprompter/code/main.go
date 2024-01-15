@@ -149,7 +149,7 @@ func draw(w *app.Window) error {
 							autoscroll = !autoscroll
 							if autospeed == 0 {
 								autoscroll = true
-								autospeed++
+								autospeed = 1
 							}
 						}
 						// Scroll up
@@ -166,12 +166,12 @@ func draw(w *app.Window) error {
 						// Faster scrollspeed
 						if gtxE.Name == "F" {
 							autoscroll = true
-							autospeed++
+							autospeed += stepSize
 						}
 						// Slower scrollspeed
 						if gtxE.Name == "S" {
 							if autospeed > 0 {
-								autospeed--
+								autospeed -= stepSize
 							}
 							if autospeed == 0 {
 								autoscroll = false
@@ -221,6 +221,9 @@ func draw(w *app.Window) error {
 			// First, check if we should autoscroll
 			// That's done by increasing the value of scrollY
 			if autoscroll {
+				if autospeed < 0 {
+					autospeed = 0
+				}
 				scrollY = scrollY + autospeed
 				op.InvalidateOp{At: gtx.Now.Add(time.Second * 2 / 100)}.Add(&ops)
 			}
