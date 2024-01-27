@@ -157,7 +157,6 @@ func simulateData(n int) []data {
 	})
 
 	return (dataset)
-
 }
 
 type (
@@ -231,11 +230,10 @@ func draw(w *app.Window, dataset *[]data) error {
 		rowNames = append(rowNames, "Total")
 		colNames = append(colNames, "Total")
 
-		// -- PART 2 -- Visualize the grid
-
 		// Used for thousand separator
 		printer := message.NewPrinter(language.English)
 
+		// -- PART 2 -- Visualize the grid
 		windowevent := <-w.Events()
 		switch e := windowevent.(type) {
 		case system.DestroyEvent:
