@@ -58,4 +58,6 @@ Come along for the ride!
 
 I really like Gio, I like the people behind it, I sponsor it financially and I want it to succeed. But I´m by no means an expert. My goal is simply to share what I've learned in the hope that you find it useful. Hope that works.
 
+Also note that Gio is moving fast and not all writeups are updated immediately. Issues and PRs are welcome.
+
 Cheers!
