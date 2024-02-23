@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 5 - Low button refactored
 
+Updated February 23rd 2024
+
 ## Goals
 
 The intent of this section is to organize the code better.
@@ -71,29 +73,27 @@ A simplified version of `draw( )` shows the structure.
 func draw(w *app.Window) error {
     // ...
 
-  // listen for events in the window.
-  for e := range w.Events() {
+    // listen for events in the window.
+    for {
+        // detect what type of event
+        switch e := w.NextEvent().(type) {
 
-    // detect what type of event
-    switch e := e.(type) {
+        // this is sent when the application should re-render.
+        case app.FrameEvent:
+            // ...
 
-    // this is sent when the application should re-render.
-    case system.FrameEvent:
-        // ...
-
-        // this is sent when the application is closed.
-    case system.DestroyEvent:
-      return e.Err
+        // this is sent when the application is closed
+        case app.DestroyEvent:
+            return e.Err
+        }
     }
-  }
-  return nil
 }
 ```
 
-As before we range through `w.Events()`, detecting their type.
+As before examine all events. But since all we really care about is the type, let's simplify to `e: = w.NextEvent().(type)`, to detect the type.
 
-- `system.FrameEvent` is handled as before,
-- we add a new case for `system.DestroyEvent`, which returns _nil_ for normal window closures, but _Err_ if something else is the cause.
+- `app.FrameEvent` is handled as before,
+- we tidy the case for `app.DestroyEvent`, which returns _nil_ for normal window closures, but _Err_ if something else is the cause. The draw function should only inform what's been detected, not call the `os` directly.
 
 ## Comments
 

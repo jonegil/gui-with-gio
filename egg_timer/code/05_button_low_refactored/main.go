@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"gioui.org/app"
-	"gioui.org/io/system"
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/unit"
@@ -42,15 +41,14 @@ func draw(w *app.Window) error {
 	// th defines the material design style
 	th := material.NewTheme()
 
-	// listen for events in the window.
-	for e := range w.Events() {
-
+	// listen for events in the window
+	for {
 		// detect what type of event
-		switch e := e.(type) {
+		switch e := w.NextEvent().(type) {
 
 		// this is sent when the application should re-render.
-		case system.FrameEvent:
-			gtx := layout.NewContext(&ops, e)
+		case app.FrameEvent:
+			gtx := app.NewContext(&ops, e)
 			// Let's try out the flexbox layout concept
 			layout.Flex{
 				// Vertical alignment, from top to bottom
@@ -74,10 +72,9 @@ func draw(w *app.Window) error {
 			)
 			e.Frame(gtx.Ops)
 
-		// this is sent when the application is closed.
-		case system.DestroyEvent:
+		// this is sent when the application is closed
+		case app.DestroyEvent:
 			return e.Err
 		}
 	}
-	return nil
 }
