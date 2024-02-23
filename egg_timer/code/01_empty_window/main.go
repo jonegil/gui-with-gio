@@ -9,8 +9,9 @@ func main() {
 		// create new window
 		w := app.NewWindow()
 
-		// listen for events in the window.
-		for range w.Events() {
+		// listen for events in the window
+		for {
+			w.NextEvent()
 		}
 	}()
 	app.Main()

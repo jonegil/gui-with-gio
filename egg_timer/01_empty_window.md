@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 1 - An empty window
 
+Updated Feb 23rd 2024
+
 ## Goals
 
 The intent of this section is to create a blank canvas that we later can draw upon.
@@ -31,20 +33,22 @@ That's it! Let's look at the code:
 package main
 
 import (
-  "gioui.org/app"
+    "gioui.org/app"
 )
 
 func main() {
-  go func() {
-    // create new window
-    w := app.NewWindow()
+    go func() {
+        // create new window
+        w := app.NewWindow()
 
-    // listen for events in the window.
-    for range w.Events() {
-    }
-  }()
-  app.Main()
+        // listen for events in the window
+        for {
+            w.NextEvent()
+        }
+    }()
+    app.Main()
 }
+
 ```
 
 ## Comments
@@ -65,7 +69,7 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
 
 2.  The **event loop** in the goroutine
 
-    - The event loop is the `for range w.Events()` loop that listens for events in the window. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
+    - The event loop is the `for { w.NextEvent() }` loop that listens for events in the window. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
 
       From [app.main](https://pkg.go.dev/gioui.org/app#hdr-Main) we learn:
 
