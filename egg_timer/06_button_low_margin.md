@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 6 - Low button with margin
 
+Updated February 23rd 2024
+
 ## Goals
 
 The intent of this chapter is to add open space around all sides of the button.
@@ -77,11 +79,11 @@ Here, margins are given as **D**evice independent **p**ixels, [unit.Dp](https://
 
 ## Code - details
 
-To wrap it all up, here's the code for the whole `system.FrameEvent`
+To wrap it all up, here's the code for the whole `app.FrameEvent`
 
 ```go
-case system.FrameEvent:
-    gtx := layout.NewContext(&ops, e)
+case app.FrameEvent:
+    gtx := app.NewContext(&ops, e)
     // Let's try out the flexbox layout concept
     layout.Flex{
         // Vertical alignment, from top to bottom
@@ -100,7 +102,7 @@ case system.FrameEvent:
                 }
                 // TWO: ... then we lay out those margins ...
                 return margins.Layout(gtx,
-                    // THREE: ... and finally within the margins, we define and lay out the button
+                    // THREE: ... and finally within the margins, we ddefine and lay out the button
                     func(gtx C) D {
                         btn := material.Button(th, &startButton, "Start")
                         return btn.Layout(gtx)
