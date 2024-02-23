@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 1 - An empty window
 
-Updated Feb 23rd 2024
+Updated February 23rd 2024
 
 ## Goals
 

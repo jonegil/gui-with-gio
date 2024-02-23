@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"gioui.org/app"
-	"gioui.org/io/system"
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/unit"
@@ -30,14 +29,15 @@ func main() {
 		th := material.NewTheme()
 
 		// listen for events in the window.
-		for e := range w.Events() {
+		for {
+			evt := w.NextEvent()
 
 			// detect what type of event
-			switch e := e.(type) {
+			switch typ := evt.(type) {
 
 			// this is sent when the application should re-render.
-			case system.FrameEvent:
-				gtx := layout.NewContext(&ops, e)
+			case app.FrameEvent:
+				gtx := app.NewContext(&ops, typ)
 				// Let's try out the flexbox layout:
 				layout.Flex{
 					// Vertical alignment, from top to bottom
@@ -59,10 +59,12 @@ func main() {
 						layout.Spacer{Height: unit.Dp(25)}.Layout,
 					),
 				)
-				e.Frame(gtx.Ops)
+				typ.Frame(gtx.Ops)
+
+			case app.DestroyEvent:
+				os.Exit(0)
 			}
 		}
-		os.Exit(0)
 	}()
 	app.Main()
 }

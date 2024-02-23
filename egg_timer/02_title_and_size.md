@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 2 - Title and size
 
-Updated Feb 23rd 2024
+Updated February 23rd 2024
 
 ## Goals
 

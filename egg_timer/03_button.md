@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 3 - Button
 
-Updated Feb 23 2024
+Updated Feb ruary 23rd 2024
 
 ## Goals
 

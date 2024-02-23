@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 4 - Low button
 
+Updated February 23rd 2024
+
 ## Goals
 
 The button can't fill the screen, obviously. So let's move the button to the bottom. To do that we start using the layout concept known as [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex).
@@ -71,9 +73,9 @@ OK, that was the high level. Now it's time to dive deep. Let's look at the whole
 ### Code
 
 ```go
-case system.FrameEvent:
-    gtx := layout.NewContext(&ops, e)
-    // Let's try out the flexbox layout concept:
+case app.FrameEvent:
+    gtx := app.NewContext(&ops, typ)
+    // Let's try out the flexbox layout:
     layout.Flex{
         // Vertical alignment, from top to bottom
         Axis: layout.Vertical,
@@ -81,20 +83,20 @@ case system.FrameEvent:
         Spacing: layout.SpaceStart,
     }.Layout(gtx,
         // We insert two rigid elements:
-        // First a button ...
+        // First one to hold a button ...
         layout.Rigid(
             func(gtx layout.Context) layout.Dimensions {
                 btn := material.Button(th, &startButton, "Start")
                 return btn.Layout(gtx)
             },
         ),
-        // ... then an empty spacer
+        // ... then one to hold an empty spacer
         layout.Rigid(
             // The height of the spacer is 25 Device independent pixels
             layout.Spacer{Height: unit.Dp(25)}.Layout,
         ),
     )
-    e.Frame(gtx.Ops)
+    typ.Frame(gtx.Ops)
 ```
 
 ### Comments
