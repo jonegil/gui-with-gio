@@ -15,8 +15,9 @@ func main() {
 			app.Size(unit.Dp(400), unit.Dp(600)),
 		)
 
-		// listen for events in the window.
-		for range w.Events() {
+		// listen for events in the window
+		for {
+			w.NextEvent()
 		}
 		os.Exit(0)
 	}()
