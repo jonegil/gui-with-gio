@@ -69,7 +69,8 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
 
 2.  The **event loop** in the goroutine
 
-    - The event loop is the `for { w.NextEvent() }` loop that listens for events in the window. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
+    - The event loop is the `for { w.NextEvent() }` loop.
+      As described in the docs, [w.NextEvent](https://pkg.go.dev/gioui.org/app#Window.NextEvent) simply _blocks until an event is received from the window_. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
 
       From [app.main](https://pkg.go.dev/gioui.org/app#hdr-Main) we learn:
 

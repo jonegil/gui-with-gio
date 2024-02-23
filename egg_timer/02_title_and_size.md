@@ -47,7 +47,6 @@ func main() {
     for {
         w.NextEvent()
     }
-    os.Exit(0)
   }()
   app.Main()
 }
@@ -55,7 +54,7 @@ func main() {
 
 ## Comments
 
-Where chapter 1 was the absolute bare minimum to open a window, we want to make some improvements here. One helps us ensure clean exits, so we import `os` and add a line with [os.Exit()](https://pkg.go.dev/os?utm_source=gopls#Exit) after the event loop. The convention is that zero indicates success, later logic can be added to send other values.
+Where chapter 1 was the absolute bare minimum to open a window, we want to make some improvements here.
 
 [gioui.org/unit](https://pkg.go.dev/gioui.org/unit) implements device independent units and values. The docs describe a handful of alternatives:
 

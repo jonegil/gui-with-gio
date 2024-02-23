@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 3 - Button
 
+Updated Feb 23 2024
+
 ## Goals
 
 The intent of this section is to add a button. Not only can we click it, but it will have a nice hover and click animations.
@@ -30,25 +32,19 @@ To make things tidy, let's discuss imports first, then the main function later.
 
 ```go
 import (
-  "os"
+    "os"
 
-  "gioui.org/app"
-  "gioui.org/io/system"
-  "gioui.org/layout"
-  "gioui.org/op"
-  "gioui.org/unit"
-  "gioui.org/widget"
-  "gioui.org/widget/material"
+    "gioui.org/app"
+    "gioui.org/op"
+    "gioui.org/unit"
+    "gioui.org/widget"
+    "gioui.org/widget/material"
 )
 ```
 
 ### Comments
 
-`os`, `app` and `unit` we know before, but the rest are new:
-
-- [io/system](https://pkg.go.dev/gioui.org/io/system) - Provides high-level events that are sent from the window. Most important is the `system.FrameEvent` which requests a new frame. The new frame is defined through a list of operations. The operations detail *what* to display and *how* to handle input. What and how. That's it.
-
-- [layout](https://pkg.go.dev/gioui.org/layout) - Defines useful parts of a layout, such as _dimensions_, _constraints_ and _directions_. Also, it includes the layout-concept known as [Flexbox](https://pkg.go.dev/gioui.org/layout#Flex). It's widely used web and user interface development. Among the many introductions, I recommend the one from [Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox).
+`app` and `unit` we know before, but the rest are new:
 
 - [op](https://pkg.go.dev/gioui.org/op) - Operations, or ops, are central in Gio. They are used to update the user interface. There are operations used to draw, handle input, change window properties, scale, rotate and more. Interestingly there are also [macros](https://pkg.go.dev/gioui.org/op#MacroOp), making it possible to record opertions to be executed later. Taken together this means a list of opererations is a _mutable stack_, where you can control the flow.
 
@@ -90,20 +86,25 @@ func main() {
     th := material.NewTheme()
 
     // listen for events in the window.
-    for e := range w.Events() {
+    for {
+        // first grab the event
+        evt := w.NextEvent()
 
-      // detect what type of event
-      switch e := e.(type) {
+        // then detect the type
+        switch typ := evt.(type) {
 
-      // this is sent when the application should re-render.
-      case system.FrameEvent:
-        gtx := layout.NewContext(&ops, e)
-        btn := material.Button(th, &startButton, "Start")
-        btn.Layout(gtx)
-        e.Frame(gtx.Ops)
-      }
+        // this is sent when the application should re-render.
+        case app.FrameEvent:
+            gtx := app.NewContext(&ops, typ)
+            btn := material.Button(th, &startButton, "Start")
+            btn.Layout(gtx)
+            typ.Frame(gtx.Ops)
+
+        // and this is sent when the application should exits
+        case app.DestroyEvent:
+            os.Exit(0)
+        }
     }
-    os.Exit(0)
   }()
   app.Main()
 }
@@ -126,31 +127,35 @@ func main() {
         - Gio now defaults to system fonts. This is great, one less thing to remember. However, should you want to flex your font skills, read the [July 2023 newsletter](https://gioui.org/news/2023-07).
         - Also you may want to learn about Go's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
 
-1. The `for e:= range w.Events() ` loop is more interesting:
-   - `w.Events()` gets us the _channel_ through which events are delivered. We simply listen to this channel forever.
+1. The `for` loop is more interesting. 
+   - `w.NextEvent()` blocks and waits for events. We store those as `evt`.
 
-- Then ... what's this `e:= e.(type)` thing. It's actually a neat thing, known as a [type switch](https://tour.golang.org/methods/16) that allows us to take different actions depending on the `type` of event that's being processed.
+   - Later we look at it's type using `typ:= evt.(type)` But note how there's also a `switch` here. That's pretty neat, and known as a [type switch](https://tour.golang.org/methods/16), allowing us to take different actions depending on the `type` of event that's being processed.
 
-- In our case, we're only interested if the event is a `system.FrameEvent`. If it is:
+  - In our case, we're especially interested if the event is a `app.FrameEvent`. If so:
 
-  - We define a new _graphical context_, or `gtx`. It receives the pointer to `ops` as well as the event
+    - We define a new _graphical context_, or `gtx`. It receives the pointer to `ops` as well as the event
 
-  - `btn` is declared as the actual button, with theme `th`, and a pointer to the `startButton` widget. We also define the text that is displayed (note how the text is purely a something that is displayed on the button, not part of the stateful widget the button actually is.)
+    - `btn` is declared as the actual button, with theme `th`, and a pointer to the `startButton` widget. We also define the text that is displayed (note how the text is purely a something that is displayed on the button, not part of the stateful widget the button actually is.)
 
-  - Look here now. The button `btn` is asked to _lay itself out_ on the context `gtx`. This is key. The layout doesn't layout the button, the button lays itself out. This is very handy. Try for example to resize the window. No stress, the button just lays itself out again, no matter size or shape of the canvas.
+    - Look here now. The button `btn` is asked to _lay itself out_ on the context `gtx`. This is key. The layout doesn't layout the button, the button lays itself out. This is very handy. Try for example to resize the window. No stress, the button just lays itself out again, no matter size or shape of the canvas.
 
     - Notice how we got all the mouseover and the click-animation for free. They're all part of the theme. That's pretty nice!
 
-  - We finalize by actually sending the operations `ops` from the context `gtx` to the FrameEvent `e`.
+    - We finalize by actually sending the operations `ops` from the context `gtx` to the FrameEvent `e`.
+
+- To ensure a clean exit we also listen for the `app.DestroyEvent` which is sent when the app exits. 
+
+  - If so call [os.Exit()](https://pkg.go.dev/os?utm_source=gopls#Exit) to ensure and orderly end to the program. The convention is that zero indicates success, later logic can be added to send other values. This aslo requires the `os` import.
 
 1. Finally we call `app.Main()`. Don't forget.
 
-Phew, that's a long one. Thanks if you're still along. We can summarize the whole chapter in three lines:
+Phew, that's a long one. Thanks if you're still along. We can summarize the news in this chapter in these three lines:
 
 ```go
-  gtx := layout.NewContext(&ops, e)
-  b := material.Button(th, &startButton, "Start")
-  b.Layout(gtx)
+  gtx := app.NewContext(&ops, e)
+  btn := material.Button(th, &startButton, "Start")
+  btn.Layout(gtx)
 ```
 
 If you're comfortable with those, you're good.

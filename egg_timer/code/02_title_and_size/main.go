@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-
 	"gioui.org/app"
 	"gioui.org/unit"
 )
@@ -19,7 +17,6 @@ func main() {
 		for {
 			w.NextEvent()
 		}
-		os.Exit(0)
 	}()
 	app.Main()
 }

@@ -4,8 +4,6 @@ import (
 	"os"
 
 	"gioui.org/app"
-	"gioui.org/io/system"
-	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/unit"
 	"gioui.org/widget"
@@ -30,20 +28,25 @@ func main() {
 		th := material.NewTheme()
 
 		// listen for events in the window.
-		for e := range w.Events() {
+		for {
+			// first grab the event
+			evt := w.NextEvent()
 
-			// detect what type of event
-			switch e := e.(type) {
+			// then detect the type
+			switch typ := evt.(type) {
 
-			// this is sent when the application should re-render.
-			case system.FrameEvent:
-				gtx := layout.NewContext(&ops, e)
+			// this is sent when the application should re-render
+			case app.FrameEvent:
+				gtx := app.NewContext(&ops, typ)
 				btn := material.Button(th, &startButton, "Start")
 				btn.Layout(gtx)
-				e.Frame(gtx.Ops)
+				typ.Frame(gtx.Ops)
+
+			// and this is sent when the application should exit
+			case app.DestroyEvent:
+				os.Exit(0)
 			}
 		}
-		os.Exit(0)
 	}()
 	app.Main()
 }
