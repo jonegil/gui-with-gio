@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 2 - Title and size
 
+Updated Feb 23rd 2024
+
 ## Goals
 
 The intent of this section is to set a custom title and the size of the window.
@@ -41,8 +43,9 @@ func main() {
       app.Size(unit.Dp(400), unit.Dp(600)),
     )
 
-    // listen for events in the window.
-    for range w.Events() {
+    // listen for events in the window
+    for {
+        w.NextEvent()
     }
     os.Exit(0)
   }()
