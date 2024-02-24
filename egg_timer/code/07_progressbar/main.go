@@ -58,6 +58,21 @@ func draw(w *app.Window) error {
 	// th defines the material design style
 	th := material.NewTheme()
 
+	// listen for events in the incrementor channel
+	go func() {
+		for range progressIncrementer {
+			if boiling && progress < 1 {
+				progress += 1.0 / 25.0 / boilDuration
+
+				if progress >= 1 {
+					progress = 1
+				}
+
+				w.Invalidate()
+			}
+		}
+	}()
+
 	for {
 		// listen for events
 		switch e := w.NextEvent().(type) {
@@ -115,13 +130,5 @@ func draw(w *app.Window) error {
 			return e.Err
 		}
 
-		// listen for events in the incrementor channel
-		select {
-		case p := <-progressIncrementer:
-			if boiling && progress < 1 {
-				progress += p
-				w.Invalidate()
-			}
-		}
 	}
 }
