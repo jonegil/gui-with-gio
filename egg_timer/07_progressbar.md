@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 7 - Progressbar
 
+Updated February 24th 2024
+
 ## Goals
 
 The intent of this section is to add a progressbar
@@ -20,7 +22,7 @@ I've looked forward to this chapter ever since I started writing this series. We
 
 - Try out a new widget, the `material.Progressbar`
 - Start using state variables to control behaviour
-- Use two concurrency techniques; one to create and share a beating pulse that progresses the progressbar, one to select among independent communication operations
+- Use a concurrency technique to create and share a beating pulse that progresses the progressbar
 
 Let's look at these in turn pieces.
 
@@ -30,11 +32,12 @@ A progressbar is obviously a bar that displays progress. But which progress? And
 
 ### Code
 
-We declare progress at root level, outside main, so that its set once and we have access to it throughout the whole program:
+We start by definding two variables for progress. The first is simply the progress as a number. We also define a channel used to send progress information through, which we'll look closer at later. Both are defined at root level, outside main, so that they are once and we have access to them throughout the whole program:
 
 ```go
-  // root level, outside main ()
-  var progress float32
+// Define the progress variables, a channel and a variable
+var progress float32
+var progressIncrementer chan float32
 ```
 
 To lay out the progressbar, we turn to our sturdy Flexbox and insert it through a rigid:
@@ -57,7 +60,7 @@ Notice how the widget itself has no state. State is maintained in the rest of th
 
 ## Feature 2 - State variables
 
-We mentioned `progress`, a variable that contains state. Another useful state to track is whether or not the start button has been clicked. In our app that means tracking if the egg has started to boil. 
+We mentioned `progress`, the variable that contains progress state. Another useful state to track is whether or not the start button has been clicked. In our app that means tracking if the egg has started to boil. 
 
 ### Code
 
@@ -65,20 +68,20 @@ We mentioned `progress`, a variable that contains state. Another useful state to
 // is the egg boiling?
 var boiling bool
 ```
-We want to flip that boolean when the start button is clicked. Thus we listen for a `system.FrameEvent` from the GUI and check if `startButton.Clicked()` is true.
+We want to flip that boolean when the start button is clicked. Thus we listen for a `app.FrameEvent` from the GUI and check if `startButton.Clicked()` is true.
 
 ```go
 case system.FrameEvent:
   gtx := layout.NewContext(&ops, e)
   // Let's try out the flexbox layout concept
-  if startButton.Clicked() {
+  if startButton.Clicked(gtx) {
     boiling = !boiling
   }
 ```
 
-Again, the only job of the button is shout out if it just was clicked. Beyond that, the rest of the program takes care of any actions that needs to be taken. 
+Again, the only job of the button is shout out if it recently was clicked. Beyond that, the rest of the program takes care of any actions that needs to be taken. 
 
-One example is what should the text on the button be. We decide that before calling the `material.Button( )` function by first checking what the state of `boiling` is.
+One example is what the text on the button should be. We decide that before calling the `material.Button( )` function by first checking what the state of `boiling` is.
 
 ```go
 // ...the same function we earlier used to create a button
@@ -96,7 +99,7 @@ func(gtx C) D {
 
 ## Feature 3 - A beating pulse
 
-A good progressbar must grow smoothly and precisely. To achieve that, we first create a separate go-routine that beats with a steady pulse. Later, where we listen for events, we pick up on these beats and grow the bar.
+A good progressbar must grow smoothly and precisely. To achieve that, we first create a separate go-routine that beats with a steady pulse. Later we listen for events, and pick up on these beats to grow the bar.
 
 ### Code
 
@@ -104,8 +107,8 @@ Here's the code, first the tick-generator:
 
 ```go
 // Define the progress variables, a channel and a variable
-var progressIncrementer chan float32
 var progress float32
+var progressIncrementer chan float32
 
 func main() {
   // Setup a separate channel to provide ticks to increment progress
@@ -127,28 +130,29 @@ Again, this is done in an anonymous function, called at creation, meaning this f
 Later we pick up from the channel, with this code inside `draw(w *app.window)`:
 
 ```go
-  // .. inside draw()
-  for {
-    select {
-      // listen for events in the window.
-      case e := <-w.Events():
+// .. inside draw()
+for {
+    // listen for events
+    switch e := w.NextEvent().(type) {
         // ...
-
-      // listen for events in the incrementor channel
-      case p := <-progressIncrementer:
-        if boiling && progress < 1 {
-        progress += p
-        w.Invalidate()
-      }
     }
-  }
 
+    // listen for events in the incrementor channel
+    select {
+    case p := <-progressIncrementer:
+        if boiling && progress < 1 {
+            progress += p
+            w.Invalidate()
+        }
+    }
+}
 ```
 
-In previous chapters, we ranged over events using `for e := range w.Events()`. Here we instead use a for-loop with a [select](https://tour.golang.org/concurrency/5) inside. This is a concurrency feature of go, where `select` waits patiently for an event that one of its `case` statement can run.
+The first part of the loop is as before, evaluating events in the frame. At the end of the for-loop with use [select](https://tour.golang.org/concurrency/5).  This is a concurrency feature of go, where `select` waits patiently for an event that one of its `case` statement can run.
 
-- The event can either stem from the window, and if so we extract it using `e := <- w.Events()`.
-- Or, the event comes from the progress-pulse, and we get it from `p := <- progressIncrementer `
+These combine so that
+- Events happen in the window. These we extract with `e := <- w.NextEvent().(type)`.
+- Events stem from the progress-pulse, and we get them using `p := <- progressIncrementer `
 
 We add the `p` to the `progress` variable if the control variable `boiling` is true, and progress is less than 1. Since `p` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
 
@@ -161,14 +165,6 @@ By using a channel like this we get
 1. Concurrent timing, the rest of the application continues as before
 
 While all of these make sense, the 2nd point deserves some extra attention. If you recompile the app without the `time.Sleep(time.Second / 25)`, your machine will work hard to render as quickly as possible. That can consume a lot of cpu resources, which in turn can drain battery as well. It also ensures consistency across devices, all run at the same pulse. As an example, pprof's from 3 different machines are included in the code folder. These include a 1/25th sleep, ensuring the same end result. Please have a look.
-
-**Update**
-
-On July 28th, [Elias Naur announced](https://lists.sr.ht/~eliasnaur/gio/%3CCD3XWVXUTCG0.23LAQED4PF674%40themachine%3E) an update that speeds up animations:
-
-> _gpu: [compute] cache and re-use drawing operations from the previous frame. This change implements an automatic layering scheme such that only the changed parts of a frame needs to go through the compute programs. Without this optimization CPU fallback would not be practical._
-
-It's also explained in more detail on the [July 2020 community call](https://www.youtube.com/watch?v=HC4Cg78l-9U).
 
 ## Comments
 

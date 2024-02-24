@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"gioui.org/app"
-	"gioui.org/io/system"
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/unit"
@@ -15,8 +14,8 @@ import (
 )
 
 // Define the progress variables, a channel and a variable
-var progressIncrementer chan float32
 var progress float32
+var progressIncrementer chan float32
 
 func main() {
 	// Setup a separate channel to provide ticks to increment progress
@@ -60,67 +59,64 @@ func draw(w *app.Window) error {
 	th := material.NewTheme()
 
 	for {
-		select {
-		// listen for events in the window.
-		case e := <-w.Events():
+		// listen for events
+		switch e := w.NextEvent().(type) {
 
-			// detect what type of event
-			switch e := e.(type) {
-
-			// this is sent when the application should re-render.
-			case system.FrameEvent:
-				gtx := layout.NewContext(&ops, e)
-				// Let's try out the flexbox layout concept
-				if startButton.Clicked() {
-					boiling = !boiling
-				}
-
-				layout.Flex{
-					// Vertical alignment, from top to bottom
-					Axis: layout.Vertical,
-					// Empty space is left at the start, i.e. at the top
-					Spacing: layout.SpaceStart,
-				}.Layout(gtx,
-					layout.Rigid(
-						func(gtx C) D {
-							bar := material.ProgressBar(th, progress)
-							return bar.Layout(gtx)
-						},
-					),
-					layout.Rigid(
-						func(gtx C) D {
-							// We start by defining a set of margins
-							margins := layout.Inset{
-								Top:    unit.Dp(25),
-								Bottom: unit.Dp(25),
-								Right:  unit.Dp(35),
-								Left:   unit.Dp(35),
-							}
-							// Then we lay out within those margins ...
-							return margins.Layout(gtx,
-								// ...the same function we earlier used to create a button
-								func(gtx C) D {
-									var text string
-									if !boiling {
-										text = "Start"
-									} else {
-										text = "Stop"
-									}
-									btn := material.Button(th, &startButton, text)
-									return btn.Layout(gtx)
-								},
-							)
-						},
-					),
-				)
-				e.Frame(gtx.Ops)
-
-			// this is sent when the application is closed.
-			case system.DestroyEvent:
-				return e.Err
+		// this is sent when the application should re-render.
+		case app.FrameEvent:
+			gtx := app.NewContext(&ops, e)
+			// Let's try out the flexbox layout concept
+			if startButton.Clicked(gtx) {
+				boiling = !boiling
 			}
 
+			layout.Flex{
+				// Vertical alignment, from top to bottom
+				Axis: layout.Vertical,
+				// Empty space is left at the start, i.e. at the top
+				Spacing: layout.SpaceStart,
+			}.Layout(gtx,
+				layout.Rigid(
+					func(gtx C) D {
+						bar := material.ProgressBar(th, progress)
+						return bar.Layout(gtx)
+					},
+				),
+				layout.Rigid(
+					func(gtx C) D {
+						// We start by defining a set of margins
+						margins := layout.Inset{
+							Top:    unit.Dp(25),
+							Bottom: unit.Dp(25),
+							Right:  unit.Dp(35),
+							Left:   unit.Dp(35),
+						}
+						// Then we lay out within those margins ...
+						return margins.Layout(gtx,
+							// ...the same function we earlier used to create a button
+							func(gtx C) D {
+								var text string
+								if !boiling {
+									text = "Start"
+								} else {
+									text = "Stop"
+								}
+								btn := material.Button(th, &startButton, text)
+								return btn.Layout(gtx)
+							},
+						)
+					},
+				),
+			)
+			e.Frame(gtx.Ops)
+
+		// this is sent when the application is closed.
+		case app.DestroyEvent:
+			return e.Err
+		}
+
 		// listen for events in the incrementor channel
+		select {
 		case p := <-progressIncrementer:
 			if boiling && progress < 1 {
 				progress += p
