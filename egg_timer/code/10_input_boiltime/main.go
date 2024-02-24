@@ -36,19 +36,19 @@ func main() {
 			progressIncrementer <- 0.004
 		}
 	}()
-	
+
 	go func() {
 		// create new window
 		w := app.NewWindow(
-			app.Title("Egg Timer"), 
-			app.Size(unit.Dp(400), unit.Dp(600))
+			app.Title("Egg Timer"),
+			app.Size(unit.Dp(400), unit.Dp(600)),
 		)
 		if err := draw(w); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
 	}()
-	
+
 	app.Main()
 }
 
@@ -90,10 +90,6 @@ func draw(w *app.Window) error {
 	for {
 		// listen for events in the window.
 		switch e := w.NextEvent().(type) {
-
-		// this is sent when the application is closed.
-		case app.DestroyEvent:
-			return e.Err
 
 		// this is sent when the application should re-render.
 		case app.FrameEvent:
@@ -262,6 +258,10 @@ func draw(w *app.Window) error {
 				),
 			)
 			e.Frame(gtx.Ops)
+
+		// this is sent when the application is closed.
+		case app.DestroyEvent:
+			return e.Err
 		}
 	}
 }
