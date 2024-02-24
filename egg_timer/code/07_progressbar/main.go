@@ -62,12 +62,8 @@ func draw(w *app.Window) error {
 	go func() {
 		for range progressIncrementer {
 			if boiling && progress < 1 {
-				progress += 1.0 / 25.0 / boilDuration
-
-				if progress >= 1 {
-					progress = 1
-				}
-
+				progress += p
+				
 				w.Invalidate()
 			}
 		}
