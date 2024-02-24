@@ -19,11 +19,11 @@ var progress float32
 
 func main() {
 	// Setup a separate channel to provide ticks to increment progress
-	progressIncrementer = make(chan bool)
+	progressIncrementer = make(chan float32)
 	go func() {
 		for {
 			time.Sleep(time.Second / 25)
-			progressIncrementer <- true
+			progressIncrementer <- 0.004
 		}
 	}()
 
@@ -60,7 +60,7 @@ func draw(w *app.Window) error {
 
 	// listen for events in the incrementor channel
 	go func() {
-		for range progressIncrementer {
+		for p := range progressIncrementer {
 			if boiling && progress < 1 {
 				progress += p
 				
