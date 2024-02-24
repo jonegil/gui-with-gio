@@ -14,8 +14,8 @@ import (
 )
 
 // Define the progress variables, a channel and a variable
-var progress float32
 var progressIncrementer chan float32
+var progress float32
 
 func main() {
 	// Setup a separate channel to provide ticks to increment progress
@@ -57,6 +57,17 @@ func draw(w *app.Window) error {
 
 	// th defines the material design style
 	th := material.NewTheme()
+
+	// listen for events in the incrementor channel
+	go func() {
+		for p := range progressIncrementer {
+			if boiling && progress < 1 {
+				progress += p
+				
+				w.Invalidate()
+			}
+		}
+	}()
 
 	for {
 		// listen for events
@@ -115,13 +126,5 @@ func draw(w *app.Window) error {
 			return e.Err
 		}
 
-		// listen for events in the incrementor channel
-		select {
-		case p := <-progressIncrementer:
-			if boiling && progress < 1 {
-				progress += p
-				w.Invalidate()
-			}
-		}
 	}
 }
