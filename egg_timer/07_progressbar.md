@@ -151,7 +151,7 @@ for {
 The first part of the loop is as before, evaluating events in the frame. At the end of the for-loop with use [select](https://tour.golang.org/concurrency/5).  This is a concurrency feature of go, where `select` waits patiently for an event that one of its `case` statement can run.
 
 These combine so that
-- Events happen in the window. These we extract with `e := <- w.NextEvent().(type)`.
+- Events happen in the window. These we extract with `e := w.NextEvent().(type)`.
 - Events stem from the progress-pulse, and we get them using `p := <- progressIncrementer `
 
 We add the `p` to the `progress` variable if the control variable `boiling` is true, and progress is less than 1. Since `p` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
