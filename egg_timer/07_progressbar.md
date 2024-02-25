@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 7 - Progressbar
 
-Updated February 24th 2024
+Updated February 25th 2024
 
 ## Goals
 
@@ -35,12 +35,11 @@ A progressbar is obviously a bar that displays progress. But which progress? And
 We start by definding two variables for progress. The first is simply the progress as a number. We also define a channel used to send progress information through, which we'll look closer at later. Both are defined at root level, outside main, so that they are once and we have access to them throughout the whole program:
 
 ```go
-// Define the progress variables, a channel and a variable
 var progress float32
 var progressIncrementer chan float32
 ```
 
-To lay out the progressbar, we turn to our sturdy Flexbox and insert it through a rigid:
+A bit below we'll see how these are updated, but first let's take a look at how `progress` is used when laying out the progressbar. To to that we turn to our sturdy Flexbox and insert the bar through a rigid:
 
 ```go
 // Inside System.FrameEvent
@@ -60,7 +59,7 @@ Notice how the widget itself has no state. State is maintained in the rest of th
 
 ## Feature 2 - State variables
 
-We mentioned `progress`, the variable that contains progress state. Another useful state to track is whether or not the start button has been clicked. In our app that means tracking if the egg has started to boil. 
+We mentioned `progress`, the variable that contains progress state. Another useful state to track is whether or not the start button has been clicked. In our app that means tracking if the egg has started to boil:
 
 ### Code
 
@@ -68,7 +67,7 @@ We mentioned `progress`, the variable that contains progress state. Another usef
 // is the egg boiling?
 var boiling bool
 ```
-We want to flip that boolean when the start button is clicked. Thus we listen for a `app.FrameEvent` from the GUI and check if `startButton.Clicked()` is true.
+We want to flip that boolean when the start button is clicked. Thus we listen for a `app.FrameEvent` from the GUI and check if `startButton.Clicked()` is true:
 
 ```go
 case system.FrameEvent:
@@ -81,7 +80,7 @@ case system.FrameEvent:
 
 Again, the only job of the button is shout out if it recently was clicked. Beyond that, the rest of the program takes care of any actions that needs to be taken. 
 
-One example is what the text on the button should be. We decide that before calling the `material.Button( )` function by first checking what the state of `boiling` is.
+One such example is what the text on the button should be. We decide that before calling the `material.Button( )` function by first checking what the state of `boiling` is.
 
 ```go
 // ...the same function we earlier used to create a button
@@ -106,10 +105,6 @@ A good progressbar must grow smoothly and precisely. To achieve that, we first c
 Here's the code, first the tick-generator:
 
 ```go
-// Define the progress variables, a channel and a variable
-var progress float32
-var progressIncrementer chan float32
-
 func main() {
   // Setup a separate channel to provide ticks to increment progress
   progressIncrementer = make(chan float32)
@@ -125,36 +120,24 @@ func main() {
 
 `progressIncrementer` is the [channel](https://tour.golang.org/concurrency/2) into which we send values, in this case of type `float32`.
 
-Again, this is done in an anonymous function, called at creation, meaning this for-loop spins for the entirety of the program. Every 1/25th of a second the number 0.004 is injected into the channel.
+Again, this is done in an anonymous function, called when our program starts, meaning this for-loop spins for the entirety of the program. Every 1/25th of a second the number 0.004 is injected into the channel.
 
-Later we pick up from the channel, with this code inside `draw(w *app.window)`:
+Later we pick up from the channel, with this code inside `draw( )`:
 
 ```go
 // .. inside draw()
-for {
-    // listen for events
-    switch e := w.NextEvent().(type) {
-        // ...
+// listen for events in the incrementer channel
+go func() {
+    for p := range progressIncrementer {
+      if boiling && progress < 1 {
+        progress += p
+        w.Invalidate()
+      }
     }
-
-    // listen for events in the incrementor channel
-    select {
-    case p := <-progressIncrementer:
-        if boiling && progress < 1 {
-            progress += p
-            w.Invalidate()
-        }
-    }
-}
+}()
 ```
 
-The first part of the loop is as before, evaluating events in the frame. At the end of the for-loop with use [select](https://tour.golang.org/concurrency/5).  This is a concurrency feature of go, where `select` waits patiently for an event that one of its `case` statement can run.
-
-These combine so that
-- Events happen in the window. These we extract with `e := w.NextEvent().(type)`.
-- Events stem from the progress-pulse, and we get them using `p := <- progressIncrementer `
-
-We add the `p` to the `progress` variable if the control variable `boiling` is true, and progress is less than 1. Since `p` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
+Here we start up an anonymous function to listen to the `progressIncrementer` channel. This is a concurrency feature of Go. Create a listener and let it do its thing. For us, that thing is to add `p` to `progress` if the control variable `boiling` is true, and progress is less than 1. Since `p` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
 
 Finally we force the window to draw, by calling `w.Invalidate()`. What is does is to inform Gio that the old rendering is now, well, invalid, and hence a new drawing must be made. Without such notice, Gio would simply not update until forced to do so by a mouse click or button press or other events. Invalidating at _every_ frame though can be costly, and alternatives exists. It's a bit of an advanced topic though, so for now let's leave it as is, but return to it in the [Bonus chapter on improved animation](11_improved_animation.md).
 
@@ -168,7 +151,7 @@ While all of these make sense, the 2nd point deserves some extra attention. If y
 
 ## Comments
 
-By combining all these building blocks we now have a stateful program we can control with ease. The user interface tells us when something happens, and the rest of the program uses that to take care of business. We had to pull a few tricks out of the bag, including both a `channel` and a `select`. Now that we have those tools in our belt, we will be well equipped to add some custom graphics in the next chapter.
+By combining all these building blocks we now have a stateful program we can control with ease. The user interface tells us when something happens, and the rest of the program uses that to take care of business. We had to pull a few tricks out of the bag, including creating, writing and listening to a `channel`. Now that we're true tricksters, let's add some custom graphics in the next chapter.
 
 ---
 

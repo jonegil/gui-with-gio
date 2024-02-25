@@ -14,8 +14,8 @@ import (
 )
 
 // Define the progress variables, a channel and a variable
-var progressIncrementer chan float32
 var progress float32
+var progressIncrementer chan float32
 
 func main() {
 	// Setup a separate channel to provide ticks to increment progress
@@ -58,22 +58,21 @@ func draw(w *app.Window) error {
 	// th defines the material design style
 	th := material.NewTheme()
 
-	// listen for events in the incrementor channel
+	// listen for events in the incrementer channel
 	go func() {
 		for p := range progressIncrementer {
 			if boiling && progress < 1 {
 				progress += p
-				
 				w.Invalidate()
 			}
 		}
 	}()
 
 	for {
-		// listen for events
+		// listen for events in the window
 		switch e := w.NextEvent().(type) {
 
-		// this is sent when the application should re-render.
+		// this is sent when the application should re-render
 		case app.FrameEvent:
 			gtx := app.NewContext(&ops, e)
 			// Let's try out the flexbox layout concept
@@ -121,7 +120,7 @@ func draw(w *app.Window) error {
 			)
 			e.Frame(gtx.Ops)
 
-		// this is sent when the application is closed.
+		// this is sent when the application is closed
 		case app.DestroyEvent:
 			return e.Err
 		}
