@@ -11,7 +11,6 @@ import (
 	"gioui.org/app"
 	"gioui.org/io/key"
 	"gioui.org/io/pointer"
-	"gioui.org/io/system"
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/unit"
@@ -41,18 +40,16 @@ func draw(w *app.Window) error {
 	// th defines the material design style
 	th := material.NewTheme()
 
-	for e := range w.Events() {
-		switch e := e.(type) {
-		case system.DestroyEvent:
+	for {
+		// listen for events in the window
+		switch e := w.NextEvent().(type) {
+		case app.DestroyEvent:
 			os.Exit(0)
 
-		case system.FrameEvent:
-
-			gtx := layout.NewContext(&ops, e)
-
-			fmt.Printf("Main: %#v\n", gtx.Constraints)
-
-			if button.Clicked() {
+		case app.FrameEvent:
+			// fmt.Printf("Main: %#v\n", gtx.Constraints)
+			gtx := app.NewContext(&ops, e)
+			if button.Clicked(gtx) {
 				switch moon {
 				case white:
 					moon = blue
@@ -63,7 +60,6 @@ func draw(w *app.Window) error {
 				}
 			}
 
-			fmt.Printf("Main: %#v\n", gtx.Constraints)
 			// Let's try out the flexbox layout:
 			layout.Flex{
 				// Vertical alignment, from top to bottom
@@ -81,7 +77,7 @@ func draw(w *app.Window) error {
 							Height:  float32(500),
 							Context: gtx,
 						}
-						fmt.Printf("  Canvas: %#v\n", canvas.Context.Constraints)
+						// fmt.Printf("  Canvas: %#v\n", canvas.Context.Constraints)
 
 						canvas.CenterRect(50, 50, 95, 95, black)
 						var x float32 = 10.0
@@ -101,7 +97,7 @@ func draw(w *app.Window) error {
 				// ... then one for the button
 				layout.Rigid(
 					func(gtx layout.Context) layout.Dimensions {
-						fmt.Printf("  Button: %#v\n", gtx.Constraints)
+						// fmt.Printf("  Button: %#v\n", gtx.Constraints)
 						btn := material.Button(th, &button, "Loco luna")
 						btn.CornerRadius = unit.Dp(0)
 						return btn.Layout(gtx)
@@ -111,6 +107,7 @@ func draw(w *app.Window) error {
 			e.Frame(gtx.Ops)
 
 		case key.Event:
+			fmt.Printf("  Key: %#v\n", e)
 			if e.State == key.Press {
 				switch e.Name {
 				case "Q", key.NameEscape:
@@ -128,15 +125,14 @@ func draw(w *app.Window) error {
 			}
 
 		case pointer.Event:
-			if e.Type == pointer.Scroll {
+			fmt.Printf("  Pointer: %#v\n", e)
+			if e.Kind == pointer.Scroll {
 				eclipseX += e.Scroll.X / 100
 				eclipseY += e.Scroll.Y / 100
 				w.Invalidate()
 			}
 		}
-
 	}
-	return nil
 }
 
 func main() {
@@ -144,7 +140,7 @@ func main() {
 		// create new window
 		w := app.NewWindow(
 			app.Title("Eclipse"),
-			app.Size(unit.Dp(400), unit.Dp(600)),
+			app.Size(unit.Dp(800), unit.Dp(500)),
 		)
 		if err := draw(w); err != nil {
 			log.Fatal(err)
