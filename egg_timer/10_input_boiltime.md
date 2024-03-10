@@ -71,13 +71,21 @@ With these, we now in the top of our `draw()` function find the following lines:
   var boilDuration float32
 ```
 
-### 3. Reading from the inputbox
+### 3. Update boil-status and read from the inputbox
 
-The only time we really need to check what is written in the inputbox is when the user clicks the start button. Hence we put the logic inside that `if{ }` block.
+The only time we really need to check what is written in the inputbox is when the user clicks the start button. Hence we put the logic inside that `if{ }` block. Naturally that's also where we control the `boiling` boolean. Boil bool, boil bool, boil bool - that's a toungue twister (sorry, I know). 
+
+A simple progress check allows us to restart a fresh boil when the first has completed. Thus the code reads:
 
 ```go
 if startButton.Clicked() {
-  //...
+  // Start (or stop) the boil
+  boiling = !boiling
+
+  // Resetting the boil
+  if progress >= 1 {
+    progress = 0
+  }
 
   // Read from the input box
   inputString := boilDurationInput.Text()
@@ -88,7 +96,7 @@ if startButton.Clicked() {
 }
 ```
 
-The first lines are self evident:
+The input variables are self evident:
 
 - `boilDurationInput.Text()` returns the text string inside the inputbox
 - `strings.TrimSpace()` removes leading and lagging space characters, if any
@@ -229,7 +237,6 @@ To present that to the user, we expand the code to paint the button:
 ```go
 func(gtx C) D {
   var text string
-  if !boiling {
     text = "Start"
   }
   if boiling && progress < 1 {
@@ -246,6 +253,26 @@ func(gtx C) D {
 - "Start" if not boiling
 - "Stop" if boiling but not finished
 - "Finished" if boil has completed
+
+
+Also note that, to reduce system load, let's stop calling `w.Invalidate( )` when the egg is boiled and we don't need to redraw the app anymore. This is simply to save work.
+```go
+// listen for events in the incrementor channel
+go func() {
+  for range progressIncrementer {
+    if boiling && progress < 1 {
+      progress += 1.0 / 25.0 / boilDuration
+      if progress >= 1 {
+        progress = 1
+      }
+      // Force a redraw by invalidating the frame
+      w.Invalidate()
+    }
+  }
+}()
+```
+
+
 
 More bells and whistles could be added here. Might I for example challenge you to set a custom [background color](https://pkg.go.dev/gioui.org/widget/material#ButtonStyle) when the boil is done?
 
