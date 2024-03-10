@@ -77,11 +77,11 @@ layout.Rigid(
   func(gtx C) D {
     circle := clip.Ellipse{
        // Hard coding the x coordinate. Try resizing the window
-       Min: image.Pt(80, 0),
-       Max: image.Pt(320, 240),
+       // Min: image.Pt(80, 0),
+       // Max: image.Pt(320, 240),
        // Soft coding the x coordinate. Try resizing the window
-       //Min: image.Pt(gtx.Constraints.Max.X/2-120, 0),
-       //Max: image.Pt(gtx.Constraints.Max.X/2+120, 240),
+       Min: image.Pt(gtx.Constraints.Max.X/2-120, 0),
+       Max: image.Pt(gtx.Constraints.Max.X/2+120, 240),
     }.Op(gtx.Ops)
     color := color.NRGBA{R: 200, A: 255}
     paint.FillShape(gtx.Ops, color, circle)
@@ -95,7 +95,9 @@ layout.Rigid(
 
 We first define a circle using `clip.Ellipse{ }`. It defines circle as an `Ellipse` within a box, where the dimensions of the box are specified by the top left and bottom right corners. `Min` and `Max` respectively.
 
-In the code the circle is hard coded, but try to resize the window and you'll see that might not necessarily be what you want. To adjust, simply comment the hard-coded coordinates and uncomment the next two lines which introduce dynamic positioning. You can play around with these dimensions, familiarizing yourself with when the circle moves up or down, depending in wheiter you resize the window or move the limiting box around the Ellipse.
+By choice there are two versions of `Min`and `Max`. One is hard coded, just to show how `image.Pt()` works. But that might not necessarily be what you want - try it for yourself by changing what's commented in and out and resize the window. 
+
+Instead, dynamic positioning based on `gtx.Constraints` adapts to the window. Play around with these dimensions, familiarize yourself with when the circle moves up or down, depending in wheiter you resize the window or move the limiting box around the Ellipse.
 
 **Gotcha:** If you are lucky enough to work with a High DPI display, and happen to run it with a scaling factor of, say 125%, another problem with the hard coded coordinates will surface. Gio works well with `Dp`, **D**isplay independent **p**ixels, which ensures that 1 Dp will have the same apparent size across displays and resolutions. When hard-coding like here, that dynamic is overruled. A 125% resolution scale will translate the **400 Dp** wide window (as defined in `app.NewWindow`) into a **500 pixels** context. You can see this by inspecting `gtx.Constraints` and convert pixels to Dp by `gtx.Dp()`. 
 

@@ -95,11 +95,11 @@ func draw(w *app.Window) error {
 					func(gtx C) D {
 						circle := clip.Ellipse{
 							// Hard coding the x coordinate. Try resizing the window
-							Min: image.Pt(80, 0),
-							Max: image.Pt(320, 240),
+							// Min: image.Pt(80, 0),
+							// Max: image.Pt(320, 240),
 							// Soft coding the x coordinate. Try resizing the window
-							//Min: image.Pt(gtx.Constraints.Max.X/2-120, 0),
-							//Max: image.Pt(gtx.Constraints.Max.X/2+120, 240),
+							Min: image.Pt(gtx.Constraints.Max.X/2-120, 0),
+							Max: image.Pt(gtx.Constraints.Max.X/2+120, 240),
 						}.Op(gtx.Ops)
 						color := color.NRGBA{R: 200, A: 255}
 						paint.FillShape(gtx.Ops, color, circle)
