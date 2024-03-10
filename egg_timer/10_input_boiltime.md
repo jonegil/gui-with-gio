@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 10 - Set the boiltime
 
+Updated March 10th 2024
+
 ## Goals
 
 The intent of this section is to add an input field to set the boiltime.

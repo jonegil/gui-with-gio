@@ -67,7 +67,7 @@ func draw(w *app.Window) error {
 		for p := range progressIncrementer {
 			if boiling && progress < 1 {
 				progress += p
-
+				// Force a redraw by invalidating the frame
 				w.Invalidate()
 			}
 		}

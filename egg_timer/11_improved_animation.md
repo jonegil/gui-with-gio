@@ -8,6 +8,8 @@ has_children: false
 
 # Bonus material - Animation
 
+Updated March 10th 2024
+
 ## Goals
 
 The intent of this section is to discuss a slightly more advanced topic related to animation, namely how and when we invalidate a frame, what that actually means, and how to code well with it.
@@ -24,51 +26,56 @@ The outline of this bonus chapter is as follows:
 
 ### 1. What is Invalidate?
 
-Gio only updates what you see when a [FrameEvent](https://pkg.go.dev/gioui.org/io/system#FrameEvent) is generated. This can be for example when a key is pressed, mouse is clicked, widget receives or loses focus. That makes perfect sense, with refresh rates of up to 120 frames per second for modern devices, chances are that what should be displayed quite often is identical to the last frame.
+Gio only updates what you see when a [FrameEvent](https://pkg.go.dev/gioui.org/app#FrameEvent) is generated. This can be for example when a key is pressed, mouse is clicked, widget receives or loses focus. That makes perfect sense, with refresh rates of up to 120 frames per second for modern devices, chances are that what should be displayed quite often is identical to the last frame.
 
 Quite often. But not always.
 
 One exception to this rule is animation. When animating, you want it to run as smooth as possible. To achieve this, we need to ask Gio to redraw continuously. And without triggering events we need to explicitly tell Gio to do so. That is done by calling `invalidate`.
 
-### 2. To ways to invalidate
+### 2. Two ways to invalidate
 
 There are two alternatives, let's look at both:
 
-- [op.InvalidateOp{}.Add(ops)](https://pkg.go.dev/gioui.org/op#InvalidateOp) is the most efficient, and can be used to request an immediate or future redraw `At time.Time`.
-- [window.Invalidate](https://pkg.go.dev/gioui.org/app#Window.Invalidate) is less efficient, and intended for externally triggered events. But it's also the right option if you want to invalidate outside of layout code. One example of that is in [Chapter 7 - Animation](07_progressbar.html) where we had a separate tick-generator.
+- [op.InvalidateCmd{}.Add(ops)](https://pkg.go.dev/gioui.org//op#InvalidateCmd) is the most efficient, and can be used to request an immediate or future redraw `At time.Time`.
+- [window.Invalidate](https://pkg.go.dev/gioui.org/app#Window.Invalidate) is less efficient, and intended for externally triggered events. But it's also the right option if you want to invalidate outside the layout code. One example of that is in [Chapter 7 - Animation](07_progressbar.html) where we had a separate tick-generator.
 
-#### Example 1 - op.InvalidateOp{}
+#### Example 1 - op.InvalidateCmd{}
 
-To showcase `op.InvaliateOp{}.Add(ops)` we'll quote the well written animation example from the [architecture document](https://gioui.org/doc/architecture#animation):
+Remember how the progress bar is one of the rigids we lay out:
 
 ```go
-// Source: https://gioui.org/doc/architecture#animation
+  // PREVIOUS CODE
 
-var startTime = time.Now()
-var duration = 10 * time.Second
-
-func drawProgressBar(ops *op.Ops, now time.Time) {
-  // Calculate how much of the progress bar to draw,
-  // based on the current time.
-  elapsed := now.Sub(startTime)
-  progress := elapsed.Seconds() / duration.Seconds()
-  if progress < 1 {
-    // The progress bar hasn’t yet finished animating.
-    op.InvalidateOp{}.Add(ops)
-  } else {
-    progress = 1
-  }
-
-  defer op.Save(ops).Load()
-  width := 200 * float32(progress)
-  clip.Rect{Max: image.Pt(int(width), 20)}.Add(ops)
-  paint.ColorOp{Color: color.NRGBA{R: 0x80, A: 0xFF}}.Add(ops)
-  paint.ColorOp{Color: color.NRGBA{G: 0x80, A: 0xFF}}.Add(ops)
-  paint.PaintOp{}.Add(ops)
-}
+  // The progressbar
+  layout.Rigid(
+    func(gtx C) D {
+      bar := material.ProgressBar(th, progress)
+      return bar.Layout(gtx)
+    },
+  ),
 ```
 
-Depending on the complexity of your layouts, this one might push your machine a bit. However, with [improved caching](https://lists.sr.ht/~eliasnaur/gio/%3CCD3XWVXUTCG0.23LAQED4PF674%40themachine%3E) that system load is reduced. If that works for your application you are good to go.
+We now expand that with its own personal timing logic: 
+
+```go
+// NEW CODE
+
+// The progressbar
+layout.Rigid(
+  func(gtx C) D {
+    bar := material.ProgressBar(th, progress)
+    if boiling && progress < 1 {
+      inv := op.InvalidateCmd{At: gtx.Now.Add(time.Second / 25)}
+      gtx.Execute(inv)
+    }
+    return bar.Layout(gtx)
+  },
+),
+```
+
+In other words, `if` we're still boiling, `Execute( )` and `InvalidateCmd` 1/25th of a second into the future.
+
+There's also an example on this in the [architecture document](https://gioui.org/doc/architecture/drawing#animation)
 
 #### Example 2 - w.Invalidate()
 
@@ -89,43 +96,31 @@ func main() {
 
 func draw(w *app.Window) error {
   // ...
-  for {
-    select {
-    // process FrameEvent and generate layout ...
 
-    // outside of layout, listen for events in the incrementor channel
-    case p := <-progressIncrementer:
-      if boiling && progress < 1 {
-        progress += p
-        w.Invalidate()
+  // listen for events in the incrementor channel
+    go func() {
+      for range progressIncrementer {
+        if boiling && progress < 1 {
+          progress += 1.0 / 25.0 / boilDuration
+          if progress >= 1 {
+            progress = 1
+          }
+          // Force a redraw by invalidating the frame
+          // w.Invalidate() // This is replaced by op.InvalidateCmd for the progressbar on line 211
+        }
       }
-    }
-  }
+    }()
 ```
 
-#### Example 3 - Replacing w.Invalidate() with op.InvalidateOp{} - what's the effect
+### 3. - Replacing w.Invalidate() with op.InvalidateCmd{} - what's the effect
 
-Can do better than that? Why not use the `IncrementOp{At time.Time}` instead of the central ticker? We need to move it into the `Layout` section inside FrameEvent. Here's how that rigid would look:
+So what's actually the effect of using `InvalidateCmd{At time.Time}` instead of the central ticker? 
 
-```go
-// The progressbar
-layout.Rigid(
-  func(gtx C) D {
-    bar := material.ProgressBar(th, progress)
-    if boiling && progress < 1 {
-      op.InvalidateOp{At: gtx.Now.Add(time.Second / 25)}.Add(&ops)
-    }
-    return bar.Layout(gtx)
-  },
- )
-
-```
-
-Take a look in the code for the animation. You'll find the above `op.InvalidateOp{}` on [line 201](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L201), and the old `w.Invalidate()` on [line 255](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L255). Try changing running either one or the other to see which one performs best.
+Take a look in the code for the animation. You'll find the new `op.InvalidateCmd{}` on [line 211](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L211), and the old `w.Invalidate()` on [line 84](https://github.com/jonegil/gui-with-gio/blob/fc54ae4394fe92f79934e816bf54ac800e703daa/egg_timer/code/11_improved_animation/main.go#L84). Try changing running either one or the other to see which one performs best.
 
 To try it out I ran three 60 second boils, one with each Invalidate method, both on my Macbook and my Windows desktop. On the Mac one was run with the old renderer, and one with the new using `GIORENDERER=forcecompute go run main.go`.
 
-Without forcecompute the 2017 Macbook Air runs `op.InvalidateOp{}` at about 16-17% CPU, while `w.Invalidate()` consumes around 18-19%. Those levels drop to ca 12% and 15% with the compute renderer. The level is fairly high, but the difference is not that large. Still it's worth knowing the effect of each invalidate technique. On my Windows machine the load is much smaller with no meaningful difference between the two techniques.
+Without forcecompute the 2017 Macbook Air ran `op.InvalidateCmd{}` at about 16-17% CPU, while `w.Invalidate()` consumes around 18-19%. Those levels drop to ca 12% and 15% with the compute renderer. The level is fairly high, but the difference is not that large. Still it's worth knowing the effect of each invalidate technique. On my Windows machine the load is much smaller with no meaningful difference between the two techniques.
 
 ![Invalidate CPU load](11_invalidate_cpu_load.png)
 
@@ -135,7 +130,7 @@ My friend Chris Waldon came through with this pattern:
 
 > _In my Gio applications, I have found a pattern that I think works well for encapsulating animation logic. It allows you to hide the management of the invalidation behind an API, and to compute the progress as a function of time. It eliminates the ticker goroutine altogether, though I almost worry that it makes the app less cool._
 
-Sound's intriguing, right? You can find the raw code in [his repo](https://github.com/whereswaldon/gui-with-gio/commit/83e43a39e75c5e6cb96985046a521ac553615d39), but let's examine it a bit here too:
+Sound's intriguing, right? You can find the raw code in [his repo](https://github.com/whereswaldon/gui-with-gio/commit/83e43a39e75c5e6cb96985046a521ac553615d39). The code is from July 2021, and not updated to the latest version of Gio but let's examine it a bit here none the less.
 
 #### An animation struct
 

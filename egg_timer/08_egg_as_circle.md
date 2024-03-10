@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 8 - Custom graphics - a circle
 
+Updated March 10th 2024
+
 ## Goals
 
 The intent of this section is to draw custom graphics that (vaguely) resembles an egg
@@ -95,7 +97,7 @@ layout.Rigid(
 
 We first define a circle using `clip.Ellipse{ }`. It defines circle as an `Ellipse` within a box, where the dimensions of the box are specified by the top left and bottom right corners. `Min` and `Max` respectively.
 
-By choice there are two versions of `Min`and `Max`. One is hard coded, just to show how `image.Pt()` works. But that might not necessarily be what you want - try it for yourself by changing what's commented in and out and resize the window. 
+By choice there are two versions of `Min`and `Max`. One is hard coded, just to show how `image.Pt( )` works. But that might not necessarily be what you want - try it for yourself by changing what's commented in and out and resize the window. 
 
 Instead, dynamic positioning based on `gtx.Constraints` adapts to the window. Play around with these dimensions, familiarize yourself with when the circle moves up or down, depending in wheiter you resize the window or move the limiting box around the Ellipse.
 

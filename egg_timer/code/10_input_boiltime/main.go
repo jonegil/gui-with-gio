@@ -77,11 +77,10 @@ func draw(w *app.Window) error {
 		for range progressIncrementer {
 			if boiling && progress < 1 {
 				progress += 1.0 / 25.0 / boilDuration
-
 				if progress >= 1 {
 					progress = 1
 				}
-
+				// Force a redraw by invalidating the frame
 				w.Invalidate()
 			}
 		}
@@ -125,7 +124,7 @@ func draw(w *app.Window) error {
 					func(gtx C) D {
 						// Draw a custom path, shaped like an egg
 						var eggPath clip.Path
-						op.Offset(image.Pt(gtx.Dp(200), gtx.Dp(150))).Add(gtx.Ops)
+						op.Offset(image.Pt(gtx.Dp(200), gtx.Dp(125))).Add(gtx.Ops)
 						eggPath.Begin(gtx.Ops)
 
 						// rotate from zero to 360 deg

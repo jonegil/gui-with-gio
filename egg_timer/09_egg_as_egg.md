@@ -8,6 +8,8 @@ has_children: false
 
 # Chapter 9 - Egg as egg
 
+Updated March 10th 2024
+
 ## Goals
 
 The intent of this section is to draw an actual egg.
@@ -16,7 +18,7 @@ The intent of this section is to draw an actual egg.
 
 ## Outline
 
-Here we utilize basic Gio functionality to draw totally custom graphics, in the shape of an egg.
+Here we utilize basic Gio functionality to draw totally custom graphics, which for us is an egg.
 
 ## Code
 
@@ -27,7 +29,7 @@ layout.Rigid(
   func(gtx C) D {
     // Draw a custom path, shaped like an egg
     var eggPath clip.Path
-    op.Offset(image.Pt(gtx.Dp(200), gtx.Dp(150))).Add(gtx.Ops)
+    op.Offset(image.Pt(gtx.Dp(200), gtx.Dp(125))).Add(gtx.Ops)
     eggPath.Begin(gtx.Ops)
     // Rotate from 0 to 360 degrees
     for deg := 0.0; deg <= 360; deg++ {
@@ -73,9 +75,9 @@ The main idea is to define a custom egg shaped `clip.Path`. We draw a line to de
 
 ## Comments
 
-First the new path is defined, ```var eggPath clip.Path````
+First the new path is defined, `var eggPath clip.Path`
 
-Then an operation is created to move 200 points right, 150 points down, `op.Offset( )`. As before, this is from the top-left corner inside this widget. Note that we don't send in hard pixels, but instead convert to Dp, device independent pixels, to ensure the user experience is comparable across different devices and resolutions.
+Then an operation is created to move 200 points right, 125 points down, `op.Offset( )`. As before, this is from the top-left corner inside this widget. Note that we don't send in hard pixels, but instead convert to Dp, device independent pixels, to ensure the user experience is comparable across different devices and resolutions.
 
 We're now at the center of our egg. This is where the path begins, `eggPath.Begin( )`
 
@@ -83,7 +85,7 @@ From here we rotate a full 360 degrees and continue drawing the outline of the E
 
 ![Hügelschäffer egg](09_torben_jansen.gif)
 
-Regarding Gio, the important line is the last in the for-loop, `eggPath.LineTo(p)`. At this point, math has found the next point `p` on the 360-degree roundtrip around the egg, and we use `eggPath.LineTo`) to move the pen to this specific coordinate point.
+Regarding Gio, the important line is the last in the for-loop, `eggPath.LineTo(p)`. At this point, math has found the next point `p` on the 360-degree roundtrip around the egg, and we use `eggPath.LineTo(p)` to move the pen to this specific coordinate point.
 
 After completing the for-loop the egg-shape is almost done. We finalize it explicitly by calling `eggPath.Close()` which closes the path.
 
