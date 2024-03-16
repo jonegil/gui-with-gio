@@ -146,7 +146,7 @@ func main() {
 
 - To ensure a clean exit we also listen for the `app.DestroyEvent` which is sent when the app exits. 
 
-  - If so call [os.Exit()](https://pkg.go.dev/os?utm_source=gopls#Exit) to ensure and orderly end to the program. The convention is that zero indicates success, later logic can be added to send other values. This aslo requires the `os` import.
+  - If so call [os.Exit()](https://pkg.go.dev/os?utm_source=gopls#Exit) to ensure and orderly end to the program. The convention is that zero indicates success, later logic can be added to send other values. This also requires the `os` import.
 
 1. Finally we call `app.Main()`. Don't forget.
 
