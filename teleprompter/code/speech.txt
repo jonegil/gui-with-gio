@@ -1,19 +1,22 @@
 
 
 
+WELCOME 
 
+This is an event handler tutorial for GIO that reacts to user input:
 
 Press SPACE to start and stop
 
 Adjust SPEED with F(ast) and S(low)
 
-RESIZE with + and -  
 
 W(ide) and N(arrow) controls the TEXTAREA
 
 SCROLL with your mouse
 
 U(p) and D(own) moves the red FOCUS bar. 
+
+RESIZE with + and -  
 
 SHIFT makes any change larger
 
@@ -22,4 +25,4 @@ SHIFT makes any change larger
 
 "What do you mean?" he said. "Do you wish me a good morning, or mean that it is a good morning whether I want it or not; or that you feel good this morning; or that it is a morning to be good on?"
 
-"All of them at once," said Bilbo. "And a very fine morning for a pipe of tobacco out of doors, into the bargain.
+"All of them at once," said Bilbo. "And a very fine morning for a pipe of tobacco out of doors, into the bargain."
