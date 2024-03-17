@@ -23,14 +23,22 @@ import (
 	"gioui.org/widget/material"
 )
 
-type C = layout.Context
-type D = layout.Dimensions
-
 // Command line input variables
 var filename *string
 
+// Define context and dimension types, just for shorthand comfort
+type C = layout.Context
+type D = layout.Dimensions
+
 // A []string to hold the speech as a list of paragraphs
 var paragraphList []string
+
+// Colors
+type colorMode struct {
+	background color.NRGBA
+	foreground color.NRGBA
+	focusbar   color.NRGBA
+}
 
 func main() {
 	// Step 1 - Read input from command line
@@ -105,6 +113,21 @@ func draw(w *app.Window) error {
 	// ops are the operations from the UI
 	var ops op.Ops
 
+	// Colors
+	colorDark := colorMode{
+		background: color.NRGBA{R: 0x00, G: 0x00, B: 0x00, A: 0xff},
+		foreground: color.NRGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
+		focusbar:   color.NRGBA{R: 0xff, G: 0x00, B: 0x00, A: 0x33},
+	}
+
+	colorLight := colorMode{
+		background: color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff},
+		foreground: color.NRGBA{R: 0x00, G: 0x00, B: 0x00, A: 0xff},
+		focusbar:   color.NRGBA{R: 0xff, A: 0x66},
+	}
+
+	myColor := colorDark
+
 	for {
 		// listen for events in the window
 		switch winE := w.NextEvent().(type) {
@@ -137,7 +160,7 @@ func draw(w *app.Window) error {
 					break
 				}
 				fmt.Printf("SCROLL: %+v\n", ev)
-				scrollY = scrollY + unit.Dp(ev.(pointer.Event).Scroll.Y) //*stepSize
+				scrollY = scrollY + unit.Dp(ev.(pointer.Event).Scroll.Y)
 				if scrollY < 0 {
 					scrollY = 0
 				}
@@ -155,9 +178,8 @@ func draw(w *app.Window) error {
 					break
 				}
 				fmt.Printf("PRESS : %+v\n", ev)
-
+				// Start / stop
 				autoscroll = !autoscroll
-
 			}
 
 			// Pressed a key?
@@ -170,12 +192,15 @@ func draw(w *app.Window) error {
 					key.Filter{Optional: key.ModShift, Name: "K"},
 					key.Filter{Optional: key.ModShift, Name: key.NameUpArrow},
 					key.Filter{Optional: key.ModShift, Name: key.NameDownArrow},
+					key.Filter{Optional: key.ModShift, Name: key.NamePageUp},
+					key.Filter{Optional: key.ModShift, Name: key.NamePageDown},
 					key.Filter{Optional: key.ModShift, Name: "F"},
 					key.Filter{Optional: key.ModShift, Name: "S"},
 					key.Filter{Optional: key.ModShift, Name: "+"},
 					key.Filter{Optional: key.ModShift, Name: "-"},
 					key.Filter{Optional: key.ModShift, Name: "W"},
 					key.Filter{Optional: key.ModShift, Name: "N"},
+					key.Filter{Optional: key.ModShift, Name: "C"},
 				)
 				if !ok {
 					break
@@ -194,6 +219,9 @@ func draw(w *app.Window) error {
 					// Start / stop
 					if name == key.NameSpace {
 						autoscroll = !autoscroll
+						if autoscroll && autospeed <= 0 {
+							autospeed = stepSize
+						}
 					}
 
 					// Move the focusBar Up
@@ -207,7 +235,7 @@ func draw(w *app.Window) error {
 					}
 
 					// Scroll up
-					if name == "K" || name == key.NameUpArrow {
+					if name == "K" || name == key.NameUpArrow || name == key.NamePageUp {
 						scrollY = scrollY - stepSize*4
 						if scrollY < 0 {
 							scrollY = 0
@@ -215,7 +243,7 @@ func draw(w *app.Window) error {
 					}
 
 					// Scroll down
-					if name == "J" || name == key.NameDownArrow {
+					if name == "J" || name == key.NameDownArrow || name == key.NamePageDown {
 						scrollY = scrollY + stepSize*4
 					}
 
@@ -230,7 +258,8 @@ func draw(w *app.Window) error {
 						if autospeed > 0 {
 							autospeed -= stepSize
 						}
-						if autospeed == 0 {
+						if autospeed <= 0 {
+							autospeed = 0
 							autoscroll = false
 						}
 					}
@@ -253,6 +282,15 @@ func draw(w *app.Window) error {
 					if name == "N" {
 						textWidth = textWidth - stepSize*10
 					}
+
+					// Swhich Colormode
+					if name == "C" {
+						if myColor == colorDark {
+							myColor = colorLight
+						} else {
+							myColor = colorDark
+						}
+					}
 				}
 			}
 
@@ -260,7 +298,8 @@ func draw(w *app.Window) error {
 			// First we layout the user interface.
 			// Afterwards we add an eventArea.
 			// Let's start with a background color
-			paint.Fill(&ops, color.NRGBA{R: 0xff, G: 0xfe, B: 0xe0, A: 0xff})
+
+			paint.Fill(&ops, myColor.background)
 
 			// ---------- THE SCROLLING TEXT ----------
 			// First, check if we should autoscroll
@@ -270,8 +309,8 @@ func draw(w *app.Window) error {
 					autospeed = 0
 				}
 				scrollY = scrollY + autospeed
-				// Invalidate 25 times per second
-				inv := op.InvalidateCmd{At: gtx.Now.Add(time.Second / 25)}
+				// Invalidate 50 times per second
+				inv := op.InvalidateCmd{At: gtx.Now.Add(time.Second / 50)}
 				gtx.Execute(inv)
 			}
 			// Then we use scrollY to control the distance from the top of the screen to the first element.
@@ -306,6 +345,8 @@ func draw(w *app.Window) error {
 							paragraph := material.Label(th, unit.Sp(float32(fontSize)), paragraphList[index])
 							// The text is centered
 							paragraph.Alignment = text.Middle
+							// Set color
+							paragraph.Color = myColor.foreground
 							// Return the laid out paragraph
 							return paragraph.Layout(gtx)
 						},
@@ -319,7 +360,7 @@ func draw(w *app.Window) error {
 				Min: image.Pt(0, int(focusBarY)),
 				Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+int(unit.Dp(50))),
 			}.Push(&ops)
-			paint.ColorOp{Color: color.NRGBA{R: 0xff, A: 0x66}}.Add(&ops)
+			paint.ColorOp{Color: myColor.focusbar}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
 			focusBar.Pop()
 

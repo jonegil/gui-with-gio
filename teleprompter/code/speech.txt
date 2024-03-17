@@ -3,12 +3,11 @@
 
 WELCOME 
 
-This is an event handler tutorial for GIO that reacts to user input:
+Let's handle user input
 
 Press SPACE to start and stop
 
 Adjust SPEED with F(ast) and S(low)
-
 
 W(ide) and N(arrow) controls the TEXTAREA
 
@@ -17,6 +16,8 @@ SCROLL with your mouse
 U(p) and D(own) moves the red FOCUS bar. 
 
 RESIZE with + and -  
+
+Change COLOR with C
 
 SHIFT makes any change larger
 
