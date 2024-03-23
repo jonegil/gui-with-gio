@@ -151,8 +151,8 @@ func draw(w *app.Window) error {
 						Target: tag,
 						Kinds:  pointer.Scroll,
 						ScrollBounds: image.Rectangle{
-							Min: image.Point{X: 0, Y: -100},
-							Max: image.Point{X: 0, Y: +100},
+							Min: image.Point{X: -1, Y: -1},
+							Max: image.Point{X: +1, Y: +2},
 						},
 					},
 				)
@@ -160,7 +160,7 @@ func draw(w *app.Window) error {
 					break
 				}
 				fmt.Printf("SCROLL: %+v\n", ev)
-				scrollY = scrollY + unit.Dp(ev.(pointer.Event).Scroll.Y)
+				scrollY = scrollY + unit.Dp(ev.(pointer.Event).Scroll.Y*float32(fontSize))
 				if scrollY < 0 {
 					scrollY = 0
 				}
@@ -358,7 +358,7 @@ func draw(w *app.Window) error {
 			// Draw the transparent red focus bar.
 			focusBar := clip.Rect{
 				Min: image.Pt(0, int(focusBarY)),
-				Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+int(unit.Dp(50))),
+				Max: image.Pt(gtx.Constraints.Max.X, int(focusBarY)+int(fontSize*1.5)),
 			}.Push(&ops)
 			paint.ColorOp{Color: myColor.focusbar}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
