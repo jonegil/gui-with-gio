@@ -113,6 +113,9 @@ func draw(w *app.Window) error {
 	// ops are the operations from the UI
 	var ops op.Ops
 
+	// Define a tag for input routing
+	var tag = "My Input Routing Tag - which could be this silly string, or an int/float/address, or anything else"
+
 	// Colors
 	colorDark := colorMode{
 		background: color.NRGBA{R: 0x00, G: 0x00, B: 0x00, A: 0xff},
@@ -126,23 +129,20 @@ func draw(w *app.Window) error {
 		focusbar:   color.NRGBA{R: 0xff, A: 0x66},
 	}
 
+	// Define a color to start with. We like dark
 	myColor := colorDark
 
 	for {
+
 		// listen for events in the window
 		switch winE := w.NextEvent().(type) {
 
 		// Should we draw a new frame?
 		case app.FrameEvent:
+			gtx := app.NewContext(&ops, winE)
 
 			// ---------- Handle input ----------
 			// Time to deal with inputs since last frame.
-
-			gtx := app.NewContext(&ops, winE)
-			var tag = "My Input Routing Tag - which could be this silly string, or an int/float/address, or anything else"
-
-			// Register the tag
-			event.Op(&ops, tag)
 
 			// Scrolled a mouse wheel?
 			for {
@@ -181,6 +181,9 @@ func draw(w *app.Window) error {
 				// Start / stop
 				autoscroll = !autoscroll
 			}
+
+			// Registering events here does not work
+			// event.Op(&ops, tag)
 
 			// Pressed a key?
 			for {
@@ -298,7 +301,6 @@ func draw(w *app.Window) error {
 			// First we layout the user interface.
 			// Afterwards we add an eventArea.
 			// Let's start with a background color
-
 			paint.Fill(&ops, myColor.background)
 
 			// ---------- THE SCROLLING TEXT ----------
@@ -364,11 +366,15 @@ func draw(w *app.Window) error {
 			paint.PaintOp{}.Add(&ops)
 			focusBar.Pop()
 
+			// ---------- REGISTERING EVENTS ----------
+			// registering events here work
+			event.Op(&ops, tag)
+
 			// ---------- FINALIZE ----------
 			// Frame completes the FrameEvent by drawing the graphical operations from ops into the window.
 			winE.Frame(&ops)
 
-		// Should we shut down?
+			// Should we shut down?
 		case app.DestroyEvent:
 			return winE.Err
 		}
