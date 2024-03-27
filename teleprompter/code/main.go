@@ -152,7 +152,7 @@ func draw(w *app.Window) error {
 						Kinds:  pointer.Scroll,
 						ScrollBounds: image.Rectangle{
 							Min: image.Point{X: -1, Y: -1},
-							Max: image.Point{X: +1, Y: +2},
+							Max: image.Point{X: +1, Y: +1},
 						},
 					},
 				)
