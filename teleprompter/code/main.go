@@ -65,7 +65,6 @@ func draw(w *app.Window) error {
 					break
 				}
 				fmt.Printf("SCROLL: %+v\n", ev)
-
 			}
 
 			// Pressed a mouse button?
@@ -80,7 +79,6 @@ func draw(w *app.Window) error {
 					break
 				}
 				fmt.Printf("PRESS : %+v\n", ev)
-
 			}
 
 			// ---------- REGISTERING EVENTS ----------
