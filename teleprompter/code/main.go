@@ -51,12 +51,13 @@ func main() {
 	// Step 3 - Start the GUI
 	go func() {
 		// create new window
-		w := app.NewWindow(
+		var w app.Window
+		w.Option(
 			app.Title("Teleprompter"),
 			app.Size(unit.Dp(650), unit.Dp(600)),
 		)
 		// draw on screen
-		if err := draw(w); err != nil {
+		if err := draw(&w); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
@@ -135,7 +136,7 @@ func draw(w *app.Window) error {
 	for {
 
 		// listen for events in the window
-		switch winE := w.NextEvent().(type) {
+		switch winE := w.Event().(type) {
 
 		// Should we draw a new frame?
 		case app.FrameEvent:
@@ -151,8 +152,8 @@ func draw(w *app.Window) error {
 						Target: tag,
 						Kinds:  pointer.Scroll,
 						ScrollBounds: image.Rectangle{
-							Min: image.Point{X: -1, Y: -1},
-							Max: image.Point{X: +1, Y: +1},
+							Min: image.Point{X: 0, Y: -1},
+							Max: image.Point{X: 0, Y: +1},
 						},
 					},
 				)
