@@ -17,29 +17,8 @@ So far we've [set up](01_setup.md) our program, [reacted to user input](02_user_
 We first create a **clip area** where events are to be collected from, and then specify which events to listen for. As always it's fairly straight forward, but we'll take the time to step through it
 
 ## Code
-	
-### eventArea := clip.Rect
 
-```go	
-// ---------- COLLECT INPUT ----------
-eventArea := clip.Rect(
-  image.Rectangle{
-    // From top left
-    Min: image.Point{0, 0},
-    // To bottom right
-    Max: image.Point{gtx.Constraints.Max.X, gtx.Constraints.Max.Y},
-  },
-).Push(gtx.Ops)
-```
-
-We start by creating a **clip area** wihtin where we will listen to events. As we discussed in the [Egg Timer](egg_timer/08_egg_as_circle.md), the role of the Clip ares is to define an area we care about, and we ignore what happens outside. 
-
-In this example we care about the full size of the screen, so naturally the `eventArea` extends from top left to bottom right. This is very useful if you want very precise control over areas that can generate input. If you want to experiment, try changig the constraints of image.Rectangle to, for example `Max: image.Point{300, 300}`. Take a guess what happens then. 
-
-Finally, after first creating `clip.Rect()`, we `Push()` the clip to the stack.
-
-
-### pointer.InputOp
+### pointer.Scroll
 
 `InputOp` declares an input handler ready for pointer events. In our case we will listen for scrolling of the mousewheel or two fingers on a trackpad.
 
@@ -48,28 +27,28 @@ Such a tag can anything really, so we simply use `Tag: 0`. Later we retireve the
 
 
 ```go
-// 1) We first add a pointer.InputOp to catch scrolling:
-pointer.InputOp{
-  Types: pointer.Scroll,
-  Tag:   0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
-  // ScrollBounds sets bounds on scrolling, and we want it to be non-zero.
-  // In practice it seldom reached 100, so [MinInt8,MaxInt8] or [-128,127] should be enough
-  ScrollBounds: image.Rectangle{
-    Min: image.Point{
-      X: 0,
-      Y: math.MinInt8, //-128
+// Scrolled a mouse wheel?
+for {
+  ev, ok := gtx.Event(
+    pointer.Filter{
+      Target:  tag,
+      Kinds:   pointer.Scroll,
+      ScrollY: pointer.ScrollRange{Min: -1, Max: +1},
     },
-    Max: image.Point{
-      X: 0,
-      Y: math.MaxInt8, //+127
-    },
-  },
-}.Add(gtx.Ops)
+  )
+  if !ok {
+    break
+  }
+  fmt.Printf("SCROLL: %+v\n", ev)
+  scrollY = scrollY + unit.Dp(ev.(pointer.Event).Scroll.Y*float32(fontSize))
+  if scrollY < 0 {
+    scrollY = 0
+  }
+}
 ```
 
 Since we listen for pointer operations, we can specify bounds on the scrolling to hinder the user from scrolling out of bounds. 
-The important thing is to allow both positive and negative range, and on my laptop the trackpad seldom reached 100. For pure 
-programmers love I chose from -128 to +127, but it could easily be +/- 100. It can't be zero though, then no scrolls will happen.
+The important thing is to allow both positive and negative range, but it could easily be +/- 1 or +/- 100 or whatever. It can't be zero though, then no scrolls will happen.
 
 
 ### key.FocusOp

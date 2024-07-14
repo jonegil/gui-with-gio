@@ -51,13 +51,11 @@ func main() {
 	// Step 3 - Start the GUI
 	go func() {
 		// create new window
-		var w app.Window
-		w.Option(
-			app.Title("Teleprompter"),
-			app.Size(unit.Dp(650), unit.Dp(600)),
-		)
+		w := new(app.Window)
+		w.Option(app.Title("Teleprompter"))
+		w.Option(app.Size(unit.Dp(650), unit.Dp(600)))
 		// draw on screen
-		if err := draw(&w); err != nil {
+		if err := draw(w); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
@@ -149,12 +147,9 @@ func draw(w *app.Window) error {
 			for {
 				ev, ok := gtx.Event(
 					pointer.Filter{
-						Target: tag,
-						Kinds:  pointer.Scroll,
-						ScrollBounds: image.Rectangle{
-							Min: image.Point{X: 0, Y: -1},
-							Max: image.Point{X: 0, Y: +1},
-						},
+						Target:  tag,
+						Kinds:   pointer.Scroll,
+						ScrollY: pointer.ScrollRange{Min: -1, Max: +1},
 					},
 				)
 				if !ok {
@@ -182,9 +177,6 @@ func draw(w *app.Window) error {
 				// Start / stop
 				autoscroll = !autoscroll
 			}
-
-			// Registering events here does not work
-			// event.Op(&ops, tag)
 
 			// Pressed a key?
 			for {
@@ -239,16 +231,22 @@ func draw(w *app.Window) error {
 					}
 
 					// Scroll up
-					if name == "K" || name == key.NameUpArrow || name == key.NamePageUp {
+					if name == "K" || name == key.NameUpArrow {
 						scrollY = scrollY - stepSize*4
-						if scrollY < 0 {
-							scrollY = 0
-						}
+					}
+					if name == key.NamePageUp {
+						scrollY = scrollY - stepSize*100
+					}
+					if scrollY < 0 {
+						scrollY = 0
 					}
 
 					// Scroll down
 					if name == "J" || name == key.NameDownArrow || name == key.NamePageDown {
 						scrollY = scrollY + stepSize*4
+					}
+					if name == key.NamePageDown {
+						scrollY = scrollY + stepSize*100
 					}
 
 					// Faster scrollspeed
@@ -300,7 +298,6 @@ func draw(w *app.Window) error {
 
 			// ---------- LAYOUT ----------
 			// First we layout the user interface.
-			// Afterwards we add an eventArea.
 			// Let's start with a background color
 			paint.Fill(&ops, myColor.background)
 
