@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 2 - Title and size
 
-Updated February 23rd 2024
+Updated July 14th 2024
 
 ## Goals
 
@@ -38,14 +38,13 @@ import (
 func main() {
   go func() {
     // create new window
-    w := app.NewWindow(
-      app.Title("Egg timer"),
-      app.Size(unit.Dp(400), unit.Dp(600)),
-    )
+		w := new(app.Window)
+		w.Option(app.Title("Egg timer"))
+		w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
 
     // listen for events in the window
     for {
-        w.NextEvent()
+        w.Event()
     }
   }()
   app.Main()
@@ -66,14 +65,14 @@ Where chapter 1 was the absolute bare minimum to open a window, we want to make 
 
 In general, `dp` is the most widely used; we like to keep device independency when we can. Hence that's what we use when we define the window size inside `app.NewWindow()`.
 
-The [options](https://pkg.go.dev/gioui.org/app#Option) of `app.NewWindow()` are fairly self-explanatory, but take note of a few things:
+The [options](https://pkg.go.dev/gioui.org/app#Option) of `app` are fairly self-explanatory, but take note of a few things:
 
 - The size is set using `app.Size(x, y)`.
 - The window can be freely resized. Try it! If you want to limit the size you can add:
   - MaxSize
   - MinSize
   - Or use both, effectively locking the window size
-- A fullscreen option is available if needed.
+- A fullscreen option is available in [WindowMode](https://pkg.go.dev/gioui.org/app#WindowMode) if needed
 - If you're building for Android, Status and Navigation colors can be set here.
 
 ---

@@ -15,10 +15,9 @@ import (
 func main() {
 	go func() {
 		// create new window
-		w := app.NewWindow(
-			app.Title("Egg timer"),
-			app.Size(unit.Dp(400), unit.Dp(600)),
-		)
+		w := new(app.Window)
+		w.Option(app.Title("Egg timer"))
+		w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
 		if err := draw(w); err != nil {
 			log.Fatal(err)
 		}
@@ -44,7 +43,7 @@ func draw(w *app.Window) error {
 	// listen for events in the window
 	for {
 		// detect what type of event
-		switch e := w.NextEvent().(type) {
+		switch e := w.Event().(type) {
 
 		// this is sent when the application should re-render.
 		case app.FrameEvent:

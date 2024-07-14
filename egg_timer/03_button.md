@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 3 - Button
 
-Updated Feb ruary 23rd 2024
+Updated July 14th 2024
 
 ## Goals
 
@@ -71,10 +71,9 @@ With imports well out of our way, let's look at the code. It's longer but still 
 func main() {
   go func() {
     // create new window
-    w := app.NewWindow(
-      app.Title("Egg timer"),
-      app.Size(unit.Dp(400), unit.Dp(600)),
-    )
+		w := new(app.Window)
+		w.Option(app.Title("Egg timer"))
+		w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
 
     // ops are the operations from the UI
     var ops op.Ops
@@ -88,7 +87,7 @@ func main() {
     // listen for events in the window.
     for {
         // first grab the event
-        evt := w.NextEvent()
+        evt := w.Event()
 
         // then detect the type
         switch typ := evt.(type) {
@@ -128,7 +127,7 @@ func main() {
         - Also you may want to learn about Go's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
 
 1. The `for` loop is more interesting. 
-   - `w.NextEvent()` blocks and waits for events. We store those as `evt`.
+   - `w.Event()` blocks and waits for events. We store those as `evt`.
 
    - Later we look at it's type using `typ:= evt.(type)` But note how there's also a `switch` here. That's pretty neat, and known as a [type switch](https://tour.golang.org/methods/16), allowing us to take different actions depending on the `type` of event that's being processed.
 

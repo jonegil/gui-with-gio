@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 1 - An empty window
 
-Updated February 23rd 2024
+Updated July 14th 2024
 
 ## Goals
 
@@ -39,11 +39,11 @@ import (
 func main() {
     go func() {
         // create new window
-        w := app.NewWindow()
+        w := new(app.Window)
 
         // listen for events in the window
         for {
-            w.NextEvent()
+            w.Event()
         }
     }()
     app.Main()
@@ -67,10 +67,14 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
     _"We should port to Mac."_ &nbsp;Consider it done! _"Hot startup seeking app and desktop experts._" &nbsp;No problem. _"Who here knows tvOS?"_ &nbsp;You do!
     _"The pilot died, can anyone land this plane?!_" &nbsp;OK, maybe not that last one but the point still stands. The diversity of Gio is nothing less than amazing.
 
-2.  The **event loop** in the goroutine
 
-    - The event loop is the `for { w.NextEvent() }` loop.
-      As described in the docs, [w.NextEvent](https://pkg.go.dev/gioui.org/app#Window.NextEvent) simply _blocks until an event is received from the window_. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
+2.  We create an `app.Window` using [new()](https://go.dev/doc/effective_go#allocation_new), the standard Go way of allocates memory for our variable and returns it's pointer (or address). 
+    It's effectively the same as writing `var w app.Window`, but we stick to the former since that is how Gio docs are written.
+
+3.  The **event loop** in the goroutine
+
+    - The event loop is the `for { wEvent() }` loop.
+      As described in the docs, [w.Event](https://pkg.go.dev/gioui.org/app#Window.Event) simply _blocks until an event is received from the window_. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
 
       From [app.main](https://pkg.go.dev/gioui.org/app#hdr-Main) we learn:
 

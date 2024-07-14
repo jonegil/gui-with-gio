@@ -8,7 +8,7 @@ has_children: false
 
 # Bonus material - Animation
 
-Updated March 10th 2024
+Updated July 14th 2024
 
 ## Goals
 

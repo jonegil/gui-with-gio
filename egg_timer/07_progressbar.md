@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 7 - Progressbar
 
-Updated February 25th 2024
+Updated July 14th 2024
 
 ## Goals
 

@@ -7,11 +7,11 @@ import (
 func main() {
 	go func() {
 		// create new window
-		w := app.NewWindow()
+		w := new(app.Window)
 
 		// listen for events in the window
 		for {
-			w.NextEvent()
+			w.Event()
 		}
 	}()
 	app.Main()

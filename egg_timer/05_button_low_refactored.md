@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 5 - Low button refactored
 
-Updated February 23rd 2024
+Updated July 14th 2024
 
 ## Goals
 
@@ -35,10 +35,9 @@ Main is too long and does too much. It's better if `main()` starts and controls 
 func main() {
   go func() {
     // create new window
-    w := app.NewWindow(
-      app.Title("Egg timer"),
-      app.Size(unit.Dp(400), unit.Dp(600)),
-    )
+		w := new(app.Window)
+		w.Option(app.Title("Egg timer"))
+		w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
     if err := draw(w); err != nil {
       log.Fatal(err)
     }
@@ -76,7 +75,7 @@ func draw(w *app.Window) error {
     // listen for events in the window.
     for {
         // detect what type of event
-        switch e := w.NextEvent().(type) {
+        switch e := w.Event().(type) {
 
         // this is sent when the application should re-render.
         case app.FrameEvent:
@@ -90,7 +89,7 @@ func draw(w *app.Window) error {
 }
 ```
 
-As before examine all events. But since all we really care about is the type, let's simplify to `e: = w.NextEvent().(type)`, to detect the type.
+As before examine all events. But since all we really care about is the type, let's simplify to `e: = w.Event().(type)`, to detect the type.
 
 - `app.FrameEvent` is handled as before,
 - we tidy the case for `app.DestroyEvent`, which returns _nil_ for normal window closures, but _Err_ if something else is the cause. The draw function should only inform what's been detected, not call the `os` directly.

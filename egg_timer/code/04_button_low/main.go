@@ -14,10 +14,9 @@ import (
 func main() {
 	go func() {
 		// create new window
-		w := app.NewWindow(
-			app.Title("Egg timer"),
-			app.Size(unit.Dp(400), unit.Dp(600)),
-		)
+		w := new(app.Window)
+		w.Option(app.Title("Egg timer"))
+		w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
 
 		// ops are the operations from the UI
 		var ops op.Ops
@@ -30,7 +29,7 @@ func main() {
 
 		// listen for events in the window.
 		for {
-			evt := w.NextEvent()
+			evt := w.Event()
 
 			// detect what type of event
 			switch typ := evt.(type) {

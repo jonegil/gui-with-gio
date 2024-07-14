@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 6 - Low button with margin
 
-Updated February 23rd 2024
+Updated July 14th 2024
 
 ## Goals
 

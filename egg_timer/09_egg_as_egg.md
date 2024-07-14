@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 9 - Egg as egg
 
-Updated March 10th 2024
+Updated July 14th 2024
 
 ## Goals
 
