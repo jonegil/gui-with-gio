@@ -19,12 +19,7 @@ We first create a **clip area** where events are to be collected from, and then 
 ## Code
 
 ### pointer.Scroll
-
-`InputOp` declares an input handler ready for pointer events. In our case we will listen for scrolling of the mousewheel or two fingers on a trackpad.
-
-Since Gio is stateless we must **Tag** events, to make sure we later have enough information to know where they came from. 
-Such a tag can anything really, so we simply use `Tag: 0`. Later we retireve these events with `gtx.Events(0)`.
-
+First we listen for mouse or trackpad events. This is done by waiting for en event that matches a filter. 
 
 ```go
 // Scrolled a mouse wheel?
@@ -46,43 +41,77 @@ for {
   }
 }
 ```
+The filter defines that this code will wait for a `pointer.Scroll` of a given range. The range can be anything really, but the most important thing is that it containts positive and negative range. Apart from that it could easily be +/- 1 or +/- 100 or whatever, but check your device sensitivity. It can't be zero though, then no scrolls will happen.
 
-Since we listen for pointer operations, we can specify bounds on the scrolling to hinder the user from scrolling out of bounds. 
-The important thing is to allow both positive and negative range, but it could easily be +/- 1 or +/- 100 or whatever. It can't be zero though, then no scrolls will happen.
+### pointer.Press
 
-
-### key.FocusOp
-
-```go
-// 2) Next we add key.FocusOp,
-key.FocusOp{
-  Tag: 0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
-}.Add(gtx.Ops)
-```
-
-For general keybaord input, we add `key.FocusOp`. These events are retrieved as `key.EditEvent`. Again we add `Tag: 0`. This is a generic catch-all where you don't want to specify the specific keys to listen for. 
-
-
-### key.InputOp
+Here we filter for `pointer.Press`, i.e. clicking down with the mouse.
 
 ```go
-// 3) Finally we add key.InputOp to catch specific keys
-key.InputOp{
-  Keys: key.Set("(Shift)-F|(Shift)-S|(Shift)-U|(Shift)-D|(Shift)-J|(Shift)-K|(Shift)-W|(Shift)-N|Space"),
-  Tag:  0, // Use Tag: 0 as the event routing tag, and retireve it through gtx.Events(0)
-}.Add(gtx.Ops)
+// Pressed a mouse button?
+for {
+  ev, ok := gtx.Event(
+    pointer.Filter{
+      Target: tag,
+      Kinds:  pointer.Press,
+    },
+  )
+  if !ok {
+    break
+  }
+  fmt.Printf("PRESS : %+v\n", ev)
+  // Start / stop
+  autoscroll = !autoscroll
+}
 ```
 
-Finally we add a specific list of keyboard shortcuts to listen for. All are specified as Large Cap, and `(Shift)` means an optional
-Shift can be included. These inputs are retrieved as `key.Event`. Here too a `Tag: 0` is used.
 
-### Closing the event Frame
+### key.Filter
 
-We finally `Pop()` the eventArea from the stack. 
+This filter explicitly filters the keys relevant for us. Some are normal letters while others are named keys, such as arrows.
+
 ```go
-// Finally Pop() the eventArea from the stack
-eventArea.Pop()
+for {
+  ev, ok := gtx.Event(
+    key.Filter{Name: key.NameSpace},
+    key.Filter{Optional: key.ModShift, Name: "U"},
+    key.Filter{Optional: key.ModShift, Name: "D"},
+    key.Filter{Optional: key.ModShift, Name: "J"},
+    key.Filter{Optional: key.ModShift, Name: "K"},
+    key.Filter{Optional: key.ModShift, Name: key.NameUpArrow},
+    key.Filter{Optional: key.ModShift, Name: key.NameDownArrow},
+    key.Filter{Optional: key.ModShift, Name: key.NamePageUp},
+    key.Filter{Optional: key.ModShift, Name: key.NamePageDown},
+    key.Filter{Optional: key.ModShift, Name: "F"},
+    key.Filter{Optional: key.ModShift, Name: "S"},
+    key.Filter{Optional: key.ModShift, Name: "+"},
+    key.Filter{Optional: key.ModShift, Name: "-"},
+    key.Filter{Optional: key.ModShift, Name: "W"},
+    key.Filter{Optional: key.ModShift, Name: "N"},
+    key.Filter{Optional: key.ModShift, Name: "C"},
+  )
 ```
+
+For each key we then define what is to happen when it is pressed. For example
+```go
+  // Faster scrollspeed
+  if name == "F" {
+    autoscroll = true
+    autospeed += stepSize
+  }
+
+  // Slower scrollspeed
+  if name == "S" {
+    if autospeed > 0 {
+      autospeed -= stepSize
+    }
+    if autospeed <= 0 {
+      autospeed = 0
+      autoscroll = false
+    }
+  }
+```
+
 
 ### Finalize
 
@@ -97,7 +126,7 @@ winE.Frame(&ops)
 
 Thank you so much, and well done my friend! High fives, fist bumps, back slaps and cheers all around. Thanks a lot for staying together on this tour of Gio's event handling. We've covered a lot of ground, but also built a really nifty little app that scales, scrolls, zooms and moves, all at the will of our fingertips. That's pretty neat.
 
-Was this useful, please **star** the repo on Github, or even better, drop me a line. I really love hearing what people build with Gio. 
+If this was useful, please **star** the repo on Github, or even better, drop me a line. I really love hearing what people build with Gio. 
 
 
 Thanks and all the best!
