@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 1 - An empty window
 
-Updated July 14th 2024
+Updated to Gio 0.71 as of August 30th 2024
 
 ## Goals
 
