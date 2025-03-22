@@ -8,13 +8,14 @@ import (
 	"image/color"
 	"io"
 	"log"
+	"math"
 	"math/rand"
 	"os"
 	"strconv"
+	"time"
 
 	"gioui.org/app"
 	"gioui.org/font"
-	"gioui.org/io/system"
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/op/clip"
@@ -38,20 +39,39 @@ func main() {
 	simulate = flag.Bool("simulate", false, "or should I simulate 1 million rows of random data every second")
 	flag.Parse()
 
-	// Step 2 - Read from file
-	dataset := []data{}
+	// Step 2 - Read or simulate data
+	//dataset := []data{}
+	var dataset []data
+
 	if *simulate {
-		dataset = simulateData(1e6)
+		// Initialize with simulated data first
+		dataset = simulateData(1e3) // Start with fewer samples for speed
+
+		// Create a sync Mutex
+		//var datasetMutex sync.Mutex
+
+		go func() {
+			for {
+				newData := simulateData(100e3)
+
+				// Safely update the dataset
+				//datasetMutex.Lock()
+				dataset = newData
+				//datasetMutex.Unlock()
+
+				time.Sleep(time.Millisecond * 100)
+			}
+		}()
 	} else {
 		dataset = readCSV(filename)
 	}
 
 	// Step 3 - Start the GUI
 	go func() {
-		w := app.NewWindow(
-			app.Title("Gio example - Table"),
-			app.Size(unit.Dp(1200), unit.Dp(350)),
-		)
+		w := new(app.Window)
+		w.Option(app.Title("GIO - Table"))
+		w.Option(app.Size(unit.Dp(1000), unit.Dp(700)))
+
 		if err := draw(w, &dataset); err != nil {
 			log.Fatal(err)
 		}
@@ -106,36 +126,53 @@ func readCSV(filename *string) []data {
 func simulateData(n int) []data {
 
 	sectors := []string{
+		"Oil & Gas",
 		"Basic Materials",
-		"Consumer Discretionary",
-		"Consumer Staples",
-		"Energy",
-		"Financials",
-		"Health Care",
 		"Industrials",
-		"Real Estate",
-		"Technology",
+		"Consumer Goods",
+		"Health Care",
+		"Consumer Services",
 		"Telecommunications",
 		"Utilities",
+		"Financials",
+		"Technology",
+		"Basic Industries",
+		"Transportation",
+		"Automobiles & Parts",
+		"Leisure Goods",
+		"Media",
+		"Travel & Leisure",
+		"Retail",
+		"Food & Beverage",
+		"Technology Hardware & Equipment",
 	}
 
-	regions := []string{
-		"Americas",
-		"Europe",
-		"Asia Pacific",
-		"Middle East & Africa",
+	markets := []string{
+		"United Kingdom",
+		"Germany",
+		"France",
+		"Switzerland",
+		"Netherlands",
+		"Spain",
+		"Italy",
+		"Sweden",
+		"Belgium",
+		"Denmark",
+		"Finland",
+		"Austria",
+		"Poland",
 	}
 
 	dataset := []data{}
 
 	for i := 0; i <= n; i++ {
 		sector := sectors[rand.Intn(len(sectors))]
-		region := regions[rand.Intn(len(regions))]
-		earnings := 10 * (rand.Float64() - 0.5)
+		region := markets[rand.Intn(len(markets))]
+		ret := (rand.NormFloat64())
 		d := data{
 			rowName: sector,
 			colName: region,
-			value:   earnings,
+			value:   ret,
 		}
 		dataset = append(dataset, d)
 	}
@@ -170,71 +207,74 @@ func draw(w *app.Window, dataset *[]data) error {
 		grid component.GridState
 	)
 
-	// -- PART 1 -- Convert the dataset to maps for the grid
-
-	// Convert dataset to a grid of cells, and also add sums
-	cells := map[string]map[string]float64{}
-	rowNames := []string{}
-	colNames := []string{}
-	rowSums := map[string]float64{}
-	colSums := map[string]float64{}
-	totSum := 0.0
-
-	// Iterate through the whole dataset
-	for _, d := range *dataset {
-		// Collect names
-		if !slices.Contains(rowNames, d.rowName) {
-			rowNames = append(rowNames, d.rowName)
-		}
-		if !slices.Contains(colNames, d.colName) {
-			colNames = append(colNames, d.colName)
-		}
-		// build and populate the 2d grid
-		var ok bool
-		if _, ok = cells[d.rowName]; !ok {
-			// Create the first map
-			cells[d.rowName] = map[string]float64{}
-		}
-		if _, ok = cells[d.rowName][d.colName]; !ok {
-			// Create the second map
-			cells[d.rowName][d.colName] = 0
-		}
-		// Calcualte the cell value
-		cells[d.rowName][d.colName] += d.value
-		// Callculate rowSums and colSums
-		rowSums[d.rowName] += d.value
-		colSums[d.colName] += d.value
-		totSum += d.value
-	}
-
-	// Add rowSums and colSums to the datasets
-	for _, v := range rowNames {
-		cells[v]["Total"] = rowSums[v]
-	}
-	for _, v := range colNames {
-		if _, ok := cells["Total"]; !ok {
-			cells["Total"] = map[string]float64{}
-		}
-		cells["Total"][v] = colSums[v]
-	}
-	cells["Total"]["Total"] = totSum
-
-	// Append Total to rowNames and colNames
-	rowNames = append(rowNames, "Total")
-	colNames = append(colNames, "Total")
-
-	// Used for thousand separator
-	printer := message.NewPrinter(language.English)
-
-	// -- PART 2 -- Visualize the grid
 	for {
-		windowevent := <-w.Events()
+		// -- PART 1 -- Convert the dataset to maps for the grid
+		// Convert dataset to a grid of cells, and also add sums
+		cells := map[string]map[string]float64{}
+		rowNames := []string{}
+		colNames := []string{}
+		rowSums := map[string]float64{}
+		colSums := map[string]float64{}
+		totSum := 0.0
+
+		// Iterate through the whole dataset
+		for _, d := range *dataset {
+			// Collect names
+			if !slices.Contains(rowNames, d.rowName) {
+				rowNames = append(rowNames, d.rowName)
+			}
+			if !slices.Contains(colNames, d.colName) {
+				colNames = append(colNames, d.colName)
+			}
+			// build and populate the 2d grid
+			var ok bool
+			if _, ok = cells[d.rowName]; !ok {
+				// Create the first map
+				cells[d.rowName] = map[string]float64{}
+			}
+			if _, ok = cells[d.rowName][d.colName]; !ok {
+				// Create the second map
+				cells[d.rowName][d.colName] = 0
+			}
+			// Calcualte the cell value
+			cells[d.rowName][d.colName] += d.value
+			// Callculate rowSums and colSums
+			rowSums[d.rowName] += d.value
+			colSums[d.colName] += d.value
+			totSum += d.value
+		}
+
+		// Add rowSums and colSums to the datasets
+		for _, v := range rowNames {
+			cells[v]["Total"] = rowSums[v]
+		}
+		for _, v := range colNames {
+			if _, ok := cells["Total"]; !ok {
+				cells["Total"] = map[string]float64{}
+			}
+			cells["Total"][v] = colSums[v]
+		}
+		cells["Total"]["Total"] = totSum
+
+		// Append Total to rowNames and colNames
+		if !slices.Contains(rowNames, "Total") {
+			rowNames = append(rowNames, "Total")
+		}
+		if !slices.Contains(colNames, "Total") {
+			colNames = append(colNames, "Total")
+		}
+
+		// Used for thousand separator
+		printer := message.NewPrinter(language.English)
+
+		// -- PART 2 -- Visualize the grid
+		windowevent := w.Event()
 		switch e := windowevent.(type) {
-		case system.DestroyEvent:
+		case app.DestroyEvent:
 			return e.Err
 
-		case system.FrameEvent:
-			gtx := layout.NewContext(&ops, e)
+		case app.FrameEvent:
+			gtx := app.NewContext(&ops, e)
 			paint.ColorOp{Color: colBlack}.Add(gtx.Ops)
 			paint.PaintOp{}.Add(gtx.Ops)
 
@@ -303,6 +343,7 @@ func draw(w *app.Window, dataset *[]data) error {
 						cell.Color = colWhite
 						// Normal non-bold font weight
 						cell.Font.Weight = font.Normal
+
 						// Zero the value
 						var value float64
 						// First col is rowName
@@ -322,6 +363,9 @@ func draw(w *app.Window, dataset *[]data) error {
 							if value < 0 {
 								cell.Color = colNeg
 							}
+							if math.Abs(value) < 25 {
+								cell.Color.A = 25
+							}
 						}
 
 						if row == len(rowNames)-1 || col == len(colNames) {
@@ -338,18 +382,28 @@ func draw(w *app.Window, dataset *[]data) error {
 			// Any clip areas we add before Pop-ing the root area
 			// are considered its children.
 
-			box1Rect := clip.Rect(image.Rect(25, 25, 175, 100))
+			box1Rect := clip.Rect(image.Rect(50, 25, 250, 250))
 			box1Area := box1Rect.Push(&ops)
-			defer clip.Stroke{
+			stroke := clip.Stroke{
 				Path:  box1Rect.Path(),
 				Width: 5,
-			}.Op().Push(&ops).Pop()
+			}.Op()
+			strokeArea := stroke.Push(&ops)
+
+			// Set color and paint
 			c := color.NRGBA{B: 0xFF, A: 0xFF}
 			paint.ColorOp{Color: c}.Add(&ops)
 			paint.PaintOp{}.Add(&ops)
+
+			// Pop in reverse order
+			strokeArea.Pop()
 			box1Area.Pop()
 
-			// op.InvalidateOp{At: gtx.Now.Add(time.Second / 10)}.Add(&ops)
+			// Request a redraw after 100ms
+			gtx.Execute(op.InvalidateCmd{
+				At: e.Now.Add(100 * time.Millisecond),
+			})
+
 			e.Frame(gtx.Ops)
 		}
 

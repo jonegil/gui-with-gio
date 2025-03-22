@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"gioui.org/app"
-	"gioui.org/io/system"
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/unit"
@@ -18,10 +17,11 @@ import (
 
 func main() {
 	go func() {
-		w := app.NewWindow(
-			app.Title("Grid example - A grid of widgets"),
-			app.Size(unit.Dp(810), unit.Dp(810)),
-		)
+
+		w := new(app.Window)
+		w.Option(app.Title("Grid example - A grid of widgets"))
+		w.Option(app.Size(unit.Dp(810), unit.Dp(810)))
+
 		if err := draw(w); err != nil {
 			log.Fatal(err)
 		}
@@ -52,16 +52,16 @@ func draw(w *app.Window) error {
 
 	for {
 
-		windowevent := <-w.Events()
+		windowevent := w.Event()
 		switch e := windowevent.(type) {
-		case system.DestroyEvent:
+		case app.DestroyEvent:
 			return e.Err
 
-		case system.FrameEvent:
-			gtx := layout.NewContext(&ops, e)
+		case app.FrameEvent:
+			gtx := app.NewContext(&ops, e)
 
 			for i := range clickers {
-				if clickers[i].Clicked() {
+				if clickers[i].Clicked(gtx) {
 					fmt.Println("You clicked button", i)
 				}
 			}
