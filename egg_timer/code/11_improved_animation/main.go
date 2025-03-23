@@ -129,7 +129,7 @@ func draw(w *app.Window) error {
 							// Egg math (really) at this brilliant site. Thanks!
 							// https://observablehq.com/@toja/egg-curve
 							// Convert degrees to radians
-							rad := deg / 360 * 2 * math.Pi
+							rad := deg * math.Pi / 180
 							// Trig gives the distance in X and Y direction
 							cosT := math.Cos(rad)
 							sinT := math.Sin(rad)

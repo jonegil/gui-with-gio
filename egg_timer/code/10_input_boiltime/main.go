@@ -129,7 +129,7 @@ func draw(w *app.Window) error {
 						// rotate from zero to 360 deg
 						for deg := 0.0; deg <= 360; deg++ {
 							// covert degrees to radians
-							rad := deg / 360 * 2 * math.Pi
+							rad := deg * math.Pi / 180
 
 							// trigger gives the distance in X and Y direction
 							cosT := math.Cos(rad)
