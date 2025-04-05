@@ -29,8 +29,6 @@ This code is very similar to that of [chapter 1](01_empty_window.md). We add:
 package main
 
 import (
-  "os"
-
   "gioui.org/app"
   "gioui.org/unit"
 )
