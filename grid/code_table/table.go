@@ -1,17 +1,15 @@
 package main
 
 import (
-	"cmp"
-	"encoding/csv"
 	"flag"
 	"image"
 	"image/color"
-	"io"
 	"log"
 	"math"
 	"math/rand"
 	"os"
-	"strconv"
+	"sort"
+	"sync"
 	"time"
 
 	"gioui.org/app"
@@ -28,42 +26,67 @@ import (
 	"golang.org/x/text/message"
 )
 
+// Datastructure for the simulation
+var sectors = []string{
+	"Technology",
+	"Telecommunications",
+	"Health Care",
+	"Banks",
+	"Financial Services",
+	"Insurance",
+	"Real Estate",
+	"Automobiles and Parts",
+	"Consumer Products and Services",
+	"Media",
+	"Retail",
+	"Travel and Leisure",
+	"Food, Beverage and Tobacco",
+	"Personal Care, Drug and Grocery Stores",
+	"Construction and Materials",
+	"Industrial Goods and Services",
+	"Basic Resources",
+	"Chemicals",
+	"Energy",
+	"Utilities",
+}
+
+var markets = []string{
+	"United Kingdom",
+	"Germany",
+	"France",
+	"Switzerland",
+	"Netherlands",
+	"Spain",
+	"Italy",
+	"Sweden",
+	"Belgium",
+	"Denmark",
+	"Finland",
+	"Austria",
+	"Poland",
+}
+
 // Command line input variables
-var filename *string
-var simulate *bool
+var n_sim *int
 
 func main() {
 	// Step 1 - Read input from command line
-	filename = flag.String("file", "example.csv", "Which .csv file shall I present? ")
-	simulate = flag.Bool("simulate", false, "or should I simulate 1 million rows of random data every second")
+	n_sim = flag.Int("N", 1000, "how many new stockprices per second?")
+	*n_sim = *n_sim / 10 // Divide by 10 since we sim 10 times per second
 	flag.Parse()
 
-	// Step 2 - Read or simulate data
-	//dataset := []data{}
-	var dataset []data
+	// Step 2 - Simulate data
+	data := initData(sectors, markets)
 
-	if *simulate {
-		// Initialize with simulated data first
-		dataset = simulateData(1e3) // Start with fewer samples for speed
-
-		// Create a sync Mutex
-		//var datasetMutex sync.Mutex
-
-		go func() {
-			for {
-				newData := simulateData(100e3)
-
-				// Safely update the dataset
-				//datasetMutex.Lock()
-				dataset = newData
-				//datasetMutex.Unlock()
-
-				time.Sleep(time.Millisecond * 100)
-			}
-		}()
-	} else {
-		dataset = readCSV(filename)
-	}
+	var dataMutex sync.RWMutex
+	go func() {
+		for {
+			// Sim baby sim
+			data = simulateData(data, *n_sim, &dataMutex)
+			// Chill out
+			time.Sleep(100 * time.Millisecond)
+		}
+	}()
 
 	// Step 3 - Start the GUI
 	go func() {
@@ -71,7 +94,7 @@ func main() {
 		w.Option(app.Title("GIO - Table"))
 		w.Option(app.Size(unit.Dp(1000), unit.Dp(700)))
 
-		if err := draw(w, &dataset); err != nil {
+		if err := draw(w, data, &dataMutex); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
@@ -79,114 +102,47 @@ func main() {
 	app.Main()
 }
 
-type data struct {
-	rowName string
-	colName string
-	value   float64
+func initData(rowNames []string, colNames []string) *map[string]map[string]float64 {
+
+	rowNames = append(rowNames, "Total")
+	colNames = append(colNames, "Total")
+
+	data := make(map[string]map[string]float64, len(rowNames))
+
+	// Preallocate inner maps
+	for _, row := range rowNames {
+		data[row] = make(map[string]float64, len(colNames))
+	}
+	// Preallocate values
+	for _, row := range rowNames {
+		for _, col := range colNames {
+			data[row][col] = 0
+		}
+	}
+
+	return &data
 }
 
-func readCSV(filename *string) []data {
-	// open file
-	f, err := os.Open(*filename)
-	if err != nil {
-		log.Fatal("Error when reading file:\n  ", err)
-	}
-
-	// remember to close the file at the end of the program
-	defer f.Close()
-
-	// Create a slice of data
-	dataset := []data{}
-
-	// read csv values using csv.Reader
-	csvReader := csv.NewReader(f)
-	for {
-		line, err := csvReader.Read()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			log.Fatal("Error when parsing csv:\n  ", err)
-		}
-		if len(line) == 3 {
-			val, err := strconv.ParseFloat(line[2], 64)
-			if err != nil {
-				log.Fatal("Error when converting data to float:\n  ", err)
-			}
-			d := data{rowName: line[0],
-				colName: line[1],
-				value:   val}
-			dataset = append(dataset, d)
-		}
-	}
-	return dataset
-}
-
-func simulateData(n int) []data {
-
-	sectors := []string{
-		"Oil & Gas",
-		"Basic Materials",
-		"Industrials",
-		"Consumer Goods",
-		"Health Care",
-		"Consumer Services",
-		"Telecommunications",
-		"Utilities",
-		"Financials",
-		"Technology",
-		"Basic Industries",
-		"Transportation",
-		"Automobiles & Parts",
-		"Leisure Goods",
-		"Media",
-		"Travel & Leisure",
-		"Retail",
-		"Food & Beverage",
-		"Technology Hardware & Equipment",
-	}
-
-	markets := []string{
-		"United Kingdom",
-		"Germany",
-		"France",
-		"Switzerland",
-		"Netherlands",
-		"Spain",
-		"Italy",
-		"Sweden",
-		"Belgium",
-		"Denmark",
-		"Finland",
-		"Austria",
-		"Poland",
-	}
-
-	dataset := []data{}
+func simulateData(data *map[string]map[string]float64, n int, mu *sync.RWMutex) *map[string]map[string]float64 {
 
 	for i := 0; i <= n; i++ {
-		sector := sectors[rand.Intn(len(sectors))]
-		region := markets[rand.Intn(len(markets))]
-		ret := (rand.NormFloat64())
-		d := data{
-			rowName: sector,
-			colName: region,
-			value:   ret,
-		}
-		dataset = append(dataset, d)
+		sec := sectors[rand.Intn(len(sectors))]
+		mkt := markets[rand.Intn(len(markets))]
+		pnl := (rand.NormFloat64())
+		/*
+			if (*data)[sec] == nil {
+				(*data)[sec] = map[string]float64{}
+			}
+		*/
+		mu.Lock()
+		(*data)[sec][mkt] += pnl
+		(*data)["Total"][mkt] += pnl
+		(*data)[sec]["Total"] += pnl
+		(*data)["Total"]["Total"] += pnl
+		mu.Unlock()
 	}
 
-	// Sort the data by rowName and colName
-	slices.SortFunc(dataset, func(a, b data) int {
-		// sort by rowName
-		if n := cmp.Compare(a.rowName, b.rowName); n != 0 {
-			return n
-		}
-		// if rowname is equal, sort by colName
-		return cmp.Compare(a.colName, b.colName)
-	})
-
-	return (dataset)
+	return data
 }
 
 type (
@@ -199,72 +155,56 @@ var colNeg = color.NRGBA{0xff, 0x68, 0x59, 255} //rally orange
 var colWhite = color.NRGBA{255, 255, 255, 255}
 var colBlack = color.NRGBA{18, 18, 18, 255}
 
-func draw(w *app.Window, dataset *[]data) error {
+func draw(w *app.Window, data *map[string]map[string]float64, mu *sync.RWMutex) error {
 	th := material.NewTheme()
 	var (
 		ops  op.Ops
 		grid component.GridState
 	)
 
-	for {
-		// -- PART 1 -- Convert the dataset to maps for the grid
-		// Convert dataset to a grid of cells, and also add sums
-		cells := map[string]map[string]float64{}
-		rowNames := []string{}
-		colNames := []string{}
-		rowSums := map[string]float64{}
-		colSums := map[string]float64{}
-		totSum := 0.0
+	var rowNames = []string{}
+	var colNames = []string{}
 
-		// Iterate through the whole dataset
-		for _, d := range *dataset {
+	// Find all row- and colnames
+	mu.Lock()
+	for row, inner := range *data {
+		for col := range inner {
 			// Collect names
-			if !slices.Contains(rowNames, d.rowName) {
-				rowNames = append(rowNames, d.rowName)
+			if !slices.Contains(rowNames, row) {
+				rowNames = append(rowNames, row)
 			}
-			if !slices.Contains(colNames, d.colName) {
-				colNames = append(colNames, d.colName)
+			if !slices.Contains(colNames, col) {
+				colNames = append(colNames, col)
 			}
-			// build and populate the 2d grid
-			var ok bool
-			if _, ok = cells[d.rowName]; !ok {
-				// Create the first map
-				cells[d.rowName] = map[string]float64{}
-			}
-			if _, ok = cells[d.rowName][d.colName]; !ok {
-				// Create the second map
-				cells[d.rowName][d.colName] = 0
-			}
-			// Calcualte the cell value
-			cells[d.rowName][d.colName] += d.value
-			// Callculate rowSums and colSums
-			rowSums[d.rowName] += d.value
-			colSums[d.colName] += d.value
-			totSum += d.value
 		}
+	}
+	mu.Unlock()
+	// Sorting is nice
+	// Custom sort to put "Total" last
+	sort.SliceStable(rowNames, func(i, j int) bool {
+		if rowNames[i] == "Total" {
+			return false
+		}
+		if rowNames[j] == "Total" {
+			return true
+		}
+		return rowNames[i] < rowNames[j]
+	})
 
-		// Add rowSums and colSums to the datasets
-		for _, v := range rowNames {
-			cells[v]["Total"] = rowSums[v]
+	sort.SliceStable(colNames, func(i, j int) bool {
+		if colNames[i] == "Total" {
+			return false
 		}
-		for _, v := range colNames {
-			if _, ok := cells["Total"]; !ok {
-				cells["Total"] = map[string]float64{}
-			}
-			cells["Total"][v] = colSums[v]
+		if colNames[j] == "Total" {
+			return true
 		}
-		cells["Total"]["Total"] = totSum
+		return colNames[i] < colNames[j]
+	})
 
-		// Append Total to rowNames and colNames
-		if !slices.Contains(rowNames, "Total") {
-			rowNames = append(rowNames, "Total")
-		}
-		if !slices.Contains(colNames, "Total") {
-			colNames = append(colNames, "Total")
-		}
+	// Used for thousand separator
+	printer := message.NewPrinter(language.English)
 
-		// Used for thousand separator
-		printer := message.NewPrinter(language.English)
+	for {
 
 		// -- PART 2 -- Visualize the grid
 		windowevent := w.Event()
@@ -353,7 +293,9 @@ func draw(w *app.Window, dataset *[]data) error {
 						}
 						// Next columns are for data
 						if col >= 1 {
-							value = cells[rowName][colName]
+							mu.Lock()
+							value = (*data)[rowName][colName]
+							mu.Unlock()
 							cell.Text = printer.Sprintf("%.1f", value)
 							cell.Alignment = text.End
 							if value > 0 {
@@ -376,6 +318,12 @@ func draw(w *app.Window, dataset *[]data) error {
 				},
 			)
 
+			// Request a redraw after 100ms
+			gtx.Execute(op.InvalidateCmd{
+				At: e.Now.Add(100 * time.Millisecond),
+			})
+
+			// Draw the frame
 			e.Frame(gtx.Ops)
 		}
 
