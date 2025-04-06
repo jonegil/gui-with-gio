@@ -1,7 +1,6 @@
 package main
 
 import (
-	"cmp"
 	"encoding/csv"
 	"flag"
 	"image"
@@ -9,7 +8,6 @@ import (
 	"io"
 	"log"
 	"math"
-	"math/rand"
 	"os"
 	"strconv"
 	"time"
@@ -31,40 +29,14 @@ import (
 
 // Command line input variables
 var filename *string
-var simulate *bool
 
 func main() {
 	// Step 1 - Read input from command line
 	filename = flag.String("file", "example.csv", "Which .csv file shall I present? ")
-	simulate = flag.Bool("simulate", false, "or should I simulate 1 million rows of random data every second")
 	flag.Parse()
 
-	// Step 2 - Read or simulate data
-	//dataset := []data{}
-	var dataset []data
-
-	if *simulate {
-		// Initialize with simulated data first
-		dataset = simulateData(1e3) // Start with fewer samples for speed
-
-		// Create a sync Mutex
-		//var datasetMutex sync.Mutex
-
-		go func() {
-			for {
-				newData := simulateData(100e3)
-
-				// Safely update the dataset
-				//datasetMutex.Lock()
-				dataset = newData
-				//datasetMutex.Unlock()
-
-				time.Sleep(time.Millisecond * 100)
-			}
-		}()
-	} else {
-		dataset = readCSV(filename)
-	}
+	// Step 2 - Read data
+	dataset := readCSV(filename)
 
 	// Step 3 - Start the GUI
 	go func() {
@@ -121,73 +93,6 @@ func readCSV(filename *string) []data {
 		}
 	}
 	return dataset
-}
-
-func simulateData(n int) []data {
-
-	sectors := []string{
-		"Oil & Gas",
-		"Basic Materials",
-		"Industrials",
-		"Consumer Goods",
-		"Health Care",
-		"Consumer Services",
-		"Telecommunications",
-		"Utilities",
-		"Financials",
-		"Technology",
-		"Basic Industries",
-		"Transportation",
-		"Automobiles & Parts",
-		"Leisure Goods",
-		"Media",
-		"Travel & Leisure",
-		"Retail",
-		"Food & Beverage",
-		"Technology Hardware & Equipment",
-	}
-
-	markets := []string{
-		"United Kingdom",
-		"Germany",
-		"France",
-		"Switzerland",
-		"Netherlands",
-		"Spain",
-		"Italy",
-		"Sweden",
-		"Belgium",
-		"Denmark",
-		"Finland",
-		"Austria",
-		"Poland",
-	}
-
-	dataset := []data{}
-
-	for i := 0; i <= n; i++ {
-		sector := sectors[rand.Intn(len(sectors))]
-		region := markets[rand.Intn(len(markets))]
-		ret := (rand.NormFloat64())
-		d := data{
-			rowName: sector,
-			colName: region,
-			value:   ret,
-		}
-		dataset = append(dataset, d)
-	}
-
-	// Sort the data by rowName and colName
-	slices.SortFunc(dataset, func(a, b data) int {
-		// sort by rowName
-		if n := cmp.Compare(a.rowName, b.rowName); n != 0 {
-			return n
-		}
-		// if rowname is equal, sort by colName
-		return cmp.Compare(a.colName, b.colName)
-	})
-
-	return (dataset)
 }
 
 type (
