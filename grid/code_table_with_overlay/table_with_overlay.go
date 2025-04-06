@@ -287,7 +287,7 @@ func draw(w *app.Window, dataset *[]data) error {
 			// Any clip areas we add before Pop-ing the root area
 			// are considered its children.
 
-			box1Rect := clip.Rect(image.Rect(50, 25, 250, 250))
+			box1Rect := clip.Rect(image.Rect(280, 25, 350, 380))
 			box1Area := box1Rect.Push(&ops)
 			stroke := clip.Stroke{
 				Path:  box1Rect.Path(),
