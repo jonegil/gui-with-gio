@@ -8,7 +8,7 @@ has_children: false
 
 # Chapter 9 - Egg as egg
 
-Updated to Gio 0.71 as of August 30th 2024
+Updated to Gio 0.8.0 as of April 4th 2025
 
 ## Goals
 
