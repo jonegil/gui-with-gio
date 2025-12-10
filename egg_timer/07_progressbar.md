@@ -67,10 +67,10 @@ We mentioned `progress`, the variable that contains progress state. Another usef
 // is the egg boiling?
 var boiling bool
 ```
-We want to flip that boolean when the start button is clicked. Thus we listen for a `app.FrameEvent` from the GUI and check if `startButton.Clicked()` is true:
+We want to flip that boolean when the start button is clicked. Thus we listen for a `app.FrameEvent` from the GUI and check if `startButton.Clicked()` is true by updating our FrameEvent case:
 
 ```go
-case system.FrameEvent:
+case app.FrameEvent:
   gtx := layout.NewContext(&ops, e)
   // Let's try out the flexbox layout concept
   if startButton.Clicked(gtx) {
