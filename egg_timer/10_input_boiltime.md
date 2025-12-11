@@ -106,7 +106,7 @@ The input variables are self evident:
 
 Finally, a trick to link the `progress` and `boilDuration`. If a boil is, for example 20% done and the user enters a new time of 10 seconds, it's fair to assume the user wants 10 more seconds, not only 8. So we scale it up to 12.5 by dividing by `(1-progress)`.
 
-Other solutions exist, like rescaling the progressbar, but adjusting the `progress` state variable. For simplicity we skip that step here, but just be mindful in your application how state variables might be logically related.
+Other solutions exist, like rescaling the progressbar, or adjusting the `progress` state variable. For simplicity we skip that step here, but just be mindful in your application how state variables might be logically related.
 
 ### 4. Laying it all out
 
@@ -140,7 +140,7 @@ layout.Flex{
 
 ### 5. The details of the inputbox
 
-Now that we have the overview in place let's examine that second rigid in detail:
+Now that we have the overview in place, let's examine that second rigid in detail:
 
 **Editor with theme**
 
