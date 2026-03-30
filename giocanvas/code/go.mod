@@ -1,6 +1,6 @@
 module eclipse_flexbox.go
 
-go 1.21.1
+go 1.25.0
 
 require (
 	gioui.org v0.5.0
@@ -13,7 +13,7 @@ require (
 	github.com/go-text/typesetting v0.0.0-20230803102845-24e03d8b5372 // indirect
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
 	golang.org/x/exp/shiny v0.0.0-20240222234643-814bf88cf225 // indirect
-	golang.org/x/image v0.18.0 // indirect
+	golang.org/x/image v0.38.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/text v0.35.0 // indirect
 )
