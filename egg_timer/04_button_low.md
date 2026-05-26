@@ -18,18 +18,18 @@ The button can't fill the screen, obviously. So let's move the button to the bot
 
 ## Outline
 
-The last chapter was all about the overall structure of the program. Now we zoom into the `system.FrameEvent` and start using Flexbox. If it's new to you, read up on it first, for example [this one from Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox).
+The last chapter was all about the overall structure of the program. Now we zoom into the `app.FrameEvent` and start using Flexbox. If it's new to you, read up on it first, for example [this one from Mozilla](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox).
 
 ## Overall structure
 
-We don't repeat the whole program here, but instead zoom in on the `system.FrameEvent`:
+We don't repeat the whole program here, but instead zoom in on the `app.FrameEvent`:
 
 ### Code
 
 We start by removing a lot of the details to better see the structure:
 
 ```go
-case system.FrameEvent:
+case app.FrameEvent:
 
     layout.Flex{
     // ...
@@ -68,7 +68,7 @@ As we see above, layout operations are recursive. A child can itself have childr
 
 ## Code in detail
 
-OK, that was the high level. Now it's time to dive deep. Let's look at the whole of `system.FrameEvent` in detail:
+OK, that was the high level. Now it's time to dive deep. Let's look at the whole of `app.FrameEvent` in detail:
 
 ### Code
 

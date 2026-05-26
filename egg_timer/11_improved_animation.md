@@ -187,7 +187,7 @@ func (a animation) progress(gtx layout.Context) (animating bool, progress float3
 With that in place we can simplify the `startButton.Clicked()` code to:
 
 ```go
-case system.FrameEvent:
+case app.FrameEvent:
   gtx := layout.NewContext(&ops, e)
   boiling, progress := anim.progress(gtx)
 
