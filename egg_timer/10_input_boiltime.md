@@ -280,9 +280,9 @@ More bells and whistles could be added here. Might I for example challenge you t
 
 And that's it. Thank you for coming along and I hope you've been tempted to try your hand at GUI development.
 
-We've only scratched the surface, and there's much more capability in the framework than we've exposed here. But, now that we have ve boiled that egg together, we've come quite far as well, right? Now, can I ask something of you?
+We've only scratched the surface, and there's much more capability in the framework than we've exposed here. But, now that we have boiled that egg together, we've come quite far as well, right? Now, can I ask something of you?
 
-If you liked what you've read, please star it on Github. I'm only human, and honestly it's tremedously motivating to receive those tokens of appreciation.
+If you liked what you've read, please star it on Github. I'm only human, and honestly it's tremendously motivating to receive those tokens of appreciation.
 
 And ~~if~~ when you get started on your own project, big or small, please drop me a line. I would love to hear from you.
 

@@ -12,7 +12,7 @@ has_children: false
 In this chapter we'll make use of the updated state variables and draw our program on screen.
 
 ## Outline
-After processing events, `system.FrameEvent` continues with laying out and drawing on screen. It has multiple pieces, but we'll calmly walk through them one by one.
+After processing events, `app.FrameEvent` continues with laying out and drawing on screen. It has multiple pieces, but we'll calmly walk through them one by one.
 
 ## Code
 

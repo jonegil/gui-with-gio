@@ -19,11 +19,11 @@ We will listen for two types of events, those from the main application per se, 
 ## Code
 
 ### Listen for events
-We start by listening for general events from the window. In our application there are two of these, `system.FrameEvent` which draws a new frame, and `system.DestroyEvent` which ends the program. Afterwards we write code that processes a queue of events that arrive between each time we draw a frame. 
+We start by listening for general events from the window. In our application there are two of these, `app.FrameEvent` which draws a new frame, and `app.DestroyEvent` which ends the program. Afterwards we write code that processes a queue of events that arrive between each time we draw a frame. 
 
 Let's start by walking through the structure of our `draw()` function:
   1. Listen for events in the window using `w.Events()`
-  1. We're especially interested in events that require us to redraw a new frame. Those are called `system.FrameEvent`
+  1. We're especially interested in events that require us to redraw a new frame. Those are called `app.FrameEvent`
   1. When those arrive, we open it's event queue on range through all events since last frame.
 
 Simplified, the code looks like this:
@@ -37,7 +37,7 @@ func draw(w *app.Window) error {
     switch winE := windowEvent.(type) {
 
     // Should we draw a new frame?
-    case system.FrameEvent:
+    case app.FrameEvent:
       // Open an new context
       gtx := layout.NewContext(&ops, winE)
 
@@ -50,7 +50,7 @@ func draw(w *app.Window) error {
 ```
 1.  **Point no 1**
     - OK, we recognice `draw()`, and also how we go through events from the window using `range w.Events()`. 
-    - The `system.FrameEvent` is one such event from the window - the one Gio sends when a new frame needs to be drawn. Fair enough. 
+    - The `app.FrameEvent` is one such event from the window - the one Gio sends when a new frame needs to be drawn. Fair enough. 
     - But before we actually draw the frame, we investigate if something interesting has happened since last frame. That could be for example a pointer scroll or a keystroke. To do that we 
       - Creating a `gtx := NewContext()` and 
       - Open it's queue of events since last frame with `gtx.Events(0)`.
@@ -77,7 +77,7 @@ As we go through it, you will see that various changes can affect each other. Fo
 Here's the structure:
 
 ```go
-case system.FrameEvent:
+case app.FrameEvent:
 
   gtx := layout.NewContext(&ops, winE)
   for _, gtxEvent := range gtx.Events(0) {

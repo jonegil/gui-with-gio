@@ -42,7 +42,7 @@ var progressIncrementer chan float32
 A bit below we'll see how these are updated, but first let's take a look at how `progress` is used when laying out the progressbar. To to that we turn to our sturdy Flexbox and insert the bar through a rigid:
 
 ```go
-// Inside System.FrameEvent
+// Inside app.FrameEvent
 layout.Flex{
   // ...
 }.Layout(gtx,
@@ -70,7 +70,7 @@ var boiling bool
 We want to flip that boolean when the start button is clicked. Thus we listen for a `app.FrameEvent` from the GUI and check if `startButton.Clicked()` is true:
 
 ```go
-case system.FrameEvent:
+case app.FrameEvent:
   gtx := layout.NewContext(&ops, e)
   // Let's try out the flexbox layout concept
   if startButton.Clicked(gtx) {
