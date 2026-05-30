@@ -33,22 +33,21 @@ That's it! Let's look at the code:
 package main
 
 import (
-    "gioui.org/app"
+  "gioui.org/app"
 )
 
 func main() {
-    go func() {
-        // create new window
-        w := new(app.Window)
+  go func() {
+    // create new window
+    w := new(app.Window)
 
-        // listen for events in the window
-        for {
-            w.Event()
-        }
-    }()
-    app.Main()
+    // listen for events in the window
+    for {
+      w.Event()
+    }
+  }()
+  app.Main()
 }
-
 ```
 
 ## Comments
@@ -73,7 +72,7 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
 
 3.  The **event loop** in the goroutine
 
-    - The event loop is the `for { wEvent() }` loop.
+    - The event loop is the `for { w.Event() }` loop.
       As described in the docs, [w.Event](https://pkg.go.dev/gioui.org/app#Window.Event) simply _blocks until an event is received from the window_. For now we just let it listen without doing anything with the events it receives. Later we'll start reacting to them.
 
       From [app.main](https://pkg.go.dev/gioui.org/app#hdr-Main) we learn:
@@ -84,7 +83,7 @@ The code looks simple enough, right? Still, let's take the time to to look at wh
 
     ```go
     go func {
-    // ...
+      // ...
     }()
     ```
 

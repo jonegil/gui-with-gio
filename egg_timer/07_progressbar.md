@@ -52,7 +52,6 @@ layout.Flex{
       return bar.Layout(gtx)
     },
   ),
-
 ```
 
 Notice how the widget itself has no state. State is maintained in the rest of the program, the widget only knows how to display the progress we send it. Any logic to increase, pause, reverse or reset we control outside the widget.
@@ -139,7 +138,7 @@ go func() {
 
 Here we start up an anonymous function to listen to the `progressIncrementer` channel. This is a concurrency feature of Go. Create a listener and let it do its thing. For us, that thing is to add `p` to `progress` if the control variable `boiling` is true, and progress is less than 1. Since `p` is 0.004, and progress increased 25 times per second, it will take 10 seconds to reach 1. Feel free to adjust either of these two to find a combination of speed and smoothness that works for you.
 
-Finally we force the window to draw, by calling `w.Invalidate()`. What is does is to inform Gio that the old rendering is now, well, invalid, and hence a new drawing must be made. Without such notice, Gio would simply not update until forced to do so by a mouse click or button press or other events. Invalidating at _every_ frame though can be costly, and alternatives exists. It's a bit of an advanced topic though, so for now let's leave it as is, but return to it in the [Bonus chapter on improved animation](11_improved_animation.md).
+Finally we force the window to draw, by calling `w.Invalidate()`. What it does is inform Gio that the old rendering is now, well, invalid, and hence a new drawing must be made. Without such notice, Gio would simply not update until forced to do so by a mouse click or button press or other events. Invalidating at _every_ frame though can be costly, and alternatives exists. It's a bit of an advanced topic though, so for now let's leave it as is, but return to it in the [Bonus chapter on improved animation](11_improved_animation.md).
 
 By using a channel like this we get
 

@@ -18,7 +18,7 @@ The intent of this section is to organize the code better.
 
 Up to now, we've built the program by bolting on functionality, bit by bit. This has served us well, allowing us to start with an empty canvas, iterate by changing the minimum amount of lines, while still making meaningful progress.
 
-Going forward however, it's starting to look a little unwieldy. Having all the code inside one big `main()` is can make it harder to understand, and harder to continue building. Hence we'll refactor the program a bit, simply breaking it up into smaller pieces.
+Going forward however, it's starting to look a little unwieldy. Having all the code inside one big `main()` can make it harder to understand, and harder to continue building. Hence we'll refactor the program a bit, simply breaking it up into smaller pieces.
 
 > _Refactoring is transforming code in a safe and rapid way is vital to keeping it cheap and easy to modify for future needs._
 > [Martin Fowler](https://martinfowler.com/books/refactoring.html)
@@ -35,9 +35,9 @@ Main is too long and does too much. It's better if `main()` starts and controls 
 func main() {
   go func() {
     // create new window
-		w := new(app.Window)
-		w.Option(app.Title("Egg timer"))
-		w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
+    w := new(app.Window)
+    w.Option(app.Title("Egg timer"))
+    w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
     if err := draw(w); err != nil {
       log.Fatal(err)
     }
@@ -70,26 +70,25 @@ A simplified version of `draw( )` shows the structure.
 
 ```go
 func draw(w *app.Window) error {
-    // ...
+  // ...
 
-    // listen for events in the window.
-    for {
-        // detect what type of event
-        switch e := w.Event().(type) {
+  // listen for events in the window.
+  for {
+    // detect what type of event
+    switch e := w.Event().(type) {
 
-        // this is sent when the application should re-render.
-        case app.FrameEvent:
-            // ...
+    // this is sent when the application should re-render.
+    case app.FrameEvent:
+      // ...
 
-        // this is sent when the application is closed
-        case app.DestroyEvent:
-            return e.Err
-        }
+    // this is sent when the application is closed
+    case app.DestroyEvent:
+      return e.Err
     }
 }
 ```
 
-As before examine all events. But since all we really care about is the type, let's simplify to `e: = w.Event().(type)`, to detect the type.
+As before examine all events. But since all we really care about is the type, let's simplify to `e := w.Event().(type)`, to detect the type.
 
 - `app.FrameEvent` is handled as before,
 - we tidy the case for `app.DestroyEvent`, which returns _nil_ for normal window closures, but _Err_ if something else is the cause. The draw function should only inform what's been detected, not call the `os` directly.

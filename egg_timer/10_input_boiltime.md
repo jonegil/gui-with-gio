@@ -56,24 +56,24 @@ The editor widget is the input field where the chef can input how long the egg s
 
 **Some variables for the editor**
 
-Just as for the button, we need a variable for the inputfield itself. So we start by declaring a [widget.Editor](https://pkg.go.dev/gioui.org/widget#Editor) variable.
+Just as for the button, we need a variable for the input field itself. So we start by declaring a [widget.Editor](https://pkg.go.dev/gioui.org/widget#Editor) variable.
 
-We also create a variable to hold the actual numerical value in the inputfield and call it `boilDuration`. Note that there is no magical link between these variables, but we will later write code that reads from the input field, and stores the values in the `boilDuration`. All in due time though.
+We also create a variable to hold the actual numerical value in the input field and call it `boilDuration`. Note that there is no magical link between these variables, but we will later write code that reads from the input field, and stores the values in the `boilDuration`. All in due time though.
 
-With these, we now in the top of our `draw()` function find the following lines:
+With these changes, we now find the following lines at the top of our `draw()` function:
 
 ```go
-  // boilDurationInput is a textfield to input boil duration
-  var boilDurationInput widget.Editor
+// boilDurationInput is a textfield to input boil duration
+var boilDurationInput widget.Editor
 
-  // is the egg boiling?
-  var boiling bool
-  var boilDuration float32
+// is the egg boiling?
+var boiling bool
+var boilDuration float32
 ```
 
 ### 3. Update boil-status and read from the inputbox
 
-The only time we really need to check what is written in the inputbox is when the user clicks the start button. Hence we put the logic inside that `if{ }` block. Naturally that's also where we control the `boiling` boolean. Boil bool, boil bool, boil bool - that's a toungue twister (sorry, I know). 
+The only time we really need to check what is written in the inputbox is when the user clicks the start button. Hence we put the logic inside that `if` block. Naturally that's also where we control the `boiling` boolean. Boil bool, boil bool, boil bool - that's a tongue twister (sorry, I know).
 
 A simple progress check allows us to restart a fresh boil when the first has completed. Thus the code reads:
 
@@ -144,7 +144,7 @@ Now that we have the overview in place let's examine that second rigid in detail
 
 **Editor with theme**
 
-We start by wrapping the `boilDurationInput` variable in the Material Design theme. We take the occation to add a [hint](https://pkg.go.dev/gioui.org/widget/material#EditorStyle)
+We start by wrapping the `boilDurationInput` variable in the Material Design theme. We take the occasion to add a [hint](https://pkg.go.dev/gioui.org/widget/material#EditorStyle)
 
 ```go
 // The inputbox
@@ -159,9 +159,9 @@ layout.Rigid(
 At this point, the `boilDurationInput` is still just an empty field, so we will do some configuration:
 
 ```go
-    // Define characteristics of the input box
-    boilDurationInput.SingleLine = true
-    boilDurationInput.Alignment = text.Middle
+// Define characteristics of the input box
+boilDurationInput.SingleLine = true
+boilDurationInput.Alignment = text.Middle
 ```
 
 - `SingleLine` forces the box to always be one line high. Without it, the box will grow when the user presses enter
@@ -181,7 +181,7 @@ if boiling && progress < 1 {
 }
 ```
 
-When we are in the middle of a boil, we here define a new `boilRemain` that holds the remaining time until the boil is complete, calculated using `(1-progress`)
+When we are in the middle of a boil, we define a new `boilRemain` that holds the remaining time until the boil is complete, calculated using `(1 - progress)`
 
 Since [math.Round()](https://pkg.go.dev/math#Round) doesn't allow rounding to a given number of decimals, we must use a trick.
 
@@ -280,9 +280,9 @@ More bells and whistles could be added here. Might I for example challenge you t
 
 And that's it. Thank you for coming along and I hope you've been tempted to try your hand at GUI development.
 
-We've only scratched the surface, and there's much more capability in the framework than we've exposed here. But, now that we have ve boiled that egg together, we've come quite far as well, right? Now, can I ask something of you?
+We've only scratched the surface, and there's much more capability in the framework than we've exposed here. But, now that we have boiled that egg together, we've come quite far as well, right? Now, can I ask something of you?
 
-If you liked what you've read, please star it on Github. I'm only human, and honestly it's tremedously motivating to receive those tokens of appreciation.
+If you liked what you've read, please star it on Github. I'm only human, and honestly it's tremendously motivating to receive those tokens of appreciation.
 
 And ~~if~~ when you get started on your own project, big or small, please drop me a line. I would love to hear from you.
 

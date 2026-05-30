@@ -44,15 +44,15 @@ There are two alternatives, let's look at both:
 Remember how the progress bar is one of the rigids we lay out:
 
 ```go
-  // PREVIOUS CODE
+// PREVIOUS CODE
 
-  // The progressbar
-  layout.Rigid(
-    func(gtx C) D {
-      bar := material.ProgressBar(th, progress)
-      return bar.Layout(gtx)
-    },
-  ),
+// The progressbar
+layout.Rigid(
+  func(gtx C) D {
+    bar := material.ProgressBar(th, progress)
+    return bar.Layout(gtx)
+},
+),
 ```
 
 We now expand that with its own personal timing logic: 
@@ -98,18 +98,18 @@ func draw(w *app.Window) error {
   // ...
 
   // listen for events in the incrementor channel
-    go func() {
-      for range progressIncrementer {
-        if boiling && progress < 1 {
-          progress += 1.0 / 25.0 / boilDuration
-          if progress >= 1 {
-            progress = 1
-          }
-          // Force a redraw by invalidating the frame
-          // w.Invalidate() // This is replaced by op.InvalidateCmd for the progressbar on line 211
+  go func() {
+    for range progressIncrementer {
+      if boiling && progress < 1 {
+        progress += 1.0 / 25.0 / boilDuration
+        if progress >= 1 {
+          progress = 1
         }
+        // Force a redraw by invalidating the frame
+        // w.Invalidate() // This is replaced by op.InvalidateCmd for the progressbar on line 211
       }
-    }()
+    }
+  }()
 ```
 
 ### 3. - Replacing w.Invalidate() with op.InvalidateCmd{} - what's the effect
@@ -179,7 +179,6 @@ func (a animation) progress(gtx layout.Context) (animating bool, progress float3
   op.InvalidateOp{}.Add(gtx.Ops)
   return true, float32(gtx.Now.Sub(a.start)) / float32(a.duration)
 }
-
 ```
 
 #### Start simplifying
@@ -203,7 +202,6 @@ case system.FrameEvent:
       anim.animate(gtx, time.Duration(inputFloat)*time.Second)
     }
   }
-
 ```
 
 #### Tidy up the loose end

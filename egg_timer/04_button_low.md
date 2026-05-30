@@ -31,15 +31,15 @@ We start by removing a lot of the details to better see the structure:
 ```go
 case system.FrameEvent:
 
-    layout.Flex{
+  layout.Flex{
     // ...
-    }.Layout( // ...
-        // We insert two rigid elements:
-        // First one to hold a button ...
-        layout.Rigid(),
-        // .. then one to hold an empty spacer
-        layout.Rigid(),
-    }
+  }.Layout( // ...
+    // We insert two rigid elements:
+    // First one to hold a button ...
+    layout.Rigid(),
+    // .. then one to hold an empty spacer
+    layout.Rigid(),
+  }
 ```
 
 ### Comments
@@ -74,29 +74,29 @@ OK, that was the high level. Now it's time to dive deep. Let's look at the whole
 
 ```go
 case app.FrameEvent:
-    gtx := app.NewContext(&ops, typ)
-    // Let's try out the flexbox layout:
-    layout.Flex{
-        // Vertical alignment, from top to bottom
-        Axis: layout.Vertical,
-        // Empty space is left at the start, i.e. at the top
-        Spacing: layout.SpaceStart,
-    }.Layout(gtx,
-        // We insert two rigid elements:
-        // First one to hold a button ...
-        layout.Rigid(
-            func(gtx layout.Context) layout.Dimensions {
-                btn := material.Button(th, &startButton, "Start")
-                return btn.Layout(gtx)
-            },
-        ),
-        // ... then one to hold an empty spacer
-        layout.Rigid(
-            // The height of the spacer is 25 Device independent pixels
-            layout.Spacer{Height: unit.Dp(25)}.Layout,
-        ),
-    )
-    typ.Frame(gtx.Ops)
+  gtx := app.NewContext(&ops, typ)
+  // Let's try out the flexbox layout:
+  layout.Flex{
+    // Vertical alignment, from top to bottom
+    Axis: layout.Vertical,
+    // Empty space is left at the start, i.e. at the top
+    Spacing: layout.SpaceStart,
+  }.Layout(gtx,
+    // We insert two rigid elements:
+    // First one to hold a button ...
+    layout.Rigid(
+      func(gtx layout.Context) layout.Dimensions {
+        btn := material.Button(th, &startButton, "Start")
+        return btn.Layout(gtx)
+      },
+    ),
+    // ... then one to hold an empty spacer
+    layout.Rigid(
+        // The height of the spacer is 25 Device independent pixels
+        layout.Spacer{Height: unit.Dp(25)}.Layout,
+    ),
+  )
+  typ.Frame(gtx.Ops)
 ```
 
 ### Comments

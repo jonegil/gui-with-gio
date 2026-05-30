@@ -32,13 +32,13 @@ To make things tidy, let's discuss imports first, then the main function later.
 
 ```go
 import (
-    "os"
+  "os"
 
-    "gioui.org/app"
-    "gioui.org/op"
-    "gioui.org/unit"
-    "gioui.org/widget"
-    "gioui.org/widget/material"
+  "gioui.org/app"
+  "gioui.org/op"
+  "gioui.org/unit"
+  "gioui.org/widget"
+  "gioui.org/widget/material"
 )
 ```
 
@@ -71,9 +71,9 @@ With imports well out of our way, let's look at the code. It's longer but still 
 func main() {
   go func() {
     // create new window
-		w := new(app.Window)
-		w.Option(app.Title("Egg timer"))
-		w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
+    w := new(app.Window)
+    w.Option(app.Title("Egg timer"))
+    w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
 
     // ops are the operations from the UI
     var ops op.Ops
@@ -86,23 +86,23 @@ func main() {
 
     // listen for events in the window.
     for {
-        // first grab the event
-        evt := w.Event()
+      // first grab the event
+      evt := w.Event()
 
-        // then detect the type
-        switch typ := evt.(type) {
+      // then detect the type
+      switch typ := evt.(type) {
 
-        // this is sent when the application should re-render.
-        case app.FrameEvent:
-            gtx := app.NewContext(&ops, typ)
-            btn := material.Button(th, &startButton, "Start")
-            btn.Layout(gtx)
-            typ.Frame(gtx.Ops)
+      // this is sent when the application should re-render.
+      case app.FrameEvent:
+        gtx := app.NewContext(&ops, typ)
+        btn := material.Button(th, &startButton, "Start")
+        btn.Layout(gtx)
+        typ.Frame(gtx.Ops)
 
-        // and this is sent when the application should exits
-        case app.DestroyEvent:
-            os.Exit(0)
-        }
+      // and this is sent when the application should exits
+      case app.DestroyEvent:
+        os.Exit(0)
+      }
     }
   }()
   app.Main()
@@ -124,7 +124,7 @@ func main() {
 - `th` is the material theme.
     -  Update in Gio 0.2 July 2023:
         - Gio now defaults to system fonts. This is great, one less thing to remember. However, should you want to flex your font skills, read the [July 2023 newsletter](https://gioui.org/news/2023-07).
-        - Also you may want to learn about Go's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definetly visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
+        - Also you may want to learn about Go's own dedicated high-quality True Type fonts? Read the [fascinating blog](https://blog.golang.org/go-fonts) and definitely visit [Bigelow & Holmes](https://bigelowandholmes.typepad.com), its creators. True old-school.
 
 1. The `for` loop is more interesting. 
    - `w.Event()` blocks and waits for events. We store those as `evt`.

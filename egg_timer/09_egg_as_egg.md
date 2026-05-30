@@ -33,7 +33,6 @@ layout.Rigid(
     eggPath.Begin(gtx.Ops)
     // Rotate from 0 to 360 degrees
     for deg := 0.0; deg <= 360; deg++ {
-
       // Egg math (really) at this brilliant site. Thanks!
       // https://observablehq.com/@toja/egg-curve
       // Convert degrees to radians
